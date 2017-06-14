@@ -6,13 +6,18 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 14 Jun 2017 04:36:29 PM PDT
+# Last Modified: Wed 14 Jun 2017 04:47:15 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
 import socket, struct
+
+HOST = 'localhost'
+PORT = 10000
+CMDS = {}
+CMDS['checkin'] = 'aaaa'
 
 def createMessage( msg, needs_reply=False ):
     ba = bytearray()
@@ -31,17 +36,26 @@ def createMessage( msg, needs_reply=False ):
     ba.extend(b'@@')
     return ba
 
-message = ''
-while message != 'q':
-    sock = socket.create_connection(('localhost',10000))
-    message = input('Enter your 4 character message: ')
+def checkin(sock):
+    msg = createMessage( CMDS['checkin'], True )
+    sock.sendall(msg)
 
-    try:
-        print('Sending {}'.format(message))
-        msg = createMessage( message )
+if __name__ == '__main__':
 
-        sock.sendall(msg)
+    message = ''
+    while message != 'q':
+        sock = socket.create_connection((HOST,PORT))
 
-    finally:
-        print('Closing socket')
-        sock.close()
+        checkin(sock)
+
+        message = input('Enter your 4 character message: ')
+
+        try:
+            print('Sending {}'.format(message))
+            msg = createMessage( message )
+
+            sock.sendall(msg)
+
+        finally:
+            print('Closing socket')
+            sock.close()
