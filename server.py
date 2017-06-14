@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 13 Jun 2017 07:01:01 PM PDT
+# Last Modified: Wed 14 Jun 2017 04:37:10 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -17,92 +17,63 @@ import socket, select
 CONNECTION_LIST = []
 PORT = 10000
 
-def broadcast_data (sock, message):
-    #Do not send the message to master socket and the client who has send us the message
-    for socket in CONNECTION_LIST:
-        if socket != server_sock and socket != sock :
-            try :
-                socket.send(message)
-            except :
-                # broken socket connection may be, chat client pressed ctrl+c for example
-                socket.close()
-                CONNECTION_LIST.remove(socket)
+def bindAndListen( sock, host, port ):
+    '''Function to initialize listening on a
+    server and particular port'''
 
-def strToBytes( string ):
-    return str.encode(string, 'UTF-8')
+    print('Starting server up on {} on port {}'.format(host,port))
+    sock.bind((host,port))
+    sock.listen(1)
+    CONNECTION_LIST.append(sock)
 
-def bytesToStr( byte ):
-    return str( byte, 'UTF-8')
+def receiveMessage( socket_conn ):
+    '''Reads in the formatted bytearray message'''
 
-class MySocket:
-    """demonstration class only
-      - coded for clarity, not efficiency
-    """
+    buf = bytearray()
+    inc_bytes = socket_conn.recv(2)
+    # Check is new message starting
+    if inc_bytes == b'!!':
+        print('Incoming Message!')
+        buf.extend(inc_bytes)
 
-    def __init__(self, sock=None):
-        if sock is None:
-            self.sock = socket.socket(
-                            socket.AF_INET, socket.SOCK_STREAM)
+        # Get reply status
+        buf.extend(socket_conn.recv(2))
+
+        # Read in 4 byte message
+        buf.extend(socket_conn.recv(4))
+
+        # Check to ensure message ends with terminator
+        last_bytes = socket_conn.recv(2)
+        if last_bytes != b'@@':
+            raise RuntimeError('Error in send message')
         else:
-            self.sock = sock
-        self.connection_list = []
+            buf.extend(last_bytes)
+    return buf
 
-    def connect(self, host, port):
-        self.sock.connect((host, port))
-
-    def send(self, msg):
-        totalsent = 0
-        while totalsent < MSGLEN:
-            sent = self.sock.send(msg[totalsent:])
-            if sent == 0:
-                raise RuntimeError("socket connection broken")
-            totalsent = totalsent + sent
-
-    def receive(self, MSGLEN):
-        chunks = []
-        bytes_recd = 0
-        while bytes_recd < MSGLEN:
-            chunk = self.sock.recv(min(MSGLEN - bytes_recd, 2048))
-            if chunk == b'':
-                raise RuntimeError("socket connection broken")
-            chunks.append(chunk)
-            bytes_recd = bytes_recd + len(chunk)
-        return b''.join(chunks)
-
-    def bindAndListen(self, host, port):
-        print('Starting server up on {} port {}'.format(host, port))
-        self.sock.bind((host,port))
-        self.sock.listen(1)
-        self.connection_list.append(self.sock)
-
-    def close(self):
-        self.sock.close()
 
 
 # Create the Socket
-# server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-server_sock = MySocket()
-server_sock.bindAndListen('localhost', 10000)
+server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-
+# Start listening
+bindAndListen( server_sock, 'localhost', 10000 )
 
 while True:
     # Wait for a connection
-    read_sockets, write_sockets, error_sockets = select.select(server_sock.connection_list, [], [])
+    read_sockets, write_sockets, error_sockets = select.select(CONNECTION_LIST, [], [])
 
     for sock in read_sockets:
         # A New connection
-        if sock == server_sock.sock:
-            sockfd, addr = server_sock.sock.accept()
-            server_sock.connection_list.append(sockfd)
+        if sock == server_sock:
+            sockfd, addr = server_sock.accept()
+            CONNECTION_LIST.append(sockfd)
             print('Client ({}, {}) connected'.format(addr[0], addr[1]))
 
         #Incoming client message
         else:
-            msg = sock.recv(16)
-            if msg:
-                print('Message was: {}'.format(msg))
-                sock.send
+            msg = receiveMessage( sock )
+            if msg != b'':
+                print(msg)
 
 
 server_sock.close()
