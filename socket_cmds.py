@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Wed 14 Jun 2017 06:12:28 PM PDT
+# Last Modified: Thu 15 Jun 2017 03:12:30 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -14,6 +14,7 @@
 
 CMDS = {}
 CMDS['checkin'] = 'aaaa'
+CMDS['leave'] = 'ab'
 
 def createMessage( msg, needs_reply=False ):
     ba = bytearray()
@@ -63,6 +64,8 @@ def receiveMessage( socket_conn ):
             buf.extend(last_bytes)
 
         return buf, reply, msg
+    else:
+        print(socket_conn, buf)
 
 def sendReply( socket_conn, msg ):
     buf = createMessage( msg, False )

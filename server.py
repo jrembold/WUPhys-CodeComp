@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 14 Jun 2017 06:12:03 PM PDT
+# Last Modified: Thu 15 Jun 2017 03:12:37 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -29,6 +29,20 @@ def bindAndListen( sock, host, port ):
     sock.listen(1)
     CONNECTION_LIST.append(sock)
 
+def playerChecksIn(sock):
+    global PLAYERCOUNT, PLAYERS
+    PLAYERCOUNT += 1
+    PLAYERS.append(PLAYERCOUNT)
+    ucode = str(PLAYERCOUNT).zfill(2)
+    print('New contender checks in! Given code {}.'.format(ucode))
+    scmds.sendReply(sock, ucode.zfill(4))
+
+def playerLeaves( sock, ucode ):
+    global CONNECTION_LIST, PLAYERS
+    sock.close()
+    CONNECTION_LIST.remove(sock)
+    PLAYERS.remove(int(ucode))
+
 if __name__ == '__main__':
 
     # Create the Socket
@@ -46,7 +60,7 @@ if __name__ == '__main__':
             if sock == server_sock:
                 sockfd, addr = server_sock.accept()
                 CONNECTION_LIST.append(sockfd)
-                # print('Client ({}, {}) connected'.format(addr[0], addr[1]))
+                print('Client ({}, {}) connected'.format(addr[0], addr[1]))
 
             #Incoming client message
             else:
@@ -55,15 +69,13 @@ if __name__ == '__main__':
                     # if buf != b'':
                         # print(buf)
                     if msg == 'aaaa':
-                        PLAYERCOUNT +=1
-                        PLAYERS.append(PLAYERCOUNT)
-                        ucode = str(PLAYERCOUNT).zfill(2)
-                        print('New contender checks in! Given code {}.'.format(ucode))
-                        scmds.sendReply(sock, ucode.zfill(4))
+                        playerChecksIn(sock)
+                    if msg[:2] == 'ab':
+                        print('Player {} has left!'.format(msg[2:]))
+                        playerLeaves( sock, msg[2:] )
                 # if no good message, a client must have disconnected and returned b''
                 except:
-                    sock.close()
-                    CONNECTION_LIST.remove(sock)
+                    print('A client most likely did not disconnect successfully')
 
 
     server_sock.close()
