@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Wed 14 Jun 2017 05:35:51 PM PDT
+# Last Modified: Wed 14 Jun 2017 06:12:28 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -39,7 +39,7 @@ def receiveMessage( socket_conn ):
     inc_bytes = socket_conn.recv(2)
     # Check is new message starting
     if inc_bytes == b'!!':
-        print('Incoming Message!')
+        # print('Incoming Message!')
         buf.extend(inc_bytes)
 
         # Get reply status
@@ -61,7 +61,8 @@ def receiveMessage( socket_conn ):
             raise RuntimeError('Error in sent message')
         else:
             buf.extend(last_bytes)
-    return buf, reply, msg
+
+        return buf, reply, msg
 
 def sendReply( socket_conn, msg ):
     buf = createMessage( msg, False )
