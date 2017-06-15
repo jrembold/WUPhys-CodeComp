@@ -6,19 +6,21 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 03:12:37 PM PDT
+# Last Modified: Thu 15 Jun 2017 04:57:13 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
 import socket, select, random
+import numpy as np
 import socket_cmds as scmds
 
 CONNECTION_LIST = []
-PLAYERCOUNT = 0
+PLAYERID = 50
 PORT = 10000
 PLAYERS = []
+MAPSIZE = 10
 
 def bindAndListen( sock, host, port ):
     '''Function to initialize listening on a
@@ -29,19 +31,41 @@ def bindAndListen( sock, host, port ):
     sock.listen(1)
     CONNECTION_LIST.append(sock)
 
-def playerChecksIn(sock):
-    global PLAYERCOUNT, PLAYERS
-    PLAYERCOUNT += 1
-    PLAYERS.append(PLAYERCOUNT)
-    ucode = str(PLAYERCOUNT).zfill(2)
+def playerChecksIn(sock, Map):
+    global PLAYERID, PLAYERS
+
+    def placePlayer( ID, Map ):
+        x = random.randrange(1,MAPSIZE-2)
+        y = random.randrange(1,MAPSIZE-2)
+        while Map[x,y] != 0:
+            x = random.randrange(1,MAPSIZE-2)
+            y = random.randrange(1,MAPSIZE-2)
+        Map[x,y] = ID
+
+    PLAYERID += 1
+    PLAYERS.append(PLAYERID)
+    ucode = str(PLAYERID).zfill(2)
     print('New contender checks in! Given code {}.'.format(ucode))
     scmds.sendReply(sock, ucode.zfill(4))
+    placePlayer(PLAYERID, Map)
 
-def playerLeaves( sock, ucode ):
+def playerLeaves( sock, ucode, Map ):
     global CONNECTION_LIST, PLAYERS
     sock.close()
     CONNECTION_LIST.remove(sock)
     PLAYERS.remove(int(ucode))
+
+    #Find and remove player on map
+    idx = tuple(np.argwhere(Map==int(ucode))[0])
+    Map[idx] = 0
+    print(Map)
+
+def createMap( size ):
+    Map = np.ones((size,size))
+    Map[1:size-1, 1:size-1] = np.zeros((size-2,size-2))
+    return Map
+
+
 
 if __name__ == '__main__':
 
@@ -50,6 +74,8 @@ if __name__ == '__main__':
 
     # Start listening
     bindAndListen( server_sock, 'localhost', 10000 )
+    Map = createMap(MAPSIZE)
+    print(Map)
 
     while True:
         # Wait for a connection
@@ -69,10 +95,11 @@ if __name__ == '__main__':
                     # if buf != b'':
                         # print(buf)
                     if msg == 'aaaa':
-                        playerChecksIn(sock)
+                        playerChecksIn(sock, Map)
+                        print(Map)
                     if msg[:2] == 'ab':
                         print('Player {} has left!'.format(msg[2:]))
-                        playerLeaves( sock, msg[2:] )
+                        playerLeaves( sock, msg[2:], Map )
                 # if no good message, a client must have disconnected and returned b''
                 except:
                     print('A client most likely did not disconnect successfully')
