@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 14 Jun 2017 05:34:30 PM PDT
+# Last Modified: Wed 14 Jun 2017 06:12:03 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -16,7 +16,9 @@ import socket, select, random
 import socket_cmds as scmds
 
 CONNECTION_LIST = []
+PLAYERCOUNT = 0
 PORT = 10000
+PLAYERS = []
 
 def bindAndListen( sock, host, port ):
     '''Function to initialize listening on a
@@ -44,15 +46,24 @@ if __name__ == '__main__':
             if sock == server_sock:
                 sockfd, addr = server_sock.accept()
                 CONNECTION_LIST.append(sockfd)
-                print('Client ({}, {}) connected'.format(addr[0], addr[1]))
+                # print('Client ({}, {}) connected'.format(addr[0], addr[1]))
 
             #Incoming client message
             else:
-                buf, reply, msg = scmds.receiveMessage( sock )
-                if buf != b'':
-                    print(buf)
-                if msg == 'aaaa':
-                    scmds.sendReply(sock, str(random.randint(1,1000)).zfill(4))
+                try:
+                    buf, reply, msg = scmds.receiveMessage( sock )
+                    # if buf != b'':
+                        # print(buf)
+                    if msg == 'aaaa':
+                        PLAYERCOUNT +=1
+                        PLAYERS.append(PLAYERCOUNT)
+                        ucode = str(PLAYERCOUNT).zfill(2)
+                        print('New contender checks in! Given code {}.'.format(ucode))
+                        scmds.sendReply(sock, ucode.zfill(4))
+                # if no good message, a client must have disconnected and returned b''
+                except:
+                    sock.close()
+                    CONNECTION_LIST.remove(sock)
 
 
     server_sock.close()
