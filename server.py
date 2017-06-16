@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 03:11:46 PM PDT
+# Last Modified: Fri 16 Jun 2017 03:51:45 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -23,8 +23,10 @@ PLAYERS = {}
 MAPSIZE = 10
 
 class Bot:
-    def __init__(self, ucode):
+    def __init__(self, ucode, sock):
         self.ID = int(ucode)
+        self.sock = sock
+        self.vision = []
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -64,6 +66,21 @@ class Bot:
     def rotCCW( self ):
         self.direction = (self.direction-1) % 4
         # print(self.direction)
+
+    def computeVision( self, Map ):
+        self.vision = []
+        targety = self.y
+        targetx = self.x
+        while Map[targety, targetx] != 1:
+            self.vision.append(Map[targety,targetx])
+            if self.direction == 0:
+                targety -= 1
+            elif self.direction == 1:
+                targetx += 1
+            elif self.direction == 2:
+                targety += 1
+            else:
+                targetx -= 1
         
 
 
@@ -81,7 +98,7 @@ def playerChecksIn(sock, Map):
 
     PLAYERID += 1
     ucode = str(PLAYERID).zfill(2)
-    PLAYERS[ucode] = Bot(ucode)
+    PLAYERS[ucode] = Bot(ucode, sock)
     PLAYERS[ucode].place(Map)
     print(Map)
     scmds.sendReply(sock, ucode.zfill(4))
