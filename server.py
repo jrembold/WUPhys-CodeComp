@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 05:31:16 PM PDT
+# Last Modified: Thu 15 Jun 2017 05:39:28 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -28,16 +28,32 @@ class Bot:
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
-        x = random.randrange(1,MAPSIZE-2)
-        y = random.randrange(1,MAPSIZE-2)
+        self.x = random.randrange(1,MAPSIZE-2)
+        self.y = random.randrange(1,MAPSIZE-2)
         while Map[x,y] != 0:
-            x = random.randrange(1,MAPSIZE-2)
-            y = random.randrange(1,MAPSIZE-2)
-        Map[x,y] = self.ID
+            self.x = random.randrange(1,MAPSIZE-2)
+            self.y = random.randrange(1,MAPSIZE-2)
+        Map[self.x,self.y] = self.ID
+        self.direction = random.randrange(1,4)
 
     def remove( self, Map ):
         loc = tuple(np.argwhere(Map==self.ID)[0])
         Map[loc] = 0
+
+    def forward( self, Map ):
+        if self.direction == 1:
+            nextloc = (self.x, self.y-1)
+        elif self.direction == 2:
+            nextloc = (self.x+1, self.y)
+        elif self.direction == 3:
+            nextloc = (self.x, self.y+1)
+        elif self.direction == 4:
+            nextloc = (self.x-1, self.y)
+
+        if Map[nextloc] == 0:
+            Map[nextloc] = self.ID
+            Map[(self.x,self.y)] = 0
+            (self.x,self.y) = nextloc
 
 
 def bindAndListen( sock, host, port ):
