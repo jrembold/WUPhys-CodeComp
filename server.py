@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 02:16:28 PM PDT
+# Last Modified: Fri 16 Jun 2017 02:30:48 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -42,7 +42,7 @@ class Bot:
         Map[loc] = 0
 
     def forward( self, Map ):
-        print(self.direction)
+        # print(self.direction)
         if self.direction == 0:
             nextloc = (self.y-1, self.x)
         elif self.direction == 1:
@@ -57,6 +57,15 @@ class Bot:
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
         print(Map)
+
+    def rotCW( self ):
+        self.direction = (self.direction+1) % 4
+        print(self.direction)
+
+    def rotCCW( self ):
+        self.direction = (self.direction-1) % 4
+        print(self.direction)
+        
 
 
 def bindAndListen( sock, host, port ):
@@ -131,6 +140,10 @@ if __name__ == '__main__':
                         playerLeaves( sock, msg[2:], Map )
                     if msg[:2] == 'ac':
                         PLAYERS[msg[2:]].forward(Map)
+                    if msg[:2] == 'ad':
+                        PLAYERS[msg[2:]].rotCW()
+                    if msg[:2] == 'ae':
+                        PLAYERS[msg[2:]].rotCCW()
                 # if no good message, a client must have disconnected and returned b''
                 except:
                     print('A client most likely did not disconnect successfully.')

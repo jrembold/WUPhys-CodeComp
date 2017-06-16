@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 06:14:14 PM PDT
+# Last Modified: Fri 16 Jun 2017 02:30:43 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -16,6 +16,8 @@ CMDS = {}
 CMDS['checkin'] = 'aaaa'
 CMDS['leave'] = 'ab'
 CMDS['forward'] = 'ac'
+CMDS['rotCW'] = 'ad'
+CMDS['rotCCW'] = 'ae'
 
 def createMessage( msg, needs_reply=False ):
     ba = bytearray()
