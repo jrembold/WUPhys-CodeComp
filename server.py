@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 06:58:57 PM PDT
+# Last Modified: Fri 16 Jun 2017 02:16:28 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -34,7 +34,7 @@ class Bot:
             self.x = random.randrange(1,MAPSIZE-2)
             self.y = random.randrange(1,MAPSIZE-2)
         Map[self.y,self.x] = self.ID
-        self.direction = random.randrange(1,4)
+        self.direction = random.randrange(0,3)
         print('Player {} placed'.format(self.ID))
 
     def remove( self, Map ):
@@ -43,11 +43,11 @@ class Bot:
 
     def forward( self, Map ):
         print(self.direction)
-        if self.direction == 1:
+        if self.direction == 0:
             nextloc = (self.y-1, self.x)
-        elif self.direction == 2:
+        elif self.direction == 1:
             nextloc = (self.y, self.x+1)
-        elif self.direction == 3:
+        elif self.direction == 2:
             nextloc = (self.y+1, self.x)
         else:
             nextloc = (self.y, self.x-1)
