@@ -6,27 +6,29 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 03:02:04 PM PDT
+# Last Modified: Fri 16 Jun 2017 03:15:06 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, struct
+import socket, struct, random
 import socket_cmds as scmds
+import time
 
 HOST = 'localhost'
 PORT = 10000
 UCODE= ''
 SOCK = ''
 
-menu = {}
-menu['1'] = ' - Move Forward'
-menu['2'] = ' - Rotate CW'
-menu['3'] = ' - Rotate CCW'
-menu['q'] = ' - Suicide'
 
 def getSelection():
+    menu = {}
+    menu['1'] = ' - Move Forward'
+    menu['2'] = ' - Rotate CW'
+    menu['3'] = ' - Rotate CCW'
+    menu['q'] = ' - Suicide'
+
     options=menu.keys()
     for entry in options:
         print(entry, menu[entry])
@@ -55,17 +57,23 @@ if __name__ == '__main__':
     checkin()
 
     while True:
-        sel = getSelection()
-        if sel == '1':
-            sendMessage('forward' )
-        if sel == '2':
-            sendMessage('rotCW' )
-        if sel == '3':
-            sendMessage('rotCCW')
-        if sel == 'q':
-            sendMessage('leave')
-            # leave()
-            break
+        # sel = getSelection()
+        # if sel == '1':
+            # sendMessage('forward' )
+        # if sel == '2':
+            # sendMessage('rotCW' )
+        # if sel == '3':
+            # sendMessage('rotCCW')
+        # if sel == 'q':
+            # sendMessage('leave')
+            # # leave()
+            # break
+        for i in range(30):
+            move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
+            sendMessage( move )
+            time.sleep(0.5)
+        sendMessage('leave')
+        break
 
     print('Closing socket')
     SOCK.close()
