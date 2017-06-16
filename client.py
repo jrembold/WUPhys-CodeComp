@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 02:30:38 PM PDT
+# Last Modified: Fri 16 Jun 2017 02:56:56 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -18,6 +18,7 @@ import socket_cmds as scmds
 HOST = 'localhost'
 PORT = 10000
 UCODE= ''
+SOCK = ''
 
 menu = {}
 menu['1'] = ' - Move Forward'
@@ -32,37 +33,38 @@ def getSelection():
     selection = input('Please select: ')
     return selection
 
-def checkin(sock):
+def checkin():
     global UCODE
     msg = scmds.createMessage( scmds.CMDS['checkin'], True )
-    sock.sendall(msg)
-    buf, reply, msg = scmds.receiveMessage( sock )
+    SOCK.sendall(msg)
+    buf, reply, msg = scmds.receiveMessage( SOCK )
     print('You are contenter #{}'.format(msg[2:]))
     UCODE = msg[2:]
 
-def leave( sock ):
+def leave():
     msg = scmds.createMessage( scmds.CMDS['leave'] + UCODE )
-    sock.sendall(msg)
+    SOCK.sendall(msg)
+
+def sendMessage( cmd ):
+    msg = scmds.createMessage( cmd + UCODE )
+    SOCK.sendall(msg)
 
 if __name__ == '__main__':
 
-    sock = socket.create_connection((HOST,PORT))
-    checkin(sock)
+    SOCK = socket.create_connection((HOST,PORT))
+    checkin()
 
     while True:
         sel = getSelection()
         if sel == '1':
-            msg = scmds.createMessage( scmds.CMDS['forward'] + UCODE )
-            sock.sendall(msg)
+            sendMessage( scmds.CMDS['forward'] )
         if sel == '2':
-            msg = scmds.createMessage( scmds.CMDS['rotCW'] + UCODE )
-            sock.sendall(msg)
+            sendMessage( scmds.CMDS['rotCW'] )
         if sel == '3':
-            msg = scmds.createMessage( scmds.CMDS['rotCCW'] + UCODE )
-            sock.sendall(msg)
+            sendMessage( scmds.CMDS['rotCCW'] )
         if sel == 'q':
-            leave( sock )
+            leave()
             break
 
     print('Closing socket')
-    sock.close()
+    SOCK.close()
