@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 03:12:34 PM PDT
+# Last Modified: Thu 15 Jun 2017 06:13:58 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -19,12 +19,23 @@ HOST = 'localhost'
 PORT = 10000
 UCODE= ''
 
+menu = {}
+menu['1.'] = 'Move Forward'
+menu['2.'] = 'Suicide'
+
+def getSelection():
+    options=menu.keys()
+    for entry in options:
+        print(entry, menu[entry])
+    selection = input('Please select: ')
+    return selection
+
 def checkin(sock):
     global UCODE
     msg = scmds.createMessage( scmds.CMDS['checkin'], True )
     sock.sendall(msg)
     buf, reply, msg = scmds.receiveMessage( sock )
-    print('You are contented #{}'.format(msg[2:]))
+    print('You are contenter #{}'.format(msg[2:]))
     UCODE = msg[2:]
 
 def leave( sock ):
@@ -37,8 +48,8 @@ if __name__ == '__main__':
     checkin(sock)
 
     while True:
-        message = input('Enter your 4 character message: ')
-        if message == 'q':
+        sel = getSelection()
+        if sel == '2':
             leave( sock )
             break
         else:
