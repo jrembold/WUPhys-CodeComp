@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 02:38:39 PM PDT
+# Last Modified: Fri 16 Jun 2017 03:11:46 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -56,15 +56,14 @@ class Bot:
             Map[nextloc] = self.ID
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
-        print(Map)
 
     def rotCW( self ):
         self.direction = (self.direction+1) % 4
-        print(self.direction)
+        # print(self.direction)
 
     def rotCCW( self ):
         self.direction = (self.direction-1) % 4
-        print(self.direction)
+        # print(self.direction)
         
 
 
@@ -140,6 +139,7 @@ if __name__ == '__main__':
                         playerLeaves( sock, msg[2:], Map )
                     if msg[:2] == scmds.CMDS['forward']:
                         PLAYERS[msg[2:]].forward(Map)
+                        print(Map)
                     if msg[:2] == scmds.CMDS['rotCW']:
                         PLAYERS[msg[2:]].rotCW()
                     if msg[:2] == scmds.CMDS['rotCCW']:
