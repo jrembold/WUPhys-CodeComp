@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 04:57:13 PM PDT
+# Last Modified: Thu 15 Jun 2017 05:31:16 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -19,8 +19,26 @@ import socket_cmds as scmds
 CONNECTION_LIST = []
 PLAYERID = 50
 PORT = 10000
-PLAYERS = []
+PLAYERS = {}
 MAPSIZE = 10
+
+class Bot:
+    def __init__(self, ucode):
+        self.ID = int(ucode)
+        print('New contender checks in! Player #{}.'.format(self.ID))
+
+    def place( self, Map ):
+        x = random.randrange(1,MAPSIZE-2)
+        y = random.randrange(1,MAPSIZE-2)
+        while Map[x,y] != 0:
+            x = random.randrange(1,MAPSIZE-2)
+            y = random.randrange(1,MAPSIZE-2)
+        Map[x,y] = self.ID
+
+    def remove( self, Map ):
+        loc = tuple(np.argwhere(Map==self.ID)[0])
+        Map[loc] = 0
+
 
 def bindAndListen( sock, host, port ):
     '''Function to initialize listening on a
@@ -34,30 +52,22 @@ def bindAndListen( sock, host, port ):
 def playerChecksIn(sock, Map):
     global PLAYERID, PLAYERS
 
-    def placePlayer( ID, Map ):
-        x = random.randrange(1,MAPSIZE-2)
-        y = random.randrange(1,MAPSIZE-2)
-        while Map[x,y] != 0:
-            x = random.randrange(1,MAPSIZE-2)
-            y = random.randrange(1,MAPSIZE-2)
-        Map[x,y] = ID
-
     PLAYERID += 1
-    PLAYERS.append(PLAYERID)
     ucode = str(PLAYERID).zfill(2)
-    print('New contender checks in! Given code {}.'.format(ucode))
+    PLAYERS[ucode] = Bot(ucode)
+    PLAYERS[ucode].place(Map)
+    print(Map)
     scmds.sendReply(sock, ucode.zfill(4))
-    placePlayer(PLAYERID, Map)
+
 
 def playerLeaves( sock, ucode, Map ):
     global CONNECTION_LIST, PLAYERS
     sock.close()
     CONNECTION_LIST.remove(sock)
-    PLAYERS.remove(int(ucode))
 
     #Find and remove player on map
-    idx = tuple(np.argwhere(Map==int(ucode))[0])
-    Map[idx] = 0
+    PLAYERS[ucode].remove(Map)
+    del PLAYERS[ucode]
     print(Map)
 
 def createMap( size ):
