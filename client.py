@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 03:15:06 PM PDT
+# Last Modified: Fri 16 Jun 2017 03:54:45 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -57,23 +57,26 @@ if __name__ == '__main__':
     checkin()
 
     while True:
-        # sel = getSelection()
-        # if sel == '1':
-            # sendMessage('forward' )
-        # if sel == '2':
-            # sendMessage('rotCW' )
-        # if sel == '3':
-            # sendMessage('rotCCW')
-        # if sel == 'q':
-            # sendMessage('leave')
-            # # leave()
-            # break
-        for i in range(30):
-            move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
-            sendMessage( move )
-            time.sleep(0.5)
-        sendMessage('leave')
-        break
+        # Selection Testing ----------
+        sel = getSelection()
+        if sel == '1':
+            sendMessage('forward' )
+        if sel == '2':
+            sendMessage('rotCW' )
+        if sel == '3':
+            sendMessage('rotCCW')
+        if sel == 'q':
+            sendMessage('leave')
+            # leave()
+            break
+
+        # Automatic Movement Testing ---
+        # for i in range(30):
+            # move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
+            # sendMessage( move )
+            # time.sleep(0.5)
+        # sendMessage('leave')
+        # break
 
     print('Closing socket')
     SOCK.close()

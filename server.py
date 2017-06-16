@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 03:51:45 PM PDT
+# Last Modified: Fri 16 Jun 2017 04:00:04 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -72,7 +72,7 @@ class Bot:
         targety = self.y
         targetx = self.x
         while Map[targety, targetx] != 1:
-            self.vision.append(Map[targety,targetx])
+            self.vision.append(int(Map[targety,targetx]))
             if self.direction == 0:
                 targety -= 1
             elif self.direction == 1:
@@ -81,6 +81,7 @@ class Bot:
                 targety += 1
             else:
                 targetx -= 1
+        print(self.vision)
         
 
 
@@ -156,6 +157,7 @@ if __name__ == '__main__':
                         playerLeaves( sock, msg[2:], Map )
                     if msg[:2] == scmds.CMDS['forward']:
                         PLAYERS[msg[2:]].forward(Map)
+                        PLAYERS[msg[2:]].computeVision(Map)
                         print(Map)
                     if msg[:2] == scmds.CMDS['rotCW']:
                         PLAYERS[msg[2:]].rotCW()
