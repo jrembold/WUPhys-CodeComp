@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 06:13:58 PM PDT
+# Last Modified: Thu 15 Jun 2017 06:58:54 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -49,18 +49,13 @@ if __name__ == '__main__':
 
     while True:
         sel = getSelection()
+        if sel == '1':
+            msg = scmds.createMessage( scmds.CMDS['forward'] + UCODE )
+            print(msg)
+            sock.sendall(msg)
         if sel == '2':
             leave( sock )
             break
-        else:
-            try:
-                print('Sending {}'.format(message))
-                msg = scmds.createMessage( message )
-
-                sock.sendall(msg)
-            except:
-                print('Error occured. Closing socket')
-                sock.close()
 
     print('Closing socket')
     sock.close()

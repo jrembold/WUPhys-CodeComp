@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 15 Jun 2017 06:14:23 PM PDT
+# Last Modified: Thu 15 Jun 2017 06:58:57 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -30,10 +30,10 @@ class Bot:
     def place( self, Map ):
         self.x = random.randrange(1,MAPSIZE-2)
         self.y = random.randrange(1,MAPSIZE-2)
-        while Map[self.x,self.y] != 0:
+        while Map[self.y,self.x] != 0:
             self.x = random.randrange(1,MAPSIZE-2)
             self.y = random.randrange(1,MAPSIZE-2)
-        Map[self.x,self.y] = self.ID
+        Map[self.y,self.x] = self.ID
         self.direction = random.randrange(1,4)
         print('Player {} placed'.format(self.ID))
 
@@ -42,19 +42,21 @@ class Bot:
         Map[loc] = 0
 
     def forward( self, Map ):
+        print(self.direction)
         if self.direction == 1:
-            nextloc = (self.x, self.y-1)
+            nextloc = (self.y-1, self.x)
         elif self.direction == 2:
-            nextloc = (self.x+1, self.y)
+            nextloc = (self.y, self.x+1)
         elif self.direction == 3:
-            nextloc = (self.x, self.y+1)
-        elif self.direction == 4:
-            nextloc = (self.x-1, self.y)
+            nextloc = (self.y+1, self.x)
+        else:
+            nextloc = (self.y, self.x-1)
 
         if Map[nextloc] == 0:
             Map[nextloc] = self.ID
-            Map[(self.x,self.y)] = 0
-            (self.x,self.y) = nextloc
+            Map[(self.y,self.x)] = 0
+            (self.y,self.x) = nextloc
+        print(Map)
 
 
 def bindAndListen( sock, host, port ):
@@ -127,11 +129,14 @@ if __name__ == '__main__':
                     if msg[:2] == 'ab':
                         print('Player {} has left!'.format(msg[2:]))
                         playerLeaves( sock, msg[2:], Map )
-                    # if msg[:2] == 'ac':
-                        # PLAYERS[msg[2:]].forward(Map)
+                    if msg[:2] == 'ac':
+                        PLAYERS[msg[2:]].forward(Map)
                 # if no good message, a client must have disconnected and returned b''
                 except:
-                    print('A client most likely did not disconnect successfully')
+                    print('A client most likely did not disconnect successfully.')
+                    print('Closing and removing it')
+                    sock.close()
+                    CONNECTION_LIST.remove(sock)
 
 
     server_sock.close()
