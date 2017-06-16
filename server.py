@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 02:30:48 PM PDT
+# Last Modified: Fri 16 Jun 2017 02:38:39 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -132,17 +132,17 @@ if __name__ == '__main__':
                     buf, reply, msg = scmds.receiveMessage( sock )
                     # if buf != b'':
                         # print(buf)
-                    if msg == 'aaaa':
+                    if msg == scmds.CMDS['checkin']:
                         playerChecksIn(sock, Map)
                         print(Map)
-                    if msg[:2] == 'ab':
+                    if msg[:2] == scmds.CMDS['leave']:
                         print('Player {} has left!'.format(msg[2:]))
                         playerLeaves( sock, msg[2:], Map )
-                    if msg[:2] == 'ac':
+                    if msg[:2] == scmds.CMDS['forward']:
                         PLAYERS[msg[2:]].forward(Map)
-                    if msg[:2] == 'ad':
+                    if msg[:2] == scmds.CMDS['rotCW']:
                         PLAYERS[msg[2:]].rotCW()
-                    if msg[:2] == 'ae':
+                    if msg[:2] == scmds.CMDS['rotCCW']:
                         PLAYERS[msg[2:]].rotCCW()
                 # if no good message, a client must have disconnected and returned b''
                 except:
