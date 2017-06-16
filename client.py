@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 02:56:56 PM PDT
+# Last Modified: Fri 16 Jun 2017 03:02:04 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -45,8 +45,8 @@ def leave():
     msg = scmds.createMessage( scmds.CMDS['leave'] + UCODE )
     SOCK.sendall(msg)
 
-def sendMessage( cmd ):
-    msg = scmds.createMessage( cmd + UCODE )
+def sendMessage( cmdstr ):
+    msg = scmds.createMessage( scmds.CMDS[cmdstr] + UCODE )
     SOCK.sendall(msg)
 
 if __name__ == '__main__':
@@ -57,13 +57,14 @@ if __name__ == '__main__':
     while True:
         sel = getSelection()
         if sel == '1':
-            sendMessage( scmds.CMDS['forward'] )
+            sendMessage('forward' )
         if sel == '2':
-            sendMessage( scmds.CMDS['rotCW'] )
+            sendMessage('rotCW' )
         if sel == '3':
-            sendMessage( scmds.CMDS['rotCCW'] )
+            sendMessage('rotCCW')
         if sel == 'q':
-            leave()
+            sendMessage('leave')
+            # leave()
             break
 
     print('Closing socket')
