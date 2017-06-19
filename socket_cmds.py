@@ -6,20 +6,20 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 03:21:57 PM PDT
+# Last Modified: Mon 19 Jun 2017 03:51:22 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
 CMDS = {}
-CMDS['checkin'] = 'aaaa'
+CMDS['checkin'] = 'aa'
 CMDS['leave'] = 'ab'
 CMDS['forward'] = 'ac'
 CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
 
-def createMessage( msg, needs_reply=False ):
+def createMessage( msgtype, msg, needs_reply=False ):
     ba = bytearray()
     # Message Initialize
     ba.extend(b'!!')
@@ -28,6 +28,9 @@ def createMessage( msg, needs_reply=False ):
         ba.extend(b'01')
     else:
         ba.extend(b'00')
+    # Message Type
+    ba.extend(bytes(msgtype, 'UTF-8'))
+
     bytemsg = bytes(msg, 'UTF-8')
     msglen = len(bytemsg)
     # Add 2 byte message length
@@ -54,6 +57,10 @@ def receiveMessage( socket_conn ):
             reply = False
         else:
             reply = True
+        buf.extend(inc_bytes)
+
+        # Get msg type
+        inc_bytes = socket_conn.recv(2)
         buf.extend(inc_bytes)
 
         # Get msg length
