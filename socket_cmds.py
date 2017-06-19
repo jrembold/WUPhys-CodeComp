@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 04:06:10 PM PDT
+# Last Modified: Mon 19 Jun 2017 04:30:20 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -66,6 +66,7 @@ def receiveMessage( socket_conn ):
         # Get msg length
         inc_bytes = socket_conn.recv(2)
         msglen = int(str(inc_bytes, 'UTF-8'))
+        buf.extend(inc_bytes)
 
         # Read in 4 byte message
         inc_bytes = socket_conn.recv(msglen)
@@ -94,7 +95,8 @@ def parseMessage( buf ):
         msgtype = str(buf[4:6], 'UTF-8')
         msglen = int(str(buf[6:8], 'UTF-8'))
         msg = str(buf[8:8+msglen], 'UTF-8')
-    return [msgtype, msg, reply]
+        return [msgtype, msg, reply]
+    return [None, None, None]
 
 def sendReply( socket_conn, msgtype, msg ):
     buf = createMessage( msgtype, msg, False )

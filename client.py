@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 02:37:41 PM PDT
+# Last Modified: Mon 19 Jun 2017 04:30:17 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -37,18 +37,20 @@ def getSelection():
 
 def checkin():
     global UCODE
-    msg = scmds.createMessage( scmds.CMDS['checkin'], True )
+    msg = scmds.createMessage( scmds.CMDS['checkin'], '', True )
     SOCK.sendall(msg)
-    buf, reply, msg = scmds.receiveMessage( SOCK )
-    print('You are contenter #{}'.format(msg[2:]))
-    UCODE = msg[2:]
+    reply = scmds.receiveMessage( SOCK )
+    print(reply)
+    [msgtype, msg, needsreply] = scmds.parseMessage( reply )
+    print('You are contenter #{}'.format(msg))
+    UCODE = msg
 
 def leave():
-    msg = scmds.createMessage( scmds.CMDS['leave'] + UCODE )
+    msg = scmds.createMessage( scmds.CMDS['leave'], UCODE )
     SOCK.sendall(msg)
 
 def sendMessage( cmdstr ):
-    msg = scmds.createMessage( scmds.CMDS[cmdstr] + UCODE )
+    msg = scmds.createMessage( scmds.CMDS[cmdstr], UCODE )
     SOCK.sendall(msg)
 
 if __name__ == '__main__':

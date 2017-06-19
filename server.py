@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 02:33:02 PM PDT
+# Last Modified: Mon 19 Jun 2017 04:30:23 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -104,7 +104,7 @@ def playerChecksIn(sock, Map):
     PLAYERS[ucode] = Bot(ucode, sock)
     PLAYERS[ucode].place(Map)
     print(Map)
-    scmds.sendReply(sock, ucode.zfill(4))
+    scmds.sendReply(sock, scmds.CMDS['checkin'], ucode.zfill(2))
 
 
 def playerLeaves( sock, ucode, Map ):
@@ -148,24 +148,26 @@ if __name__ == '__main__':
             #Incoming client message
             else:
                 try:
-                    buf, reply, msg = scmds.receiveMessage( sock )
+                    inc_msg = scmds.receiveMessage( sock )
+                    [msgtype, msg, needsreply] = scmds.parseMessage(inc_msg)
                     # if buf != b'':
                         # print(buf)
-                    if msg == scmds.CMDS['checkin']:
+                    if msgtype == scmds.CMDS['checkin']:
+                        print('Player checking in!')
                         playerChecksIn(sock, Map)
                         print(Map)
-                    if msg[:2] == scmds.CMDS['leave']:
+                    if msgtype == scmds.CMDS['leave']:
                         print('Player {} has left!'.format(msg[2:]))
-                        playerLeaves( sock, msg[2:], Map )
-                    if msg[:2] == scmds.CMDS['forward']:
-                        PLAYERS[msg[2:]].forward(Map)
-                        PLAYERS[msg[2:]].computeVision(Map)
+                        playerLeaves( sock, msg, Map )
+                    if msgtype == scmds.CMDS['forward']:
+                        PLAYERS[msg].forward(Map)
+                        PLAYERS[msg].computeVision(Map)
                         print(Map)
-                    if msg[:2] == scmds.CMDS['rotCW']:
-                        PLAYERS[msg[2:]].rotCW(Map)
+                    if msgtype == scmds.CMDS['rotCW']:
+                        PLAYERS[msg].rotCW(Map)
                         print(Map)
-                    if msg[:2] == scmds.CMDS['rotCCW']:
-                        PLAYERS[msg[2:]].rotCCW(Map)
+                    if msgtype == scmds.CMDS['rotCCW']:
+                        PLAYERS[msg].rotCCW(Map)
                         print(Map)
                 # if no good message, a client must have disconnected and returned b''
                 except:
