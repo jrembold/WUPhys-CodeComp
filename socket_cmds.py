@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 03:51:22 PM PDT
+# Last Modified: Mon 19 Jun 2017 04:06:10 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -79,10 +79,23 @@ def receiveMessage( socket_conn ):
         else:
             buf.extend(last_bytes)
 
-        return buf, reply, msg
+        return buf
     else:
         print(socket_conn, buf)
 
-def sendReply( socket_conn, msg ):
-    buf = createMessage( msg, False )
+def parseMessage( buf ):
+    if buf[:2] != b'!!' or buf[-2:] != b'@@':
+        print('Unknown message sent')
+    else:
+        if buf[2:4] == b'00':
+            reply = False
+        else:
+            reply = True
+        msgtype = str(buf[4:6], 'UTF-8')
+        msglen = int(str(buf[6:8], 'UTF-8'))
+        msg = str(buf[8:8+msglen], 'UTF-8')
+    return [msgtype, msg, reply]
+
+def sendReply( socket_conn, msgtype, msg ):
+    buf = createMessage( msgtype, msg, False )
     socket_conn.sendall(buf)
