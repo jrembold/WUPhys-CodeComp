@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 02:29:16 PM PDT
+# Last Modified: Mon 19 Jun 2017 02:33:02 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -40,7 +40,7 @@ class Bot:
         print('Player {} placed'.format(self.ID))
 
     def remove( self, Map ):
-        loc = tuple(np.argwhere(Map==self.ID)[0])
+        loc = tuple(np.argwhere(Map==self.ID+self.direction/10)[0])
         Map[loc] = 0
 
     def forward( self, Map ):
