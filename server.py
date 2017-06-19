@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 04:00:04 PM PDT
+# Last Modified: Mon 19 Jun 2017 02:29:16 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -32,11 +32,11 @@ class Bot:
     def place( self, Map ):
         self.x = random.randrange(1,MAPSIZE-2)
         self.y = random.randrange(1,MAPSIZE-2)
+        self.direction = random.randrange(0,3)
         while Map[self.y,self.x] != 0:
             self.x = random.randrange(1,MAPSIZE-2)
             self.y = random.randrange(1,MAPSIZE-2)
-        Map[self.y,self.x] = self.ID
-        self.direction = random.randrange(0,3)
+        Map[self.y,self.x] = self.ID + self.direction/10
         print('Player {} placed'.format(self.ID))
 
     def remove( self, Map ):
@@ -55,16 +55,18 @@ class Bot:
             nextloc = (self.y, self.x-1)
 
         if Map[nextloc] == 0:
-            Map[nextloc] = self.ID
+            Map[nextloc] = self.ID + self.direction/10
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
 
-    def rotCW( self ):
+    def rotCW( self, Map ):
         self.direction = (self.direction+1) % 4
+        Map[(self.y, self.x)] = self.ID + self.direction/10
         # print(self.direction)
 
-    def rotCCW( self ):
+    def rotCCW( self, Map ):
         self.direction = (self.direction-1) % 4
+        Map[(self.y, self.x)] = self.ID + self.direction/10
         # print(self.direction)
 
     def computeVision( self, Map ):
@@ -160,9 +162,11 @@ if __name__ == '__main__':
                         PLAYERS[msg[2:]].computeVision(Map)
                         print(Map)
                     if msg[:2] == scmds.CMDS['rotCW']:
-                        PLAYERS[msg[2:]].rotCW()
+                        PLAYERS[msg[2:]].rotCW(Map)
+                        print(Map)
                     if msg[:2] == scmds.CMDS['rotCCW']:
-                        PLAYERS[msg[2:]].rotCCW()
+                        PLAYERS[msg[2:]].rotCCW(Map)
+                        print(Map)
                 # if no good message, a client must have disconnected and returned b''
                 except:
                     print('A client most likely did not disconnect successfully.')
