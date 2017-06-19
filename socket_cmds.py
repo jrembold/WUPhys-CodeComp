@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Fri 16 Jun 2017 02:30:43 PM PDT
+# Last Modified: Mon 19 Jun 2017 03:21:57 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -28,10 +28,12 @@ def createMessage( msg, needs_reply=False ):
         ba.extend(b'01')
     else:
         ba.extend(b'00')
-    # 4 byte message
-    if len(msg)>4:
-        raise RuntimeError('Msg too long!')
-    ba.extend(bytes(msg, 'UTF-8'))
+    bytemsg = bytes(msg, 'UTF-8')
+    msglen = len(bytemsg)
+    # Add 2 byte message length
+    ba.extend(bytes(str(msglen).zfill(2), 'UTF-8'))
+    # Add actual message
+    ba.extend(bytemsg)
     # End Message
     ba.extend(b'@@')
     return ba
@@ -54,8 +56,12 @@ def receiveMessage( socket_conn ):
             reply = True
         buf.extend(inc_bytes)
 
+        # Get msg length
+        inc_bytes = socket_conn.recv(2)
+        msglen = int(str(inc_bytes, 'UTF-8'))
+
         # Read in 4 byte message
-        inc_bytes = socket_conn.recv(4)
+        inc_bytes = socket_conn.recv(msglen)
         msg = str(inc_bytes, 'UTF-8')
         buf.extend(inc_bytes)
 
