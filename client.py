@@ -6,13 +6,13 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 02:30:02 PM PDT
+# Last Modified: Tue 20 Jun 2017 03:03:33 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, struct, random, pickle
+import socket, struct, random
 import socket_cmds as scmds
 import time
 
@@ -79,6 +79,7 @@ if __name__ == '__main__':
             mapstate = scmds.receiveMessage( SOCK )
             [msgtype, msg, needsreply] = scmds.parseMapState( mapstate )
             print('I see {}'.format(msg['vision']))
+            print('There are {} players alive.'.format(msg['pcount']))
         sendMessage('leave')
         break
 
