@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 02:51:58 PM PDT
+# Last Modified: Tue 20 Jun 2017 03:14:29 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -63,14 +63,18 @@ class Bot:
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
 
+        self.computeVision( Map )
+
     def rotCW( self, Map ):
         self.direction = (self.direction+1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
+        self.computeVision( Map )
         # print(self.direction)
 
     def rotCCW( self, Map ):
         self.direction = (self.direction-1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
+        self.computeVision( Map )
         # print(self.direction)
 
     def computeVision( self, Map ):
@@ -87,6 +91,8 @@ class Bot:
                 targety += 1
             else:
                 targetx -= 1
+
+    # def checkStab( self, Map ):
         
 
 
@@ -178,7 +184,7 @@ if __name__ == '__main__':
 
         # Send map data to all bots
         for p in PLAYERS:
-            PLAYERS[p].computeVision(Map)
+            # PLAYERS[p].computeVision(Map)
             send_dict = {'vision':PLAYERS[p].vision,
                          'spears':PLAYERS[p].spearcount,
                          'alive': PLAYERS[p].alive,
