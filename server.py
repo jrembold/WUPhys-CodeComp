@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 02:29:56 PM PDT
+# Last Modified: Tue 20 Jun 2017 02:51:58 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -29,6 +29,8 @@ class Bot:
         self.sock = sock
         self.vision = []
         self.msgrecv = False
+        self.spearcount = 2
+        self.alive = True
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -133,8 +135,9 @@ if __name__ == '__main__':
     Map = createMap(MAPSIZE)
     print(Map)
 
-
-    # Get initial bots
+    # ------------------------------------------
+    # Receive initial bot check-ins
+    # ------------------------------------------
     while len(PLAYERS)<NUMPLAYERS:
         read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
 
@@ -161,25 +164,35 @@ if __name__ == '__main__':
                     sock.close()
                     CONNECTION_LIST.remove(sock)
 
-    # While we still have players alive
+    # Pause a moment to make sure all check-ins complete
     time.sleep(1)
+
+    # As long as a player is alive
     while len(PLAYERS)>0:
         # Show current Map
         print(Map)
 
-        # Reset all the message flags to false
+        # Reset all the message received flags to false
         for p in PLAYERS:
             PLAYERS[p].msgrecv = False
 
-        # Send vision data
+        # Send map data to all bots
         for p in PLAYERS:
             PLAYERS[p].computeVision(Map)
-            scmds.sendReply( PLAYERS[p].sock, 'ba', pickle.dumps({'vision':PLAYERS[p].vision}))
+            send_dict = {'vision':PLAYERS[p].vision,
+                         'spears':PLAYERS[p].spearcount,
+                         'alive': PLAYERS[p].alive,
+                         'pcount':len(PLAYERS)
+                         }
+            scmds.sendReply( PLAYERS[p].sock, 'ba', pickle.dumps(send_dict))
 
-        # Get bot responses
+
+        # -------------------------------------
+        # Wait for and process bot responses
+        # -------------------------------------
         while not all([PLAYERS[i].msgrecv for i in PLAYERS]):
             # Wait for a connection
-            read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
+            read_socks, write_s, err_s = select.select(CONNECTION_LIST, [], [])
 
             for sock in read_socks:
                 # A New connection
@@ -207,9 +220,9 @@ if __name__ == '__main__':
                         if msgtype == scmds.CMDS['rotCCW']:
                             PLAYERS[msg].rotCCW(Map)
                             PLAYERS[msg].msgrecv = True
-                    # if no good message, a client must have disconnected and returned b''
+                    # if no good message, a client must have disconnected unexpectedly
                     except:
-                        print('A client most likely did not disconnect successfully.')
+                        print('A client most likely did not disconnect properly.')
                         print('Closing and removing it')
                         sock.close()
                         CONNECTION_LIST.remove(sock)
