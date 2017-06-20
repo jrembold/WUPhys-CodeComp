@@ -6,13 +6,13 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 03:14:29 PM PDT
+# Last Modified: Tue 20 Jun 2017 03:58:11 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, select, random, pickle, time
+import socket, select, random, pickle, time, math
 import numpy as np
 import socket_cmds as scmds
 
@@ -92,7 +92,15 @@ class Bot:
             else:
                 targetx -= 1
 
-    # def checkStab( self, Map ):
+    def checkStab( self, Map ):
+        if len(self.vision)>1:
+            adj = self.vision[1]
+            if adj != 0:
+                ucode = str(math.floor(adj)).zfill(2)
+                PLAYERS[ucode].alive = False
+
+
+
         
 
 
@@ -184,7 +192,8 @@ if __name__ == '__main__':
 
         # Send map data to all bots
         for p in PLAYERS:
-            # PLAYERS[p].computeVision(Map)
+            PLAYERS[p].computeVision(Map)
+            PLAYERS[p].checkStab(Map)
             send_dict = {'vision':PLAYERS[p].vision,
                          'spears':PLAYERS[p].spearcount,
                          'alive': PLAYERS[p].alive,

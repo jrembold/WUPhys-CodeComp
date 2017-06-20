@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 03:03:33 PM PDT
+# Last Modified: Tue 20 Jun 2017 03:58:26 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -72,14 +72,21 @@ if __name__ == '__main__':
             # break
 
         # Automatic Movement Testing ---
-        for i in range(30):
+        for i in range(50):
             move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
             sendMessage( move )
             time.sleep(0.15)
             mapstate = scmds.receiveMessage( SOCK )
             [msgtype, msg, needsreply] = scmds.parseMapState( mapstate )
             print('I see {}'.format(msg['vision']))
-            print('There are {} players alive.'.format(msg['pcount']))
+            if msg['alive']:
+                print('I am alive.')
+            else:
+                print('I am dead.')
+                break
+            if msg['pcount'] == 1:
+                print('I win!!')
+                break
         sendMessage('leave')
         break
 
