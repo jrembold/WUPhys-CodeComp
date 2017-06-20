@@ -6,13 +6,13 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 06:38:02 PM PDT
+# Last Modified: Tue 20 Jun 2017 02:30:02 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, struct, random
+import socket, struct, random, pickle
 import socket_cmds as scmds
 import time
 
@@ -76,9 +76,9 @@ if __name__ == '__main__':
             move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
             sendMessage( move )
             time.sleep(0.15)
-            reply = scmds.receiveMessage( SOCK )
-            [msgtype, msg, needsreply] = scmds.parseMessage( reply )
-            print('I see {}'.format(msg))
+            mapstate = scmds.receiveMessage( SOCK )
+            [msgtype, msg, needsreply] = scmds.parseMapState( mapstate )
+            print('I see {}'.format(msg['vision']))
         sendMessage('leave')
         break
 

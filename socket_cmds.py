@@ -6,11 +6,13 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 06:38:05 PM PDT
+# Last Modified: Tue 20 Jun 2017 02:29:59 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
+
+import pickle
 
 CMDS = {}
 CMDS['checkin'] = 'aa'
@@ -34,10 +36,13 @@ def createMessage( msgtype, msg, needs_reply=False ):
     # Message Type
     ba.extend(bytes(msgtype, 'UTF-8'))
 
-    bytemsg = bytes(msg, 'UTF-8')
+    if isinstance(msg, str):
+        bytemsg = bytes(msg, 'UTF-8')
+    else:
+        bytemsg = msg
     msglen = len(bytemsg)
     # Add 2 byte message length
-    ba.extend(bytes(str(msglen).zfill(2), 'UTF-8'))
+    ba.extend(bytes(str(msglen).zfill(3), 'UTF-8'))
     # Add actual message
     ba.extend(bytemsg)
     # End Message
@@ -56,10 +61,6 @@ def receiveMessage( socket_conn ):
 
         # Get reply status
         inc_bytes = socket_conn.recv(2)
-        if inc_bytes == b'00':
-            reply = False
-        else:
-            reply = True
         buf.extend(inc_bytes)
 
         # Get msg type
@@ -67,18 +68,18 @@ def receiveMessage( socket_conn ):
         buf.extend(inc_bytes)
 
         # Get msg length
-        inc_bytes = socket_conn.recv(2)
+        inc_bytes = socket_conn.recv(3)
         msglen = int(str(inc_bytes, 'UTF-8'))
         buf.extend(inc_bytes)
 
-        # Read in 4 byte message
+        # Read in byte message
         inc_bytes = socket_conn.recv(msglen)
-        msg = str(inc_bytes, 'UTF-8')
         buf.extend(inc_bytes)
 
         # Check to ensure message ends with terminator
         last_bytes = socket_conn.recv(2)
         if last_bytes != b'@@':
+            print(buf)
             raise RuntimeError('Error in sent message')
         else:
             buf.extend(last_bytes)
@@ -96,8 +97,22 @@ def parseMessage( buf ):
         else:
             reply = True
         msgtype = str(buf[4:6], 'UTF-8')
-        msglen = int(str(buf[6:8], 'UTF-8'))
-        msg = str(buf[8:8+msglen], 'UTF-8')
+        msglen = int(str(buf[6:9], 'UTF-8'))
+        msg = str(buf[9:9+msglen], 'UTF-8')
+        return [msgtype, msg, reply]
+    return [None, None, None]
+
+def parseMapState( buf ):
+    if buf[:2] != b'!!' or buf[-2:] != b'@@':
+        print('Unknown message sent')
+    else:
+        if buf[2:4] == b'00':
+            reply = False
+        else:
+            reply = True
+        msgtype = str(buf[4:6], 'UTF-8')
+        msglen = int(str(buf[6:9], 'UTF-8'))
+        msg = pickle.loads(buf[9:9+msglen])
         return [msgtype, msg, reply]
     return [None, None, None]
 

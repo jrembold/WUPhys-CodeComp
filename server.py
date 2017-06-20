@@ -6,13 +6,13 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 06:38:08 PM PDT
+# Last Modified: Tue 20 Jun 2017 02:29:56 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, select, random
+import socket, select, random, pickle, time
 import numpy as np
 import socket_cmds as scmds
 
@@ -21,6 +21,7 @@ PLAYERID = 50
 PORT = 10000
 PLAYERS = {}
 MAPSIZE = 10
+NUMPLAYERS = 3
 
 class Bot:
     def __init__(self, ucode, sock):
@@ -134,7 +135,7 @@ if __name__ == '__main__':
 
 
     # Get initial bots
-    while len(PLAYERS)<2:
+    while len(PLAYERS)<NUMPLAYERS:
         read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
 
         for sock in read_socks:
@@ -152,7 +153,6 @@ if __name__ == '__main__':
                     # if buf != b'':
                         # print(buf)
                     if msgtype == scmds.CMDS['checkin']:
-                        print('Player checking in!')
                         playerChecksIn(sock, Map)
                         print(Map)
                 except:
@@ -162,6 +162,7 @@ if __name__ == '__main__':
                     CONNECTION_LIST.remove(sock)
 
     # While we still have players alive
+    time.sleep(1)
     while len(PLAYERS)>0:
         # Show current Map
         print(Map)
@@ -173,7 +174,7 @@ if __name__ == '__main__':
         # Send vision data
         for p in PLAYERS:
             PLAYERS[p].computeVision(Map)
-            scmds.sendReply( PLAYERS[p].sock, 'ba', ' '.join(str(i) for i in PLAYERS[p].vision) )
+            scmds.sendReply( PLAYERS[p].sock, 'ba', pickle.dumps({'vision':PLAYERS[p].vision}))
 
         # Get bot responses
         while not all([PLAYERS[i].msgrecv for i in PLAYERS]):
