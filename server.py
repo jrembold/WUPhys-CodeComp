@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 04:30:23 PM PDT
+# Last Modified: Mon 19 Jun 2017 06:38:08 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -27,6 +27,7 @@ class Bot:
         self.ID = int(ucode)
         self.sock = sock
         self.vision = []
+        self.msgrecv = False
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -74,7 +75,7 @@ class Bot:
         targety = self.y
         targetx = self.x
         while Map[targety, targetx] != 1:
-            self.vision.append(int(Map[targety,targetx]))
+            self.vision.append(Map[targety,targetx])
             if self.direction == 0:
                 targety -= 1
             elif self.direction == 1:
@@ -83,7 +84,6 @@ class Bot:
                 targety += 1
             else:
                 targetx -= 1
-        print(self.vision)
         
 
 
@@ -103,7 +103,6 @@ def playerChecksIn(sock, Map):
     ucode = str(PLAYERID).zfill(2)
     PLAYERS[ucode] = Bot(ucode, sock)
     PLAYERS[ucode].place(Map)
-    print(Map)
     scmds.sendReply(sock, scmds.CMDS['checkin'], ucode.zfill(2))
 
 
@@ -115,7 +114,6 @@ def playerLeaves( sock, ucode, Map ):
     #Find and remove player on map
     PLAYERS[ucode].remove(Map)
     del PLAYERS[ucode]
-    print(Map)
 
 def createMap( size ):
     Map = np.ones((size,size))
@@ -134,8 +132,9 @@ if __name__ == '__main__':
     Map = createMap(MAPSIZE)
     print(Map)
 
-    while True:
-        # Wait for a connection
+
+    # Get initial bots
+    while len(PLAYERS)<2:
         read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
 
         for sock in read_socks:
@@ -156,25 +155,64 @@ if __name__ == '__main__':
                         print('Player checking in!')
                         playerChecksIn(sock, Map)
                         print(Map)
-                    if msgtype == scmds.CMDS['leave']:
-                        print('Player {} has left!'.format(msg[2:]))
-                        playerLeaves( sock, msg, Map )
-                    if msgtype == scmds.CMDS['forward']:
-                        PLAYERS[msg].forward(Map)
-                        PLAYERS[msg].computeVision(Map)
-                        print(Map)
-                    if msgtype == scmds.CMDS['rotCW']:
-                        PLAYERS[msg].rotCW(Map)
-                        print(Map)
-                    if msgtype == scmds.CMDS['rotCCW']:
-                        PLAYERS[msg].rotCCW(Map)
-                        print(Map)
-                # if no good message, a client must have disconnected and returned b''
                 except:
                     print('A client most likely did not disconnect successfully.')
                     print('Closing and removing it')
                     sock.close()
                     CONNECTION_LIST.remove(sock)
 
+    # While we still have players alive
+    while len(PLAYERS)>0:
+        # Show current Map
+        print(Map)
 
+        # Reset all the message flags to false
+        for p in PLAYERS:
+            PLAYERS[p].msgrecv = False
+
+        # Send vision data
+        for p in PLAYERS:
+            PLAYERS[p].computeVision(Map)
+            scmds.sendReply( PLAYERS[p].sock, 'ba', ' '.join(str(i) for i in PLAYERS[p].vision) )
+
+        # Get bot responses
+        while not all([PLAYERS[i].msgrecv for i in PLAYERS]):
+            # Wait for a connection
+            read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
+
+            for sock in read_socks:
+                # A New connection
+                if sock == server_sock:
+                    print('Unregistered contender tried to connect')
+
+                #Incoming client message
+                else:
+                    try:
+                        inc_msg = scmds.receiveMessage( sock )
+                        [msgtype, msg, needsreply] = scmds.parseMessage(inc_msg)
+                        # if buf != b'':
+                            # print(buf)
+                        if msgtype == scmds.CMDS['leave']:
+                            PLAYERS[msg].msgrecv = True
+                            playerLeaves( sock, msg, Map )
+                            print('Player {} has left!'.format(msg[2:]))
+                        if msgtype == scmds.CMDS['forward']:
+                            PLAYERS[msg].forward(Map)
+                            PLAYERS[msg].computeVision(Map)
+                            PLAYERS[msg].msgrecv = True
+                        if msgtype == scmds.CMDS['rotCW']:
+                            PLAYERS[msg].rotCW(Map)
+                            PLAYERS[msg].msgrecv = True
+                        if msgtype == scmds.CMDS['rotCCW']:
+                            PLAYERS[msg].rotCCW(Map)
+                            PLAYERS[msg].msgrecv = True
+                    # if no good message, a client must have disconnected and returned b''
+                    except:
+                        print('A client most likely did not disconnect successfully.')
+                        print('Closing and removing it')
+                        sock.close()
+                        CONNECTION_LIST.remove(sock)
+
+    for sock in CONNECTION_LIST:
+        sock.close()
     server_sock.close()

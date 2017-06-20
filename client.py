@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 04:30:17 PM PDT
+# Last Modified: Mon 19 Jun 2017 06:38:02 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -40,7 +40,6 @@ def checkin():
     msg = scmds.createMessage( scmds.CMDS['checkin'], '', True )
     SOCK.sendall(msg)
     reply = scmds.receiveMessage( SOCK )
-    print(reply)
     [msgtype, msg, needsreply] = scmds.parseMessage( reply )
     print('You are contenter #{}'.format(msg))
     UCODE = msg
@@ -76,7 +75,10 @@ if __name__ == '__main__':
         for i in range(30):
             move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
             sendMessage( move )
-            time.sleep(0.5)
+            time.sleep(0.15)
+            reply = scmds.receiveMessage( SOCK )
+            [msgtype, msg, needsreply] = scmds.parseMessage( reply )
+            print('I see {}'.format(msg))
         sendMessage('leave')
         break
 

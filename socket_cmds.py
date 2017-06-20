@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Mon 19 Jun 2017 04:30:20 PM PDT
+# Last Modified: Mon 19 Jun 2017 06:38:05 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -18,6 +18,9 @@ CMDS['leave'] = 'ab'
 CMDS['forward'] = 'ac'
 CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
+
+CMDS['bvision'] = 'ba'
+CMDS['bspears'] = 'bb'
 
 def createMessage( msgtype, msg, needs_reply=False ):
     ba = bytearray()
