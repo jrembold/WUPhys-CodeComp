@@ -6,13 +6,13 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 02:29:59 PM PDT
+# Last Modified: Tue 20 Jun 2017 05:46:04 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import pickle
+import pickle, socket
 
 CMDS = {}
 CMDS['checkin'] = 'aa'
@@ -21,8 +21,7 @@ CMDS['forward'] = 'ac'
 CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
 
-CMDS['bvision'] = 'ba'
-CMDS['bspears'] = 'bb'
+CMDS['mapstate'] = 'ba'
 
 def createMessage( msgtype, msg, needs_reply=False ):
     ba = bytearray()
@@ -103,8 +102,12 @@ def parseMessage( buf ):
     return [None, None, None]
 
 def parseMapState( buf ):
-    if buf[:2] != b'!!' or buf[-2:] != b'@@':
+    if buf == b'':
+        print('Server is sending nonsense. It probably went down.')
+        return None
+    elif buf[:2] != b'!!' or buf[-2:] != b'@@':
         print('Unknown message sent')
+        return None
     else:
         if buf[2:4] == b'00':
             reply = False
@@ -113,9 +116,57 @@ def parseMapState( buf ):
         msgtype = str(buf[4:6], 'UTF-8')
         msglen = int(str(buf[6:9], 'UTF-8'))
         msg = pickle.loads(buf[9:9+msglen])
-        return [msgtype, msg, reply]
-    return [None, None, None]
+        return msg
 
 def sendReply( socket_conn, msgtype, msg ):
     buf = createMessage( msgtype, msg, False )
     socket_conn.sendall(buf)
+
+
+
+
+class CBot:
+    def __init__(self):
+        self.HOST = 'localhost'
+        self.PORT = 10000
+        self.UCODE = ''
+        self.alive = True
+        self.playercount = 1
+        self.vision = []
+        self.spearcount = 2
+        self.active = True
+        self.SOCK = socket.create_connection((self.HOST,self.PORT))
+        self.checkin()
+
+    def checkin(self):
+        msg = createMessage( CMDS['checkin'], '', True )
+        self.SOCK.sendall(msg)
+        reply = receiveMessage( self.SOCK )
+        [msgtype, msg, needsreply] = parseMessage( reply )
+        print('You are contenter #{}'.format(msg))
+        self.UCODE = msg
+
+    def sendMessage( self, cmdstr ):
+        msg = createMessage( CMDS[cmdstr], self.UCODE )
+        self.SOCK.sendall(msg)
+
+    def getMapState( self ):
+        mapstate = receiveMessage( self.SOCK )
+        state = parseMapState( mapstate )
+        self.alive = state['alive']
+        self.spearcount = state['spears']
+        self.playercount = state['pcount']
+        self.vision = state['vision']
+
+        if not self.alive:
+            print('You have been killed!')
+            self.sendMessage('leave')
+            self.SOCK.close()
+            self.active = False
+
+        if self.playercount == 1:
+            print('You are victorious!')
+            self.sendMessage('leave')
+            self.SOCK.close()
+            self.active = False
+
