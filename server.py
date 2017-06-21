@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 05:06:31 PM PDT
+# Last Modified: Tue 20 Jun 2017 05:56:01 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -14,7 +14,7 @@
 
 import socket, select, random, pickle, time, math
 import numpy as np
-import socket_cmds as scmds
+import library as lib
 
 CONNECTION_LIST = []
 PLAYERID = 50
@@ -120,7 +120,7 @@ def playerChecksIn(sock, Map):
     ucode = str(PLAYERID).zfill(2)
     PLAYERS[ucode] = Bot(ucode, sock)
     PLAYERS[ucode].place(Map)
-    scmds.sendReply(sock, scmds.CMDS['checkin'], ucode.zfill(2))
+    lib.sendReply(sock, lib.CMDS['checkin'], ucode.zfill(2))
 
 
 def playerLeaves( sock, ucode, Map ):
@@ -165,11 +165,11 @@ if __name__ == '__main__':
             #Incoming client message
             else:
                 try:
-                    inc_msg = scmds.receiveMessage( sock )
-                    [msgtype, msg, needsreply] = scmds.parseMessage(inc_msg)
+                    inc_msg = lib.receiveMessage( sock )
+                    [msgtype, msg, needsreply] = lib.parseMessage(inc_msg)
                     # if buf != b'':
                         # print(buf)
-                    if msgtype == scmds.CMDS['checkin']:
+                    if msgtype == lib.CMDS['checkin']:
                         playerChecksIn(sock, Map)
                         print(Map)
                 except:
@@ -199,7 +199,7 @@ if __name__ == '__main__':
                          'alive': PLAYERS[p].alive,
                          'pcount':len(PLAYERS)
                          }
-            scmds.sendReply( PLAYERS[p].sock, scmds.CMDS['mapstate'], pickle.dumps(send_dict))
+            lib.sendReply( PLAYERS[p].sock, lib.CMDS['mapstate'], pickle.dumps(send_dict))
 
 
         # -------------------------------------
@@ -217,22 +217,22 @@ if __name__ == '__main__':
                 #Incoming client message
                 else:
                     try:
-                        inc_msg = scmds.receiveMessage( sock )
-                        [msgtype, msg, needsreply] = scmds.parseMessage(inc_msg)
+                        inc_msg = lib.receiveMessage( sock )
+                        [msgtype, msg, needsreply] = lib.parseMessage(inc_msg)
                         # if buf != b'':
                             # print(buf)
-                        if msgtype == scmds.CMDS['leave']:
+                        if msgtype == lib.CMDS['leave']:
                             PLAYERS[msg].msgrecv = True
                             playerLeaves( sock, msg, Map )
                             print('Player {} has left!'.format(msg[2:]))
-                        if msgtype == scmds.CMDS['forward']:
+                        if msgtype == lib.CMDS['forward']:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == scmds.CMDS['rotCW']:
+                        if msgtype == lib.CMDS['rotCW']:
                             PLAYERS[msg].rotCW(Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == scmds.CMDS['rotCCW']:
+                        if msgtype == lib.CMDS['rotCCW']:
                             PLAYERS[msg].rotCCW(Map)
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly

@@ -6,16 +6,16 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 05:46:12 PM PDT
+# Last Modified: Tue 20 Jun 2017 05:57:15 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket_cmds as scmds
+import library as lib
 import time, random
 
-bot = scmds.CBot()
+bot = lib.CBot()
 
 while bot.active:
     bot.getMapState()

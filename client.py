@@ -6,14 +6,14 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 05:32:30 PM PDT
+# Last Modified: Tue 20 Jun 2017 05:57:49 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
 import socket, struct, random
-import socket_cmds as scmds
+import library as lib
 import time
 
 HOST = 'localhost'
@@ -37,15 +37,15 @@ def getSelection():
 
 def checkin():
     global UCODE
-    msg = scmds.createMessage( scmds.CMDS['checkin'], '', True )
+    msg = lib.createMessage( lib.CMDS['checkin'], '', True )
     SOCK.sendall(msg)
-    reply = scmds.receiveMessage( SOCK )
-    [msgtype, msg, needsreply] = scmds.parseMessage( reply )
+    reply = lib.receiveMessage( SOCK )
+    [msgtype, msg, needsreply] = lib.parseMessage( reply )
     print('You are contenter #{}'.format(msg))
     UCODE = msg
 
 def sendMessage( cmdstr ):
-    msg = scmds.createMessage( scmds.CMDS[cmdstr], UCODE )
+    msg = lib.createMessage( lib.CMDS[cmdstr], UCODE )
     SOCK.sendall(msg)
 
 if __name__ == '__main__':
@@ -72,8 +72,8 @@ if __name__ == '__main__':
             move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
             sendMessage( move )
             time.sleep(0.15)
-            mapstate = scmds.receiveMessage( SOCK )
-            [msgtype, msg, needsreply] = scmds.parseMapState( mapstate )
+            mapstate = lib.receiveMessage( SOCK )
+            [msgtype, msg, needsreply] = lib.parseMapState( mapstate )
             print('I see {}'.format(msg['vision']))
             if msg['alive']:
                 print('I am alive.')
