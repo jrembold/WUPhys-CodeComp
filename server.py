@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 03:58:11 PM PDT
+# Last Modified: Tue 20 Jun 2017 05:06:31 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -21,7 +21,7 @@ PLAYERID = 50
 PORT = 10000
 PLAYERS = {}
 MAPSIZE = 10
-NUMPLAYERS = 3
+NUMPLAYERS = 4
 
 class Bot:
     def __init__(self, ucode, sock):
@@ -199,7 +199,7 @@ if __name__ == '__main__':
                          'alive': PLAYERS[p].alive,
                          'pcount':len(PLAYERS)
                          }
-            scmds.sendReply( PLAYERS[p].sock, 'ba', pickle.dumps(send_dict))
+            scmds.sendReply( PLAYERS[p].sock, scmds.CMDS['mapstate'], pickle.dumps(send_dict))
 
 
         # -------------------------------------

@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 03:58:26 PM PDT
+# Last Modified: Tue 20 Jun 2017 05:32:30 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -44,10 +44,6 @@ def checkin():
     print('You are contenter #{}'.format(msg))
     UCODE = msg
 
-def leave():
-    msg = scmds.createMessage( scmds.CMDS['leave'], UCODE )
-    SOCK.sendall(msg)
-
 def sendMessage( cmdstr ):
     msg = scmds.createMessage( scmds.CMDS[cmdstr], UCODE )
     SOCK.sendall(msg)
@@ -72,7 +68,7 @@ if __name__ == '__main__':
             # break
 
         # Automatic Movement Testing ---
-        for i in range(50):
+        for i in range(100):
             move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
             sendMessage( move )
             time.sleep(0.15)
