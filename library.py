@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 05:46:04 PM PDT
+# Last Modified: Tue 20 Jun 2017 06:59:01 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -159,13 +159,13 @@ class CBot:
         self.vision = state['vision']
 
         if not self.alive:
-            print('You have been killed!')
+            # print('You have been killed!')
             self.sendMessage('leave')
             self.SOCK.close()
             self.active = False
 
         if self.playercount == 1:
-            print('You are victorious!')
+            # print('You are victorious!')
             self.sendMessage('leave')
             self.SOCK.close()
             self.active = False

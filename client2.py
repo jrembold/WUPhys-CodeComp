@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 05:57:15 PM PDT
+# Last Modified: Tue 20 Jun 2017 06:43:37 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -23,6 +23,6 @@ while bot.active:
     if bot.active:
         move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
         bot.sendMessage( move )
-        time.sleep(0.15)
+        # time.sleep(0.15)
 
-        print('I see {}'.format(bot.vision))
+        # print('I see {}'.format(bot.vision))

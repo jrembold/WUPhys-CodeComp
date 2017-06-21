@@ -6,13 +6,13 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 05:56:01 PM PDT
+# Last Modified: Tue 20 Jun 2017 07:00:02 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, select, random, pickle, time, math
+import socket, select, random, pickle, time, math, subprocess, sys
 import numpy as np
 import library as lib
 
@@ -152,6 +152,9 @@ if __name__ == '__main__':
     # ------------------------------------------
     # Receive initial bot check-ins
     # ------------------------------------------
+    for i in range(4):
+        subprocess.Popen([sys.executable, 'client2.py'])
+
     while len(PLAYERS)<NUMPLAYERS:
         read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
 
@@ -190,6 +193,10 @@ if __name__ == '__main__':
         for p in PLAYERS:
             PLAYERS[p].msgrecv = False
 
+        if len(PLAYERS) == 1:
+            for key in PLAYERS:
+                print('Player {} is victorious!'.format(key))
+
         # Send map data to all bots
         for p in PLAYERS:
             PLAYERS[p].computeVision(Map)
@@ -200,6 +207,7 @@ if __name__ == '__main__':
                          'pcount':len(PLAYERS)
                          }
             lib.sendReply( PLAYERS[p].sock, lib.CMDS['mapstate'], pickle.dumps(send_dict))
+
 
 
         # -------------------------------------
@@ -242,6 +250,6 @@ if __name__ == '__main__':
                         sock.close()
                         CONNECTION_LIST.remove(sock)
 
-    for sock in CONNECTION_LIST:
-        sock.close()
+    # for sock in CONNECTION_LIST:
+        # sock.close()
     server_sock.close()
