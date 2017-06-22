@@ -6,13 +6,13 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 06:59:01 PM PDT
+# Last Modified: Wed 21 Jun 2017 10:47:01 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import pickle, socket
+import pickle, socket, time
 
 CMDS = {}
 CMDS['checkin'] = 'aa'
@@ -160,13 +160,13 @@ class CBot:
 
         if not self.alive:
             # print('You have been killed!')
+            self.active = False
             self.sendMessage('leave')
             self.SOCK.close()
-            self.active = False
 
         if self.playercount == 1:
             # print('You are victorious!')
-            self.sendMessage('leave')
-            self.SOCK.close()
             self.active = False
+            print('Stopping client socket')
+            self.SOCK.close()
 

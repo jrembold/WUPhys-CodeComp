@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 20 Jun 2017 07:00:02 PM PDT
+# Last Modified: Wed 21 Jun 2017 10:46:54 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -109,6 +109,7 @@ def bindAndListen( sock, host, port ):
     server and particular port'''
 
     print('Starting server up on {} on port {}'.format(host,port))
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host,port))
     sock.listen(1)
     CONNECTION_LIST.append(sock)
@@ -182,7 +183,7 @@ if __name__ == '__main__':
                     CONNECTION_LIST.remove(sock)
 
     # Pause a moment to make sure all check-ins complete
-    time.sleep(1)
+    time.sleep(0.5)
 
     # As long as a player is alive
     while len(PLAYERS)>0:
@@ -190,8 +191,11 @@ if __name__ == '__main__':
         print(Map)
 
         # Reset all the message received flags to false
+        # Update latest vision and check stabs
         for p in PLAYERS:
             PLAYERS[p].msgrecv = False
+            PLAYERS[p].computeVision(Map)
+            PLAYERS[p].checkStab(Map)
 
         if len(PLAYERS) == 1:
             for key in PLAYERS:
@@ -199,8 +203,6 @@ if __name__ == '__main__':
 
         # Send map data to all bots
         for p in PLAYERS:
-            PLAYERS[p].computeVision(Map)
-            PLAYERS[p].checkStab(Map)
             send_dict = {'vision':PLAYERS[p].vision,
                          'spears':PLAYERS[p].spearcount,
                          'alive': PLAYERS[p].alive,
@@ -232,7 +234,7 @@ if __name__ == '__main__':
                         if msgtype == lib.CMDS['leave']:
                             PLAYERS[msg].msgrecv = True
                             playerLeaves( sock, msg, Map )
-                            print('Player {} has left!'.format(msg[2:]))
+                            print('Player {} has left!'.format(msg))
                         if msgtype == lib.CMDS['forward']:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
@@ -253,3 +255,4 @@ if __name__ == '__main__':
     # for sock in CONNECTION_LIST:
         # sock.close()
     server_sock.close()
+    print('Server socket closed')
