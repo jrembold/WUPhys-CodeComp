@@ -11,6 +11,7 @@ Bots are written as simple python scripts and should reside in the same folder a
 	 * Send a response for what action the bot should take for that round
 
 And that's it! Bot moves are sent as a string, and currently include:
+
   Command | Description
   --- | ---
   'forward' | Takes one step forward in currently facing direction
