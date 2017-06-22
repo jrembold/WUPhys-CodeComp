@@ -11,9 +11,12 @@ Bots are written as simple python scripts and should reside in the same folder a
 	 * Send a response for what action the bot should take for that round
 
 And that's it! Bot moves are sent as a string, and currently include:
-  * 'forward' - To take one step forward
-  * 'rotCW' - To rotate clockwise 90 degrees
-  * 'rotCCW' - To rotate counterclockwise 90 degrees
+  Command | Description
+  --- | ---
+  'forward' | Takes one step forward in currently facing direction
+  'rotCW' | Rotates 90 degrees clockwise
+  'rotCCW' | Rotates 90 degrees counter-clockwise
+
 (Things are rather simple at the moment!)
 
 To influence these moves, each bot is given particular information each round from the server. All this information is saved in the bot CBot class and can be accessed via attributes. Information available at the moment includes:
