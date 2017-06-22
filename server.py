@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 21 Jun 2017 11:19:21 PM PDT
+# Last Modified: Thu 22 Jun 2017 02:40:34 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -25,7 +25,8 @@ NUMPLAYERS = 4
 WINNER = ''
 
 class Bot:
-    def __init__(self, ucode, sock):
+    def __init__(self, ucode, sock, name):
+        self.name = name
         self.ID = int(ucode)
         self.sock = sock
         self.vision = []
@@ -122,12 +123,12 @@ def bindAndListen( sock, host, port ):
     sock.listen(1)
     CONNECTION_LIST.append(sock)
 
-def playerChecksIn(sock, Map):
+def playerChecksIn(sock, name, Map):
     global PLAYERID, PLAYERS
 
     PLAYERID += 1
     ucode = str(PLAYERID).zfill(2)
-    PLAYERS[ucode] = Bot(ucode, sock)
+    PLAYERS[ucode] = Bot(ucode, sock, name)
     PLAYERS[ucode].place(Map)
     lib.sendReply(sock, lib.CMDS['checkin'], ucode.zfill(2))
 
@@ -186,13 +187,18 @@ if __name__ == '__main__':
                     # if buf != b'':
                         # print(buf)
                     if msgtype == lib.CMDS['checkin']:
-                        playerChecksIn(sock, Map)
+                        playerChecksIn(sock, msg, Map)
                         print(Map)
                 except:
                     print('A client most likely did not disconnect successfully.')
                     print('Closing and removing it')
                     sock.close()
                     CONNECTION_LIST.remove(sock)
+
+
+    # ---------------------------------------
+    # Now start the main loop
+    # ---------------------------------------
 
     # Pause a moment to make sure all check-ins complete
     time.sleep(0.5)
@@ -212,6 +218,7 @@ if __name__ == '__main__':
         if len(PLAYERS) == 1:
             for key in PLAYERS:
                 WINNER = key
+                WINNERNAME = PLAYERS[key].name
                 # print('Player {} is victorious!'.format(key))
 
         # Send map data to all bots
@@ -271,6 +278,6 @@ if __name__ == '__main__':
 
     # Winner text!
     if WINNER != '':
-        print('Player {} was victorious!'.format(WINNER))
+        print('{} (#{}) was victorious!'.format(WINNERNAME, WINNER))
     else:
         print('There were no winners. Life is tough.')

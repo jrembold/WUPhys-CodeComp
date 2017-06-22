@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Wed 21 Jun 2017 10:49:09 PM PDT
+# Last Modified: Thu 22 Jun 2017 02:36:41 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -126,7 +126,8 @@ def sendReply( socket_conn, msgtype, msg ):
 
 
 class CBot:
-    def __init__(self):
+    def __init__(self, name):
+        self.name = name
         self.HOST = 'localhost'
         self.PORT = 10000
         self.UCODE = ''
@@ -139,7 +140,7 @@ class CBot:
         self.checkin()
 
     def checkin(self):
-        msg = createMessage( CMDS['checkin'], '', True )
+        msg = createMessage( CMDS['checkin'], self.name, True )
         self.SOCK.sendall(msg)
         reply = receiveMessage( self.SOCK )
         [msgtype, msg, needsreply] = parseMessage( reply )
