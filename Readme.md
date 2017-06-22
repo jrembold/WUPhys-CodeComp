@@ -21,10 +21,16 @@ To influence these moves, each bot is given particular information each round fr
   * .spearcount - Not yet utilized, but coming soon!
   * .vision - A list of the number values "seen" by your bot in the direction it is facing. More details below.
 
-### Bot Vision
+#### Bot Vision
 The .vision attribute will return a list of values depicting everything your bot see's in the direction it is looking. *This list will always begin with your bot itself!* The server keeps track of the map in the following fashion:
   * 0 - Nothing is here
   * 1 - There is a wall here
   * 2 digit number - Bot Identification number, there is a bot here
     * Bots will also have a decimal trailing after them which shows what direction they are facing. .0 is straight up, .1 is to the right, .2 is downwards, and .3 is to the left
   * 2 - Will be a spear once implemented, and will have traveling direction like bots
+
+## Running the Server
+The server is run from a command prompt or shell following normal python conventions. Bots to compete are added to the prompt following a -i option. For example, to run a competition between the Randomman.py and Simpleman.py, you'd write:
+```
+python server.py -i Randomman.py Simpleman.py
+```
