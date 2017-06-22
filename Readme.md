@@ -25,9 +25,8 @@ To influence these moves, each bot is given particular information each round fr
   Attribute | Description
   --- | ---
   .playercount | Returns current number of bots still in the round
-  .spearcount | Returns the number of spears you currently have
-   | **Not yet implemented!**
-   .vision | A list of number values 'seen' by your bot in the direction in is facing. More details below
+  .spearcount | Returns the number of spears you currently have. **Not yet implemented!**
+  .vision | A list of number values 'seen' by your bot in the direction in is facing. More details below
 
 #### Bot Vision
 The .vision attribute will return a list of values depicting everything your bot see's in the direction it is looking. *This list will always begin with your bot itself!* The server keeps track of the map in the following fashion:
