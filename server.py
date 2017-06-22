@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 21 Jun 2017 10:46:54 PM PDT
+# Last Modified: Wed 21 Jun 2017 10:55:15 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -22,6 +22,7 @@ PORT = 10000
 PLAYERS = {}
 MAPSIZE = 10
 NUMPLAYERS = 4
+WINNER = ''
 
 class Bot:
     def __init__(self, ucode, sock):
@@ -199,7 +200,8 @@ if __name__ == '__main__':
 
         if len(PLAYERS) == 1:
             for key in PLAYERS:
-                print('Player {} is victorious!'.format(key))
+                WINNER = key
+                # print('Player {} is victorious!'.format(key))
 
         # Send map data to all bots
         for p in PLAYERS:
@@ -234,7 +236,7 @@ if __name__ == '__main__':
                         if msgtype == lib.CMDS['leave']:
                             PLAYERS[msg].msgrecv = True
                             playerLeaves( sock, msg, Map )
-                            print('Player {} has left!'.format(msg))
+                            # print('Player {} has left!'.format(msg))
                         if msgtype == lib.CMDS['forward']:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
@@ -255,4 +257,8 @@ if __name__ == '__main__':
     # for sock in CONNECTION_LIST:
         # sock.close()
     server_sock.close()
-    print('Server socket closed')
+
+    if WINNER != '':
+        print('Player {} was victorious!'.format(WINNER))
+    else:
+        print('There were no winners. Life is tough.')
