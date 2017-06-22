@@ -6,13 +6,13 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 21 Jun 2017 11:04:28 PM PDT
+# Last Modified: Wed 21 Jun 2017 11:19:21 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import socket, select, random, pickle, time, math, subprocess, sys
+import socket, select, random, pickle, time, math, subprocess, sys, argparse
 import numpy as np
 import library as lib
 
@@ -148,6 +148,11 @@ def createMap( size ):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input', nargs = '*', help='List of python bots to compete')
+    botnames = parser.parse_args()
+
+    NUMPLAYERS = len(botnames.input)
 
     # Create the Socket
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -160,8 +165,8 @@ if __name__ == '__main__':
     # ------------------------------------------
     # Receive initial bot check-ins
     # ------------------------------------------
-    for i in range(4):
-        subprocess.Popen([sys.executable, 'client2.py'])
+    for i in botnames.input:
+        subprocess.Popen([sys.executable, i])
 
     while len(PLAYERS)<NUMPLAYERS:
         read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
