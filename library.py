@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Wed 21 Jun 2017 10:47:01 PM PDT
+# Last Modified: Wed 21 Jun 2017 10:49:09 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -167,6 +167,6 @@ class CBot:
         if self.playercount == 1:
             # print('You are victorious!')
             self.active = False
-            print('Stopping client socket')
+            self.sendMessage('leave')
             self.SOCK.close()
 
