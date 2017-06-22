@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Wed 21 Jun 2017 10:55:15 PM PDT
+# Last Modified: Wed 21 Jun 2017 11:04:28 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -35,6 +35,7 @@ class Bot:
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
+        '''Randomly place bot somewhere on map'''
         self.x = random.randrange(1,MAPSIZE-2)
         self.y = random.randrange(1,MAPSIZE-2)
         self.direction = random.randrange(0,3)
@@ -45,11 +46,13 @@ class Bot:
         print('Player {} placed'.format(self.ID))
 
     def remove( self, Map ):
+        '''Delete bot from map'''
         loc = tuple(np.argwhere(Map==self.ID+self.direction/10)[0])
         Map[loc] = 0
 
     def forward( self, Map ):
-        # print(self.direction)
+        ''' Move bot in direction it is facing if
+        nothing is there '''
         if self.direction == 0:
             nextloc = (self.y-1, self.x)
         elif self.direction == 1:
@@ -66,19 +69,24 @@ class Bot:
 
         self.computeVision( Map )
 
+
     def rotCW( self, Map ):
+        ''' Rotates bot clockwise'''
         self.direction = (self.direction+1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
         self.computeVision( Map )
-        # print(self.direction)
+
 
     def rotCCW( self, Map ):
+        ''' Rotates bot CCW '''
         self.direction = (self.direction-1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
         self.computeVision( Map )
-        # print(self.direction)
+
 
     def computeVision( self, Map ):
+        ''' Gets list of values straight ahead of
+        bot until it encounters a wall. '''
         self.vision = []
         targety = self.y
         targetx = self.x
@@ -93,16 +101,15 @@ class Bot:
             else:
                 targetx -= 1
 
+
     def checkStab( self, Map ):
+        ''' Check if adjacent cell has another bot.
+        If so, end it's life. '''
         if len(self.vision)>1:
             adj = self.vision[1]
             if adj != 0:
                 ucode = str(math.floor(adj)).zfill(2)
                 PLAYERS[ucode].alive = False
-
-
-
-        
 
 
 def bindAndListen( sock, host, port ):
@@ -123,7 +130,6 @@ def playerChecksIn(sock, Map):
     PLAYERS[ucode] = Bot(ucode, sock)
     PLAYERS[ucode].place(Map)
     lib.sendReply(sock, lib.CMDS['checkin'], ucode.zfill(2))
-
 
 def playerLeaves( sock, ucode, Map ):
     global CONNECTION_LIST, PLAYERS
@@ -258,6 +264,7 @@ if __name__ == '__main__':
         # sock.close()
     server_sock.close()
 
+    # Winner text!
     if WINNER != '':
         print('Player {} was victorious!'.format(WINNER))
     else:
