@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 10:43:25 PM PDT
+# Last Modified: Thu 22 Jun 2017 10:48:06 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -45,7 +45,7 @@ class Bot:
             self.x = random.randrange(1,MAPSIZE-2)
             self.y = random.randrange(1,MAPSIZE-2)
         Map[self.y,self.x] = self.ID + self.direction/10
-        print('Player {} placed'.format(self.ID))
+        # print('Player {} placed'.format(self.ID))
 
     def remove( self, Map ):
         '''Delete bot from map'''
@@ -258,7 +258,7 @@ if __name__ == '__main__':
             if sock == server_sock:
                 sockfd, addr = server_sock.accept()
                 CONNECTION_LIST.append(sockfd)
-                print('Client ({}, {}) connected'.format(addr[0], addr[1]))
+                # print('Client ({}, {}) connected'.format(addr[0], addr[1]))
 
             #Incoming client message
             else:
