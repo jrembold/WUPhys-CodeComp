@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 05:51:03 PM PDT
+# Last Modified: Thu 22 Jun 2017 10:46:52 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -145,7 +145,7 @@ class CBot:
         self.SOCK.sendall(msg)
         reply = receiveMessage( self.SOCK )
         [msgtype, msg, needsreply] = parseMessage( reply )
-        print('You are contenter #{}'.format(msg))
+        # print('You are contenter #{}'.format(msg))
         self.UCODE = msg
 
     def sendMessage( self, cmdstr ):
