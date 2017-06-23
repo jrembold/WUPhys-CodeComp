@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 06:43:10 PM PDT
+# Last Modified: Thu 22 Jun 2017 07:50:55 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -49,8 +49,13 @@ class Bot:
 
     def remove( self, Map ):
         '''Delete bot from map'''
-        loc = tuple(np.argwhere(Map==self.ID+self.direction/10)[0])
-        Map[loc] = 0
+        try:
+            loc = tuple(np.argwhere(Map==self.ID+self.direction/10)[0])
+            Map[loc] = 0
+        # if it isn't on the map, something must have already overwritten it
+        # no worries then, proceed
+        except:
+            pass
 
     def forward( self, Map ):
         ''' Move bot in direction it is facing if
@@ -77,6 +82,9 @@ class Bot:
 
         if Map[nextloc] == 3:
             self.spearcount += 1
+            Map[nextloc] = self.ID + self.direction/10
+            Map[(self.y,self.x)] = 0
+            (self.y,self.x) = nextloc
 
         self.computeVision( Map )
 
@@ -125,6 +133,7 @@ class Bot:
 class Spear:
     def __init__(self, bot, Map):
         self.direction = bot.direction
+        bot.spearcount -= 1
         self.moving = True
         self.getInitPosition(bot)
         self.draw(Map)
@@ -149,9 +158,43 @@ class Spear:
 
     def checkKill( self, Map ):
         spearloc = Map(self.y,self.x)
-        if spearloc > 2:
+        if spearloc > 10:
             ucode = str(math.floor(spearloc).zfill(2))
             PLAYERS[ucode].alive = False
+            Map[self.y,self.x] = 3
+            self.moving = False
+
+    def move( self, Map ):
+        if self.direction == 0:
+            nextloc = (self.y-1, self.x)
+        elif self.direction == 1:
+            nextloc = (self.y, self.x+1)
+        elif self.direction == 2:
+            nextloc = (self.y+1, self.x)
+        else:
+            nextloc = (self.y, self.x-1)
+
+        #Only move into empty spaces
+        if Map[nextloc] == 0:
+            Map[nextloc] = 2
+            Map[(self.y,self.x)] = 0
+            (self.y,self.x) = nextloc
+
+        if Map[nextloc] == 1 or Map[nextloc] == 3:
+            self.moving = False
+            Map[self.y,self.x] = 3
+
+        #If moving onto bot, kill it!
+        if Map[nextloc] > 10:
+            ucode = str(math.floor(Map[nextloc])).zfill(2)
+            PLAYERS[ucode].alive = False
+            Map[self.y,self.x] = 0
+            Map[nextloc] = 3
+            (self.y,self.x) = nextloc
+            self.moving = False
+
+
+
 
 def bindAndListen( sock, host, port ):
     '''Function to initialize listening on a
@@ -255,6 +298,14 @@ if __name__ == '__main__':
             PLAYERS[p].computeVision(Map)
             PLAYERS[p].checkStab(Map)
 
+        for s in SPEARS:
+            for i in range(2):
+                if s.moving:
+                    s.move(Map)
+            if not s.moving:
+                SPEARS.remove(s)
+
+
         if len(PLAYERS) == 1:
             for key in PLAYERS:
                 WINNER = key
@@ -306,7 +357,8 @@ if __name__ == '__main__':
                             PLAYERS[msg].rotCCW(Map)
                             PLAYERS[msg].msgrecv = True
                         if msgtype == lib.CMDS['spear']:
-                            SPEARS.append(Spear(PLAYERS[msg],Map))
+                            if PLAYERS[msg].spearcount > 0:
+                                SPEARS.append(Spear(PLAYERS[msg],Map))
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly
                     except:
