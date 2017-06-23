@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 06:08:24 PM PDT
+# Last Modified: Thu 22 Jun 2017 07:36:48 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -35,6 +35,7 @@ def getSelection():
     menu['q'] = ' - Suicide'
 
     options=menu.keys()
+    print('You have {} spears.'.format(bot.spearcount))
     for entry in options:
         print(entry, menu[entry])
     selection = input('Please select: ')
