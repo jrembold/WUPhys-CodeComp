@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 10:27:39 PM PDT
+# Last Modified: Thu 22 Jun 2017 10:43:25 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -157,24 +157,8 @@ class Spear:
             bot.spearcount -= 1
             (self.y, self.x) = loc
             Map[loc] = 2
-
-    def getInitPosition(self, bot):
-        d = bot.direction
-        if d == 0:
-            self.x = bot.x
-            self.y = bot.y-1
-        elif d == 1:
-            self.x = bot.x+1
-            self.y = bot.y
-        elif d == 2:
-            self.x = bot.x
-            self.y = bot.y+1
         else:
-            self.x = bot.x-1
-            self.y = bot.y
-
-    def draw(self, Map):
-        Map[self.y,self.x] = 2
+            self.moving = False
 
     def checkKill( self, Map ):
         spearloc = Map(self.y,self.x)
@@ -185,14 +169,7 @@ class Spear:
             self.moving = False
 
     def move( self, Map ):
-        if self.direction == 0:
-            nextloc = (self.y-1, self.x)
-        elif self.direction == 1:
-            nextloc = (self.y, self.x+1)
-        elif self.direction == 2:
-            nextloc = (self.y+1, self.x)
-        else:
-            nextloc = (self.y, self.x-1)
+        nextloc = self.getFacingLoc()
 
         #Only move into empty spaces
         if Map[nextloc] == 0:
@@ -201,12 +178,12 @@ class Spear:
             (self.y,self.x) = nextloc
 
         #Hitting a wall, or any other spear
-        if Map[nextloc] == 1 or Map[nextloc] == 2 or Map[nextloc] == 3:
+        elif Map[nextloc] == 1 or Map[nextloc] == 3 or Map[nextloc] == 2:
             self.moving = False
             Map[self.y,self.x] = 3
 
         #If moving onto bot, kill it!
-        if Map[nextloc] > 10:
+        elif Map[nextloc] > 10:
             ucode = str(math.floor(Map[nextloc])).zfill(2)
             PLAYERS[ucode].alive = False
             Map[self.y,self.x] = 0
@@ -292,7 +269,6 @@ if __name__ == '__main__':
                         # print(buf)
                     if msgtype == lib.CMDS['checkin']:
                         playerChecksIn(sock, msg, Map)
-                        print(Map)
                 except:
                     print('A client most likely did not disconnect successfully.')
                     print('Closing and removing it')
