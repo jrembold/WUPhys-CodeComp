@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 02:40:34 PM PDT
+# Last Modified: Thu 22 Jun 2017 06:43:10 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -23,6 +23,7 @@ PLAYERS = {}
 MAPSIZE = 10
 NUMPLAYERS = 4
 WINNER = ''
+SPEARS = []
 
 class Bot:
     def __init__(self, ucode, sock, name):
@@ -63,10 +64,19 @@ class Bot:
         else:
             nextloc = (self.y, self.x-1)
 
+        #Only move into empty spaces
         if Map[nextloc] == 0:
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
+
+        #If moving onto moving spear, die!
+        if Map[nextloc] == 2:
+            self.alive = False
+            Map[nextloc] = 3
+
+        if Map[nextloc] == 3:
+            self.spearcount += 1
 
         self.computeVision( Map )
 
@@ -108,10 +118,40 @@ class Bot:
         If so, end it's life. '''
         if len(self.vision)>1:
             adj = self.vision[1]
-            if adj != 0:
+            if adj > 10:
                 ucode = str(math.floor(adj)).zfill(2)
                 PLAYERS[ucode].alive = False
 
+class Spear:
+    def __init__(self, bot, Map):
+        self.direction = bot.direction
+        self.moving = True
+        self.getInitPosition(bot)
+        self.draw(Map)
+
+    def getInitPosition(self, bot):
+        d = bot.direction
+        if d == 0:
+            self.x = bot.x
+            self.y = bot.y-1
+        elif d == 1:
+            self.x = bot.x+1
+            self.y = bot.y
+        elif d == 2:
+            self.x = bot.x
+            self.y = bot.y+1
+        else:
+            self.x = bot.x-1
+            self.y = bot.y
+
+    def draw(self, Map):
+        Map[self.y,self.x] = 2
+
+    def checkKill( self, Map ):
+        spearloc = Map(self.y,self.x)
+        if spearloc > 2:
+            ucode = str(math.floor(spearloc).zfill(2))
+            PLAYERS[ucode].alive = False
 
 def bindAndListen( sock, host, port ):
     '''Function to initialize listening on a
@@ -264,6 +304,9 @@ if __name__ == '__main__':
                             PLAYERS[msg].msgrecv = True
                         if msgtype == lib.CMDS['rotCCW']:
                             PLAYERS[msg].rotCCW(Map)
+                            PLAYERS[msg].msgrecv = True
+                        if msgtype == lib.CMDS['spear']:
+                            SPEARS.append(Spear(PLAYERS[msg],Map))
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly
                     except:
