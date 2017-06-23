@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 02:36:41 PM PDT
+# Last Modified: Thu 22 Jun 2017 05:51:03 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -20,6 +20,7 @@ CMDS['leave'] = 'ab'
 CMDS['forward'] = 'ac'
 CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
+CMDS['spear'] = 'af'
 
 CMDS['mapstate'] = 'ba'
 
