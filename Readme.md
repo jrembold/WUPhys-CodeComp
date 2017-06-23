@@ -38,6 +38,6 @@ The .vision attribute will return a list of values depicting everything your bot
 
 ## Running the Server
 The server is run from a command prompt or shell following normal python conventions. Bots to compete are added to the prompt following a -i option. For example, to run a competition between the Randomman.py and Simpleman.py, you'd write:
-```
+```Shell
 python server.py -i Randomman.py Simpleman.py
 ```
