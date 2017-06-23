@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 07:50:55 PM PDT
+# Last Modified: Thu 22 Jun 2017 10:27:39 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -133,10 +133,30 @@ class Bot:
 class Spear:
     def __init__(self, bot, Map):
         self.direction = bot.direction
-        bot.spearcount -= 1
+        self.x = bot.x
+        self.y = bot.y
+        # bot.spearcount -= 1
         self.moving = True
-        self.getInitPosition(bot)
-        self.draw(Map)
+        # self.getInitPosition(bot)
+        # self.draw(Map)
+        self.placeSpear(Map,bot)
+
+    def getFacingLoc(self):
+        d = self.direction
+        if d == 0:
+            return (self.y-1,self.x)
+        if d == 1:
+            return (self.y, self.x+1)
+        if d == 2:
+            return (self.y+1,self.x)
+        return (self.y, self.x-1)
+
+    def placeSpear(self, Map, bot):
+        loc = self.getFacingLoc()
+        if Map[loc] == 0:
+            bot.spearcount -= 1
+            (self.y, self.x) = loc
+            Map[loc] = 2
 
     def getInitPosition(self, bot):
         d = bot.direction
@@ -180,7 +200,8 @@ class Spear:
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
 
-        if Map[nextloc] == 1 or Map[nextloc] == 3:
+        #Hitting a wall, or any other spear
+        if Map[nextloc] == 1 or Map[nextloc] == 2 or Map[nextloc] == 3:
             self.moving = False
             Map[self.y,self.x] = 3
 
