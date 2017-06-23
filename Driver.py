@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 09:52:12 PM PDT
+# Last Modified: Thu 22 Jun 2017 10:42:08 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -39,7 +39,9 @@ def getSelection():
     print('You have {} spears.'.format(bot.spearcount))
     for entry in options:
         print(entry, menu[entry])
-    selection = input('Please select: ')
+    selection = ''
+    while selection == '':
+        selection = input('Please select: ')
     return selection
 
 
