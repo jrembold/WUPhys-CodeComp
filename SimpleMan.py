@@ -1,12 +1,12 @@
 #===================================================
 #
-# File Name: client2.py
+# File Name: Simpleman.py
 # 
-# Purpose: A client using the class definition 
+# Purpose: A simple bot for stabbing things
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 03:03:08 PM PDT
+# Last Modified: Fri 23 Jun 2017 03:04:13 PM PDT
 #
 # Created by: Jed Rembold
 #
