@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Fri 23 Jun 2017 05:12:50 PM PDT
+# Last Modified: Fri 23 Jun 2017 06:52:40 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -15,6 +15,8 @@
 import socket, select, random, pickle, time, math, subprocess, sys, argparse
 import numpy as np
 import library as lib
+
+np.set_printoptions(formatter={'float': ' {:4.1f} '.format})
 
 CONNECTION_LIST = []
 PLAYERID = 50
@@ -234,9 +236,13 @@ def createMap( size ):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('-i', '--input', nargs = '*', help='List of python bots to compete')
+    parser.add_argument('-s', '--size', default=10, help='Square size of arena')
+    parser.add_argument('-d', '--delay', default=0, help='Time to delay between turns')
     botnames = parser.parse_args()
 
     NUMPLAYERS = len(botnames.input)
+    MAPSIZE = int(botnames.size)
+    DELAYTIME = float(botnames.delay)
 
     # Create the Socket
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -290,6 +296,9 @@ if __name__ == '__main__':
     while len(PLAYERS)>0:
         # Show current Map
         print(Map)
+
+        # Delay
+        time.sleep(DELAYTIME)
 
         # Reset all the message received flags to false
         # Update latest vision and check stabs
