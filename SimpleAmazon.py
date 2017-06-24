@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Fri 23 Jun 2017 03:37:21 PM PDT
+# Last Modified: Fri 23 Jun 2017 05:27:51 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -26,7 +26,6 @@ def calcMove( bot ):
         return 'forward'
     #if stationary too long, move
     elif tcount > 3 and len(v)>0:
-        print('Times up moving forwards!')
         tcount = 0
         return 'forward'
     #Otherwise, turn clockwise
@@ -44,5 +43,4 @@ while bot.active:
 
     if bot.active:
         move = calcMove(bot)
-        print(tcount)
         bot.sendMessage( move )
