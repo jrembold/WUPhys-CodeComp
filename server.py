@@ -1,12 +1,12 @@
 #===================================================
 #
 # File Name: server.py
-# 
+#
 # Purpose: To server as the server and game master 
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 22 Jun 2017 07:50:55 PM PDT
+# Last Modified: Fri 23 Jun 2017 05:12:50 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -21,7 +21,7 @@ PLAYERID = 50
 PORT = 10000
 PLAYERS = {}
 MAPSIZE = 10
-NUMPLAYERS = 4
+NUMPLAYERS = 0
 WINNER = ''
 SPEARS = []
 
