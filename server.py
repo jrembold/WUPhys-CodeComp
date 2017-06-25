@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sat 24 Jun 2017 05:22:23 PM PDT
+# Last Modified: Sat 24 Jun 2017 07:20:09 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -40,14 +40,29 @@ class Bot:
 
     def place( self, Map ):
         '''Randomly place bot somewhere on map'''
-        self.x = random.randrange(1,MAPSIZE-2)
-        self.y = random.randrange(1,MAPSIZE-2)
-        self.direction = random.randrange(0,3)
-        while Map[self.y,self.x] != 0:
-            self.x = random.randrange(1,MAPSIZE-2)
-            self.y = random.randrange(1,MAPSIZE-2)
+        # self.x = random.randrange(1,MAPSIZE-2)
+        # self.y = random.randrange(1,MAPSIZE-2)
+        acceptable = False
+        while not acceptable:
+            self.x = random.randrange(0,MAPSIZE-1)
+            self.y = random.randrange(0,MAPSIZE-1)
+            self.direction = random.randrange(0,3)
+
+            nbs = [Map[loc] for loc in self.getNeighbors(Map)]
+            # Make sure no starting next to another bot or in a wall
+            if not any(np.array(nbs)>10) and Map[self.y,self.x] == 0:
+                acceptable = True
+
         Map[self.y,self.x] = self.ID + self.direction/10
         # print('Player {} placed'.format(self.ID))
+
+    def getNeighbors( self, Map ):
+        neighbors = []
+        for i in [-1,1]:
+            neighbors.append((self.y+i,self.x))
+            neighbors.append((self.y,self.x+i))
+        return neighbors
+
 
     def remove( self, Map ):
         '''Delete bot from map'''
