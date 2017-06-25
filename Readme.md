@@ -36,6 +36,8 @@ The .vision attribute will return a list of values depicting everything your bot
   * 2 digit number - Bot Identification number, there is a bot here
     * Bots will also have a decimal trailing after them which shows what direction they are facing. .0 is straight up, .1 is to the right, .2 is downwards, and .3 is to the left
   * 2 - A traveling spear. *Dangerous!*
+    * Like bots, spears have a trailing decimal indicating their direction of flight
+	* Regardless of value, touching them will result in death!
   * 3 - A spear that has struck something and fallen *Not dangerous*
 
 ## Running the Server
