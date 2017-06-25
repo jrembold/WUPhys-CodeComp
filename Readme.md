@@ -1,4 +1,4 @@
-# :running:← Speary Bot!
+# Speary Bot! :running:← 
 
 Things are finally reasonably functional! Much more work will be added and tweaked over the coming days, but for now the core code functions properly and bots can be coded.
 
