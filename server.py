@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sat 24 Jun 2017 07:20:09 PM PDT
+# Last Modified: Sat 24 Jun 2017 07:49:10 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -93,7 +93,7 @@ class Bot:
             (self.y,self.x) = nextloc
 
         #If moving onto moving spear, die!
-        if Map[nextloc] == 2:
+        if math.floor(Map[nextloc]) == 2:
             self.alive = False
             Map[nextloc] = 3
 
@@ -173,7 +173,7 @@ class Spear:
         if Map[loc] == 0:
             bot.spearcount -= 1
             (self.y, self.x) = loc
-            Map[loc] = 2
+            Map[loc] = 2 + self.direction/10
         else:
             self.moving = False
 
@@ -190,12 +190,12 @@ class Spear:
 
         #Only move into empty spaces
         if Map[nextloc] == 0:
-            Map[nextloc] = 2
+            Map[nextloc] = 2+self.direction/10
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
 
         #Hitting a wall, or any other spear
-        elif Map[nextloc] == 1 or Map[nextloc] == 3 or Map[nextloc] == 2:
+        elif Map[nextloc] == 1 or Map[nextloc] == 3 or math.floor(Map[nextloc]) == 2:
             self.moving = False
             Map[self.y,self.x] = 3
 
