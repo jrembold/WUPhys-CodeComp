@@ -1,4 +1,4 @@
-# Stabby Bot!
+# Speary Bot!
 
 Things are finally reasonably functional! Much more work will be added and tweaked over the coming days, but for now the core code functions properly and bots can be coded.
 
@@ -17,6 +17,7 @@ And that's it! Bot moves are sent as a string, and currently include:
   'forward' | Takes one step forward in currently facing direction
   'rotCW' | Rotates 90 degrees clockwise
   'rotCCW' | Rotates 90 degrees counter-clockwise
+  'spear' | Throws a spear in the facing direction
 
 (Things are rather simple at the moment!)
 
@@ -25,7 +26,7 @@ To influence these moves, each bot is given particular information each round fr
   Attribute | Description
   --- | ---
   .playercount | Returns current number of bots still in the round
-  .spearcount | Returns the number of spears you currently have. **Not yet implemented!**
+  .spearcount | Returns the number of spears you currently have.
   .vision | A list of number values 'seen' by your bot in the direction in is facing. More details below
 
 #### Bot Vision
@@ -34,7 +35,8 @@ The .vision attribute will return a list of values depicting everything your bot
   * 1 - There is a wall here
   * 2 digit number - Bot Identification number, there is a bot here
     * Bots will also have a decimal trailing after them which shows what direction they are facing. .0 is straight up, .1 is to the right, .2 is downwards, and .3 is to the left
-  * 2 - Will be a spear once implemented, and will have traveling direction like bots
+  * 2 - A traveling spear. *Dangerous!*
+  * 3 - A spear that has struck something and fallen *Not dangerous*
 
 ## Running the Server
 The server is run from a command prompt or shell following normal python conventions. Bots to compete are added to the prompt following a -i option. For example, to run a competition between the Randomman.py and Simpleman.py, you'd write:
