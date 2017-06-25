@@ -43,3 +43,9 @@ The server is run from a command prompt or shell following normal python convent
 ```Shell
 python server.py -i Randomman.py Simpleman.py
 ```
+There are several other server flags that may be of use:
+
+  Flag | Default | Use
+  --- | --- | ---
+  -d *num* | 0 | Will delay the execution of each turn by *num* seconds so the motion can be followed
+  -s *num* | 10 | Sets the square size of the arena
