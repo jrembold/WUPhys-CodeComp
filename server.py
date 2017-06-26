@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 01:53:54 PM PDT
+# Last Modified: Mon 26 Jun 2017 01:55:22 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -436,7 +436,7 @@ if __name__ == '__main__':
 
     # Winner text!
     if WINNER != '':
-        print('{} (#{}) was victorious!'.format(WINNERNAME, WINNER))
+        print('{} (#{}) was victorious in {} rounds!'.format(WINNERNAME, WINNER, ROUND))
     else:
         print('There were no winners. Life is tough.')
 
