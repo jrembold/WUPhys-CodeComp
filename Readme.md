@@ -3,7 +3,7 @@
 Things are finally reasonably functional! Much more work will be added and tweaked over the coming days, but for now the core code functions properly and bots can be coded.
 
 ## Coding Bots
-Bots are written as simple python scripts and should reside in the same folder as server.py. Two example bots are provided for reference. Each bot should always include several things:
+Bots are written as simple python scripts and should reside in the same folder as server.py. Several example bots are provided for reference. Each bot should always include several things:
   1. Importing the library module
   2. Initialize the bot as the CBot class, giving in a fun name 
   3. For as long as the bot is active:
@@ -19,7 +19,7 @@ And that's it! Bot moves are sent as a string, and currently include:
   'rotCCW' | Rotates 90 degrees counter-clockwise
   'spear' | Throws a spear in the facing direction
 
-(Things are rather simple at the moment!)
+(Things are rather simple at the moment!) *Please note that the server enforces a timebomb mechanic where if your bot does not move from a square in 120 turns, it explodes!*
 
 To influence these moves, each bot is given particular information each round from the server. All this information is saved in the bot CBot class and can be accessed via attributes. Information available at the moment includes:
 
