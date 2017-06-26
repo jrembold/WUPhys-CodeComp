@@ -6,7 +6,7 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 12:21:09 AM PDT
+# Last Modified: Mon 26 Jun 2017 12:29:48 AM PDT
 #
 # Created by: Jed Rembold
 #
@@ -49,7 +49,7 @@ for rnd in range(numrounds+1):
     ax.imshow(mapstate['Map'], cmap='gray_r')
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
-        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), label=player['name'])
+        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), label=player['name']+' - '+str(player['spears']))
     for s in mapstate[rnd]['spears']:
         ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
