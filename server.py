@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sun 25 Jun 2017 11:48:21 PM PDT
+# Last Modified: Mon 26 Jun 2017 12:26:23 AM PDT
 #
 # Created by: Jed Rembold
 #
@@ -271,6 +271,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--size', default=10, help='Square size of arena')
     parser.add_argument('-d', '--delay', default=0, help='Time to delay between turns')
     parser.add_argument('-o', '--obs', default=5, help='Maximum number of obstacles')
+    parser.add_argument('-v', '--view', action='store_true', help='Run viewer after completion?')
     botnames = parser.parse_args()
 
     NUMPLAYERS = len(botnames.input)
@@ -427,3 +428,6 @@ if __name__ == '__main__':
     # Save MAPSTATE
     with open('lastgame.pickle', 'wb') as f:
         pickle.dump(MAPSTATE, f)
+
+    if botnames.view:
+        subprocess.Popen([sys.executable, 'viewer.py'])
