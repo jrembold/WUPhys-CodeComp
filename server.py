@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 12:26:23 AM PDT
+# Last Modified: Mon 26 Jun 2017 01:03:58 AM PDT
 #
 # Created by: Jed Rembold
 #
@@ -37,6 +37,7 @@ class Bot:
         self.msgrecv = False
         self.spearcount = 2
         self.alive = True
+        self.timebomb = 0
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -55,6 +56,7 @@ class Bot:
                 acceptable = True
 
         Map[self.y,self.x] = self.ID + self.direction/10
+        self.oldloc = (self.y,self.x)
         # print('Player {} placed'.format(self.ID))
 
     def getNeighbors( self, Map ):
@@ -91,6 +93,7 @@ class Bot:
         if Map[nextloc] == 0:
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y,self.x)] = 0
+            self.oldloc = (self.y,self.x)
             (self.y,self.x) = nextloc
 
         #If moving onto moving spear, die!
@@ -151,6 +154,16 @@ class Bot:
             if adj > 10:
                 ucode = str(math.floor(adj)).zfill(2)
                 PLAYERS[ucode].alive = False
+
+    def checkIfMoved( self ):
+        ''' Check to see if bot has moved this round.
+        If not, increment time bomb'''
+        if (self.y,self.x) == self.oldloc:
+            self.timebomb += 1
+            if self.timebomb > 120:
+                self.alive = False
+        else:
+            self.timebomb = 0
 
 class Spear:
     def __init__(self, bot, Map):
@@ -345,6 +358,7 @@ if __name__ == '__main__':
             PLAYERS[p].msgrecv = False
             PLAYERS[p].computeVision(Map)
             PLAYERS[p].checkStab(Map)
+            PLAYERS[p].checkIfMoved()
 
         for s in SPEARS:
             for i in range(2):
