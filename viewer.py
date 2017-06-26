@@ -6,13 +6,13 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Sun 25 Jun 2017 11:01:27 PM PDT
+# Last Modified: Sun 25 Jun 2017 11:38:49 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import pickle
+import pickle, time
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -42,3 +42,5 @@ for rnd in range(numrounds+1):
         ax.scatter(s[0], s[1], marker='2', color='gray')
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
     plt.pause(0.05)
+
+time.sleep(5)
