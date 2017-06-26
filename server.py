@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sat 24 Jun 2017 07:49:50 PM PDT
+# Last Modified: Sun 25 Jun 2017 08:38:31 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -242,6 +242,11 @@ def playerLeaves( sock, ucode, Map ):
 def createMap( size ):
     Map = np.ones((size,size))
     Map[1:size-1, 1:size-1] = np.zeros((size-2,size-2))
+    obs = random.randint(0,5)
+    for o in range(obs):
+        x = random.randint(1,size-1)
+        y = random.randint(1,size-1)
+        Map[y,x] = 1
     return Map
 
 
