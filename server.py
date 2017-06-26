@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sun 25 Jun 2017 08:38:31 PM PDT
+# Last Modified: Sun 25 Jun 2017 08:42:29 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -242,7 +242,7 @@ def playerLeaves( sock, ucode, Map ):
 def createMap( size ):
     Map = np.ones((size,size))
     Map[1:size-1, 1:size-1] = np.zeros((size-2,size-2))
-    obs = random.randint(0,5)
+    obs = random.randint(0,int(botnames.obs))
     for o in range(obs):
         x = random.randint(1,size-1)
         y = random.randint(1,size-1)
@@ -256,6 +256,7 @@ if __name__ == '__main__':
     parser.add_argument('-i', '--input', nargs = '*', help='List of python bots to compete')
     parser.add_argument('-s', '--size', default=10, help='Square size of arena')
     parser.add_argument('-d', '--delay', default=0, help='Time to delay between turns')
+    parser.add_argument('-o', '--obs', default=5, help='Maximum number of obstacles')
     botnames = parser.parse_args()
 
     NUMPLAYERS = len(botnames.input)
