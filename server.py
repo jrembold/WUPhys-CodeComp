@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 01:03:58 AM PDT
+# Last Modified: Mon 26 Jun 2017 01:53:54 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -297,7 +297,7 @@ if __name__ == '__main__':
     # Start listening
     bindAndListen( server_sock, 'localhost', 10000 )
     Map = createMap(MAPSIZE)
-    print(Map)
+    # print(Map)
     MAPSTATE['Map'] = Map.copy()
 
     # ------------------------------------------
@@ -345,7 +345,8 @@ if __name__ == '__main__':
     # As long as a player is alive
     while len(PLAYERS)>0:
         # Show current Map
-        print(Map)
+        if not botnames.view:
+            print(Map)
         MAPSTATE[ROUND] = genMapState(PLAYERS,SPEARS)
         ROUND += 1
 
