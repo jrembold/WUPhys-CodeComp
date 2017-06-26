@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 01:55:22 PM PDT
+# Last Modified: Mon 26 Jun 2017 02:26:02 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -27,6 +27,7 @@ NUMPLAYERS = 0
 WINNER = ''
 SPEARS = []
 MAPSTATE = {}
+ROUNDCAP = 2000
 
 class Bot:
     def __init__(self, ucode, sock, name):
@@ -192,6 +193,7 @@ class Spear:
             bot.spearcount -= 1
             (self.y, self.x) = loc
             Map[loc] = 2 + self.direction/10
+            SPEARS.append(self)
         else:
             self.moving = False
 
@@ -353,6 +355,11 @@ if __name__ == '__main__':
         # Delay
         time.sleep(DELAYTIME)
 
+        # Check roundcap:
+        if ROUND >= ROUNDCAP:
+            for p in PLAYERS:
+                PLAYERS[p].alive = False
+
         # Reset all the message received flags to false
         # Update latest vision and check stabs
         for p in PLAYERS:
@@ -421,7 +428,7 @@ if __name__ == '__main__':
                             PLAYERS[msg].msgrecv = True
                         if msgtype == lib.CMDS['spear']:
                             if PLAYERS[msg].spearcount > 0:
-                                SPEARS.append(Spear(PLAYERS[msg],Map))
+                                Spear(PLAYERS[msg],Map)
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly
                     except:
@@ -436,7 +443,7 @@ if __name__ == '__main__':
 
     # Winner text!
     if WINNER != '':
-        print('{} (#{}) was victorious in {} rounds!'.format(WINNERNAME, WINNER, ROUND))
+        print('{} (#{}) was victorious in {} rounds!'.format(WINNERNAME, WINNER, ROUND-1))
     else:
         print('There were no winners. Life is tough.')
 
