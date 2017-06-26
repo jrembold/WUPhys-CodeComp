@@ -6,7 +6,7 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 12:29:48 AM PDT
+# Last Modified: Mon 26 Jun 2017 02:00:55 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -47,6 +47,7 @@ numrounds = max([x for x in mapstate.keys() if isinstance(x,int)])
 for rnd in range(numrounds+1):
     ax.cla()
     ax.imshow(mapstate['Map'], cmap='gray_r')
+    fig.suptitle('Round {}'.format(rnd))
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
         ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), label=player['name']+' - '+str(player['spears']))
