@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sun 25 Jun 2017 08:42:29 PM PDT
+# Last Modified: Sun 25 Jun 2017 11:05:07 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -26,6 +26,7 @@ MAPSIZE = 10
 NUMPLAYERS = 0
 WINNER = ''
 SPEARS = []
+MAPSTATE = {}
 
 class Bot:
     def __init__(self, ucode, sock, name):
@@ -249,6 +250,15 @@ def createMap( size ):
         Map[y,x] = 1
     return Map
 
+def genMapState(PLAYERS,SPEARS):
+    players = {}
+    for p in PLAYERS:
+        players[PLAYERS[p].ID] = {'x':PLAYERS[p].x, 'y':PLAYERS[p].y, 'face':PLAYERS[p].direction, 'spears':PLAYERS[p].spearcount, 'name':PLAYERS[p].name}
+    spears = []
+    for s in SPEARS:
+        spears.append([ s.x, s.y, s.direction ])
+    return {'players':players, 'spears':spears}
+
 
 
 if __name__ == '__main__':
@@ -270,6 +280,7 @@ if __name__ == '__main__':
     bindAndListen( server_sock, 'localhost', 10000 )
     Map = createMap(MAPSIZE)
     print(Map)
+    MAPSTATE['Map'] = Map.copy()
 
     # ------------------------------------------
     # Receive initial bot check-ins
@@ -310,10 +321,15 @@ if __name__ == '__main__':
     # Pause a moment to make sure all check-ins complete
     time.sleep(0.5)
 
+    # Round counter
+    ROUND = 0
+
     # As long as a player is alive
     while len(PLAYERS)>0:
         # Show current Map
         print(Map)
+        MAPSTATE[ROUND] = genMapState(PLAYERS,SPEARS)
+        ROUND += 1
 
         # Delay
         time.sleep(DELAYTIME)
@@ -403,3 +419,7 @@ if __name__ == '__main__':
         print('{} (#{}) was victorious!'.format(WINNERNAME, WINNER))
     else:
         print('There were no winners. Life is tough.')
+
+    # Save MAPSTATE
+    with open('lastgame.pickle', 'wb') as f:
+        pickle.dump(MAPSTATE, f)
