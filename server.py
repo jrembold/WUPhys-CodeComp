@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sun 25 Jun 2017 11:05:07 PM PDT
+# Last Modified: Sun 25 Jun 2017 11:48:21 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -103,6 +103,10 @@ class Bot:
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
+            #Remove spear
+            for s in SPEARS:
+                if (s.y, s.x) == nextloc:
+                    SPEARS.remove(s)
 
         self.computeVision( Map )
 
@@ -256,7 +260,7 @@ def genMapState(PLAYERS,SPEARS):
         players[PLAYERS[p].ID] = {'x':PLAYERS[p].x, 'y':PLAYERS[p].y, 'face':PLAYERS[p].direction, 'spears':PLAYERS[p].spearcount, 'name':PLAYERS[p].name}
     spears = []
     for s in SPEARS:
-        spears.append([ s.x, s.y, s.direction ])
+        spears.append([ s.x, s.y, s.direction, s.moving ])
     return {'players':players, 'spears':spears}
 
 
@@ -345,8 +349,8 @@ if __name__ == '__main__':
             for i in range(2):
                 if s.moving:
                     s.move(Map)
-            if not s.moving:
-                SPEARS.remove(s)
+            # if not s.moving:
+                # SPEARS.remove(s)
 
 
         if len(PLAYERS) == 1:
