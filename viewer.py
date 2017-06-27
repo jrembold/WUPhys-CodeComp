@@ -6,17 +6,23 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 02:00:55 PM PDT
+# Last Modified: Mon 26 Jun 2017 05:57:03 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import pickle, time
+import pickle, time, argparse
 import numpy as np
 import matplotlib.pyplot as plt
 
-with open('lastgame.pickle', 'rb') as f:
+p = argparse.ArgumentParser()
+p.add_argument('-i', '--input', default='lastgame.pickle', help='Saved replay file to load')
+p.add_argument('-d', '--delay', default=1, help='Delay scaling factor. >1 speeds up')
+args = p.parse_args()
+
+
+with open(args.input, 'rb') as f:
     mapstate = pickle.load(f)
 
 def getPlayerDirSym(player):
@@ -54,6 +60,6 @@ for rnd in range(numrounds+1):
     for s in mapstate[rnd]['spears']:
         ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
-    plt.pause(0.05)
+    plt.pause(0.05/float(args.delay))
 
 time.sleep(5)
