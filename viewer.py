@@ -6,7 +6,7 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 05:57:03 PM PDT
+# Last Modified: Mon 26 Jun 2017 06:12:09 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -60,6 +60,7 @@ for rnd in range(numrounds+1):
     for s in mapstate[rnd]['spears']:
         ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
+    # fig.savefig('Temp/ForGif_{:03d}.png'.format(rnd))
     plt.pause(0.05/float(args.delay))
 
 time.sleep(5)
