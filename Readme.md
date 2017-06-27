@@ -1,6 +1,6 @@
 # Speary Bot! :running:← 
 
-Things are finally reasonably functional! Much more work will be added and tweaked over the coming days, but for now the core code functions properly and bots can be coded.
+Hey now! Things are finally starting to look decent!
 ![Animation Gif](animation.gif)
 
 ## Coding Bots
@@ -54,3 +54,11 @@ There are several other server flags that may be of use:
   -s *num* | 10 | Sets the square size of the arena
   -o *num* | 5 | Sets the maximum number of obstacles scattered about the map
   -v | False | Automatically runs the viewer after the battle is over
+
+## Running the Viewer
+The viewer script will by default load the last game replay and _play_ it using a matplotlib interface. It is called automatically if the -v server flag is used, or can be run anytime standalone to rewatch a match. It has a few options:
+
+Flag | Default | Use
+--- | --- | ---
+-i | lastgame.pickle | If you've saved a game replay under a different name, you can load it with the -i flag
+-d | 1 | Speed multiplier of default playback. Matplotlib seems to max out on a multiplier of >5. Fractional values will give slower playback
