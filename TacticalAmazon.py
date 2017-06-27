@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 03:23:01 PM PDT
+# Last Modified: Mon 26 Jun 2017 05:50:45 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -17,11 +17,18 @@ import numpy as np
 import logging
 from math import floor
 
+# Logging Config!
 logging.basicConfig(
+        # Filename to log to
         filename = 'TacticalAmazon.log',
+        # Logging supports multiple levels and will show everything above
+        # this level. Debug is the bottom, so it will show everything
         level = logging.DEBUG,
+        # Style for defining the format
         style = '{',
+        # What will be saved in the log file
         format = '[{levelname}] [Line: {lineno}] {message}',
+        # Rewrite the log file each run
         filemode = 'w',
         )
 
@@ -33,25 +40,41 @@ def getObjDir( obj ):
     if d == 0.3: return 'West'
     return None
 
-def calcMove( bot ):
+def opposite( direction ):
+    if direction=='North': return 'South'
+    if direction=='South': return 'North'
+    if direction=='East': return 'West'
+    if direction=='West': return 'East'
+
+def calcMove( bot):
     global tcount
     v = np.array(bot.vision[1:])
 
     #Get facing direction
     botdir = getObjDir(bot.vision[0])
 
-    #If anything non-zero in front to me and I have spears, throw one!
-    if any(v>10) and bot.spearcount>0 and not any([floor(i)==2 for i in v]):
-        return 'spear'
-    elif any(v==3):
+    #Do I see a bot?
+    if any(v>10):
+        #Empty space in front?
+        if v[0] == 0:
+            #Have spear onhand?
+            if bot.spearcount>0:
+                #Already spear enroute?
+                if any([opposite(getObjDir(i))==botdir for i in v if floor(i)==2]):
+                    return 'spear'
+                elif any([floor(i)==2 for i in v]):
+                    return 'rotCW'
+                else:
+                    return 'spear'
+    if any(v==3) and not any(v>10):
         tcount = 0
         return 'forward'
     #if stationary too long, move
-    elif tcount > 3 and len(v)>0:
+    if tcount > 3 and len(v)>0:
         tcount = 0
         return 'forward'
-    #Otherwise, turn clockwise
     else:
+        #Otherwise, turn clockwise
         tcount += 1
         return 'rotCW'
 
