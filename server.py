@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 18 Jul 2017 06:26:13 PM PDT
+# Last Modified: Tue 18 Jul 2017 07:03:17 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -342,9 +342,11 @@ if __name__ == '__main__':
                         playerChecksIn(sock, msg, Map)
                 except:
                     print('A client most likely did not disconnect successfully.')
-                    print('Closing and removing it')
+                    print('Closing and removing it.')
                     sock.close()
                     CONNECTION_LIST.remove(sock)
+                    NUMPLAYERS -= 1
+                    print('Currently have {}/{} players'.format(len(PLAYERS),NUMPLAYERS))
 
 
     # ---------------------------------------
@@ -451,13 +453,14 @@ if __name__ == '__main__':
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly
                     except:
-                        print('A client most likely did not disconnect properly.')
-                        print('Closing and removing it')
-                        sock.close()
-                        CONNECTION_LIST.remove(sock)
+                        # print('A client most likely did not disconnect properly.')
+                        # print('Closing and removing it.')
+                        for p in PLAYERS:
+                            if PLAYERS[p].sock == sock:
+                                ucode = str(PLAYERS[p].ID)
+                        print('{} crashed and loses.'.format(PLAYERS[ucode].name))
+                        playerLeaves(sock, ucode, Map)
 
-    # for sock in CONNECTION_LIST:
-        # sock.close()
     server_sock.close()
 
     # Winner text!
