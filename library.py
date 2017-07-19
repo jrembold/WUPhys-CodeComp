@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Tue 18 Jul 2017 05:46:22 PM PDT
+# Last Modified: Tue 18 Jul 2017 07:20:52 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -42,7 +42,7 @@ def createMessage( msgtype, msg, needs_reply=False ):
     else:
         bytemsg = msg
     msglen = len(bytemsg)
-    # Add 2 byte message length
+    # Add 3 byte message length
     ba.extend(bytes(str(msglen).zfill(3), 'UTF-8'))
     # Add actual message
     ba.extend(bytemsg)
@@ -81,6 +81,7 @@ def receiveMessage( socket_conn ):
         last_bytes = socket_conn.recv(2)
         if last_bytes != b'@@':
             print(buf)
+            print('Message supposed to be {} bytes long'.format(msglen))
             raise RuntimeError('Error in sent message')
         else:
             buf.extend(last_bytes)
@@ -138,6 +139,7 @@ class CBot:
         self.vision = []
         self.spearcount = 2
         self.active = True
+        self.msg = ''
         self.SOCK = socket.create_connection((self.HOST,self.PORT))
         self.checkin()
 
@@ -155,6 +157,7 @@ class CBot:
 
     def getMapState( self ):
         mapstate = receiveMessage( self.SOCK )
+        self.msg = mapstate
         state = parseMapState( mapstate )
         self.alive = state['alive']
         self.spearcount = state['spears']
