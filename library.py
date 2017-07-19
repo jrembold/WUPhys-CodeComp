@@ -1,12 +1,12 @@
 #===================================================
 #
-# File Name: socket_cmds.py
+# File Name: library.py
 # 
 # Purpose: To be a library of common shared socket cmds 
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Sat 24 Jun 2017 05:22:41 PM PDT
+# Last Modified: Tue 18 Jul 2017 05:46:22 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -21,6 +21,7 @@ CMDS['forward'] = 'ac'
 CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
 CMDS['spear'] = 'af'
+CMDS['ping'] = 'ag'
 
 CMDS['mapstate'] = 'ba'
 
