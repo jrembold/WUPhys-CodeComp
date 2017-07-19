@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 18 Jul 2017 05:45:44 PM PDT
+# Last Modified: Tue 18 Jul 2017 06:26:13 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -151,11 +151,12 @@ class Bot:
         ''' Gets list of values within 2 units of the bot
         in all directions '''
         maxval = Map.shape[0]
-        minx = max(self.x-2, 0)
-        miny = max(self.y-2, 0)
-        maxx = min(self.x+3, maxval)
-        maxy = min(self.y+3, maxval)
-        vision_chunk = Map[minx:maxx, miny:maxy]
+        pingrng = 3
+        minx = max(self.x-pingrng, 0)
+        miny = max(self.y-pingrng, 0)
+        maxx = min(self.x+pingrng+1, maxval)
+        maxy = min(self.y+pingrng+1, maxval)
+        vision_chunk = Map[miny:maxy, minx:maxx]
         self.vision = list(vision_chunk.ravel())
 
 
