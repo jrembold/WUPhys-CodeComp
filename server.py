@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 02:26:02 PM PDT
+# Last Modified: Tue 18 Jul 2017 05:45:44 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -39,6 +39,7 @@ class Bot:
         self.spearcount = 2
         self.alive = True
         self.timebomb = 0
+        self.ping = False
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -145,6 +146,17 @@ class Bot:
                 targety += 1
             else:
                 targetx -= 1
+
+    def computePingVision( self, Map ):
+        ''' Gets list of values within 2 units of the bot
+        in all directions '''
+        maxval = Map.shape[0]
+        minx = max(self.x-2, 0)
+        miny = max(self.y-2, 0)
+        maxx = min(self.x+3, maxval)
+        maxy = min(self.y+3, maxval)
+        vision_chunk = Map[minx:maxx, miny:maxy]
+        self.vision = list(vision_chunk.ravel())
 
 
     def checkStab( self, Map ):
@@ -364,7 +376,10 @@ if __name__ == '__main__':
         # Update latest vision and check stabs
         for p in PLAYERS:
             PLAYERS[p].msgrecv = False
-            PLAYERS[p].computeVision(Map)
+            if PLAYERS[p].ping:
+                PLAYERS[p].computePingVision(Map)
+            else:
+                PLAYERS[p].computeVision(Map)
             PLAYERS[p].checkStab(Map)
             PLAYERS[p].checkIfMoved()
 
@@ -429,6 +444,9 @@ if __name__ == '__main__':
                         if msgtype == lib.CMDS['spear']:
                             if PLAYERS[msg].spearcount > 0:
                                 Spear(PLAYERS[msg],Map)
+                            PLAYERS[msg].msgrecv = True
+                        if msgtype == lib.CMDS['ping']:
+                            PLAYERS[msg].ping = True
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly
                     except:
