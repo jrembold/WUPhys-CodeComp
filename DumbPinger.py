@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 01:31:44 PM PDT
+# Last Modified: Thu 17 Aug 2017 02:37:22 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -23,7 +23,7 @@ logging.basicConfig(
         filename = 'DumbPinger.log',
         # Logging supports multiple levels and will show everything above
         # this level. Debug is the bottom, so it will show everything
-        level = logging.DEBUG,
+        level = logging.INFO,
         # Style for defining the format
         style = '{',
         # What will be saved in the log file
@@ -41,12 +41,10 @@ bot = lib.CBot('Anita Pinger')
 while bot.active:
     bot.getMapState()
     logging.debug(bot.msg)
-    logging.info('[Round: {:^2}]: I see: {}'.format(roundnum, bot.vision))
 
     if bot.active:
         move = calcMove(bot)
-        logging.info('[Round: {:^2}]: Sent move: {}'.format(roundnum,move))
         bot.sendMessage( move )
-        logging.debug(bot.lastping)
+        logging.debug(bot.msg)
+        logging.info(bot.lastping)
 
-    roundnum += 1
