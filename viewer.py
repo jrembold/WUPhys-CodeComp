@@ -6,7 +6,7 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Mon 26 Jun 2017 06:12:09 PM PDT
+# Last Modified: Thu 17 Aug 2017 04:17:40 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -15,6 +15,7 @@
 import pickle, time, argparse
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 
 p = argparse.ArgumentParser()
 p.add_argument('-i', '--input', default='lastgame.pickle', help='Saved replay file to load')
@@ -42,11 +43,16 @@ def getSpearColor(spear):
     if spear[3]: return 'red'
     return 'gray'
 
+def getPlayerColor(player):
+    return player_colors[player%50]
+
 width, height = mapstate['Map'].shape
 fig = plt.figure()
 ax = fig.add_axes((0.05,0.05,0.9,0.9), aspect='equal', xlim=(0,width), ylim=(0,height))
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
+
+player_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
 
 numrounds = max([x for x in mapstate.keys() if isinstance(x,int)])
@@ -56,7 +62,9 @@ for rnd in range(numrounds+1):
     fig.suptitle('Round {}'.format(rnd))
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
-        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), label=player['name']+' - '+str(player['spears']))
+        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), color=getPlayerColor(p), label=player['name']+' - '+str(player['spears']))
+        if player['pinging']:
+            ax.add_patch(patches.CirclePolygon((player['x'],player['y']), 3, alpha=0.5, color=getPlayerColor(p)))
     for s in mapstate[rnd]['spears']:
         ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
