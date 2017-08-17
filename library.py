@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 12:52:29 PM PDT
+# Last Modified: Thu 17 Aug 2017 02:21:19 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -141,7 +141,7 @@ class CBot:
         self.vision = []
         self.spearcount = 2
         self.active = True
-        self.lastping = {}
+        self.lastping = {'Terrain':[], 'ASpear':[], 'DSpear':[], 'Enemy':[]}
         self.msg = ''
         self.SOCK = socket.create_connection((self.HOST,self.PORT))
         self.checkin()
@@ -158,10 +158,6 @@ class CBot:
         msg = createMessage( CMDS[cmdstr], self.UCODE )
         self.SOCK.sendall(msg)
 
-        if cmdstr == 'ping':
-            reply = receiveMessage( self.SOCK )
-            self.lastping = parseMapState(reply)
-
     def getMapState( self ):
         mapstate = receiveMessage( self.SOCK )
         self.msg = mapstate
@@ -170,6 +166,7 @@ class CBot:
         self.spearcount = state['spears']
         self.playercount = state['pcount']
         self.vision = state['vision']
+        self.lastping = state['lastping']
 
         if not self.alive:
             # print('You have been killed!')
