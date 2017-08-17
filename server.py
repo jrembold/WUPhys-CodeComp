@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 02:36:13 PM PDT
+# Last Modified: Thu 17 Aug 2017 04:20:26 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -40,6 +40,7 @@ class Bot:
         self.alive = True
         self.timebomb = 0
         self.ping = {}
+        self.pinging = False
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -192,6 +193,7 @@ class Bot:
     def handlePing( self, Map ):
         info = self.computePingVision( Map )
         # lib.sendReply( self.sock, lib.CMDS['retping'], pickle.dump(info) )
+        self.pinging = True
         self.ping=info
 
 
@@ -320,7 +322,7 @@ def createMap( size ):
 def genMapState(PLAYERS,SPEARS):
     players = {}
     for p in PLAYERS:
-        players[PLAYERS[p].ID] = {'x':PLAYERS[p].x, 'y':PLAYERS[p].y, 'face':PLAYERS[p].direction, 'spears':PLAYERS[p].spearcount, 'name':PLAYERS[p].name}
+        players[PLAYERS[p].ID] = {'x':PLAYERS[p].x, 'y':PLAYERS[p].y, 'face':PLAYERS[p].direction, 'spears':PLAYERS[p].spearcount, 'name':PLAYERS[p].name, 'pinging':PLAYERS[p].pinging}
     spears = []
     for s in SPEARS:
         spears.append([ s.x, s.y, s.direction, s.moving ])
@@ -444,6 +446,7 @@ if __name__ == '__main__':
                          'lastping':PLAYERS[p].ping
                          }
             lib.sendReply( PLAYERS[p].sock, lib.CMDS['mapstate'], pickle.dumps(send_dict))
+            PLAYERS[p].pinging = False
 
 
 
