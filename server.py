@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Tue 18 Jul 2017 07:27:46 PM PDT
+# Last Modified: Thu 17 Aug 2017 12:46:09 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -147,17 +147,48 @@ class Bot:
             else:
                 targetx -= 1
 
+    # def computePingVision( self, Map ):
+        # ''' Gets list of values within 2 units of the bot
+        # in all directions '''
+        # maxval = Map.shape[0]
+        # pingrng = 3
+        # minx = max(self.x-pingrng, 0)
+        # miny = max(self.y-pingrng, 0)
+        # maxx = min(self.x+pingrng+1, maxval)
+        # maxy = min(self.y+pingrng+1, maxval)
+        # vision_chunk = Map[miny:maxy, minx:maxx]
+        # self.vision = list(vision_chunk.ravel())
+
     def computePingVision( self, Map ):
-        ''' Gets list of values within 2 units of the bot
-        in all directions '''
-        maxval = Map.shape[0]
         pingrng = 3
-        minx = max(self.x-pingrng, 0)
-        miny = max(self.y-pingrng, 0)
-        maxx = min(self.x+pingrng+1, maxval)
-        maxy = min(self.y+pingrng+1, maxval)
-        vision_chunk = Map[miny:maxy, minx:maxx]
-        self.vision = list(vision_chunk.ravel())
+        maxval = Map.shape[0]
+
+        def circ_pts( center, radius ):
+            (x,y) = center
+            pts = []
+            for i in range(x-radius, x+radius):
+                for j in range(y-radius,y+radius):
+                    if (i-x)**2+(j-y)**2<radius**2:
+                        pts.append((i,j))
+            return pts
+
+        pts = circ_pts( (self.y, self.x), pingrng )
+        fpts = list(filter(lambda x: x[0]>0 and x[0]<maxval and x[1]>0 and x[1]<maxval))
+
+        pinginfo = {'Terrain':[], 'ASpear':[], 'DSpear':[], 'Enemy':[]}
+        for p in fpts:
+            if Map[p] == 1:
+                pinginfo['Terrain'].append(p)
+            elif Map[p] == 2:
+                pinginfo['ASpear'].append(p)
+            elif Map[p] == 3:
+                pinginfo['DSpear'].append(p)
+            elif Map[p] != 0:
+                pinginfo['Enemy'].append(p)
+
+        return pinginfo
+
+
 
 
     def checkStab( self, Map ):
