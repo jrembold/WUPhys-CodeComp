@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Tue 18 Jul 2017 07:20:52 PM PDT
+# Last Modified: Thu 17 Aug 2017 12:52:29 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -24,6 +24,8 @@ CMDS['spear'] = 'af'
 CMDS['ping'] = 'ag'
 
 CMDS['mapstate'] = 'ba'
+CMDS['retping'] = 'bg'
+
 
 def createMessage( msgtype, msg, needs_reply=False ):
     ba = bytearray()
@@ -139,6 +141,7 @@ class CBot:
         self.vision = []
         self.spearcount = 2
         self.active = True
+        self.lastping = {}
         self.msg = ''
         self.SOCK = socket.create_connection((self.HOST,self.PORT))
         self.checkin()
@@ -154,6 +157,10 @@ class CBot:
     def sendMessage( self, cmdstr ):
         msg = createMessage( CMDS[cmdstr], self.UCODE )
         self.SOCK.sendall(msg)
+
+        if cmdstr == 'ping':
+            reply = receiveMessage( self.SOCK )
+            self.lastping = parseMapState(reply)
 
     def getMapState( self ):
         mapstate = receiveMessage( self.SOCK )
