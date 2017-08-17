@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 01:28:59 PM PDT
+# Last Modified: Thu 17 Aug 2017 02:36:13 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -39,7 +39,7 @@ class Bot:
         self.spearcount = 2
         self.alive = True
         self.timebomb = 0
-        self.ping = False
+        self.ping = {}
         print('New contender checks in! Player #{}.'.format(self.ID))
 
     def place( self, Map ):
@@ -173,24 +173,26 @@ class Bot:
             return pts
 
         pts = circ_pts( (self.y, self.x), pingrng )
-        fpts = list(filter(lambda x: x[0]>0 and x[0]<maxval and x[1]>0 and x[1]<maxval))
+        fpts = list(filter(lambda x: x[0]>0 and x[0]<maxval and x[1]>0 and x[1]<maxval, pts))
 
         pinginfo = {'Terrain':[], 'ASpear':[], 'DSpear':[], 'Enemy':[]}
         for p in fpts:
+            p2 = tuple(map(sum, zip(p,(-self.y,-self.x))))
             if Map[p] == 1:
-                pinginfo['Terrain'].append(p)
+                pinginfo['Terrain'].append(p2)
             elif Map[p] == 2:
-                pinginfo['ASpear'].append(p)
+                pinginfo['ASpear'].append(p2)
             elif Map[p] == 3:
-                pinginfo['DSpear'].append(p)
+                pinginfo['DSpear'].append(p2)
             elif Map[p] != 0:
-                pinginfo['Enemy'].append(p)
+                pinginfo['Enemy'].append(p2)
 
         return pinginfo
 
     def handlePing( self, Map ):
         info = self.computePingVision( Map )
-        lib.sendReply( self.sock, lib.CMDS['retping'], pickle.dump(info) )
+        # lib.sendReply( self.sock, lib.CMDS['retping'], pickle.dump(info) )
+        self.ping=info
 
 
     def checkStab( self, Map ):
@@ -438,7 +440,8 @@ if __name__ == '__main__':
             send_dict = {'vision':PLAYERS[p].vision,
                          'spears':PLAYERS[p].spearcount,
                          'alive': PLAYERS[p].alive,
-                         'pcount':len(PLAYERS)
+                         'pcount':len(PLAYERS),
+                         'lastping':PLAYERS[p].ping
                          }
             lib.sendReply( PLAYERS[p].sock, lib.CMDS['mapstate'], pickle.dumps(send_dict))
 
