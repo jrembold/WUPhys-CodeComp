@@ -6,7 +6,7 @@
 #
 # Creation Date: 20-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 02:37:22 PM PDT
+# Last Modified: Thu 17 Aug 2017 04:19:44 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -15,7 +15,7 @@
 import library as lib
 import numpy as np
 import logging
-from math import floor
+import random
 
 # Logging Config!
 logging.basicConfig(
@@ -33,7 +33,7 @@ logging.basicConfig(
         )
 
 def calcMove( bot):
-    return 'ping'
+    return random.choice(['ping','forward','rotCW'])
 
 
 bot = lib.CBot('Anita Pinger')
