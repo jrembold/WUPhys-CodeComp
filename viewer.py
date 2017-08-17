@@ -6,7 +6,7 @@
 #
 # Creation Date: 25-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 04:17:40 PM PDT
+# Last Modified: Thu 17 Aug 2017 04:41:58 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -48,7 +48,8 @@ def getPlayerColor(player):
 
 width, height = mapstate['Map'].shape
 fig = plt.figure()
-ax = fig.add_axes((0.05,0.05,0.9,0.9), aspect='equal', xlim=(0,width), ylim=(0,height))
+# ax = fig.add_axes((0.05,0.05,0.9,0.9), aspect='equal', xlim=(0,width), ylim=(0,height))
+ax = fig.add_subplot(111, aspect='equal')
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
 
@@ -60,13 +61,15 @@ for rnd in range(numrounds+1):
     ax.cla()
     ax.imshow(mapstate['Map'], cmap='gray_r')
     fig.suptitle('Round {}'.format(rnd))
+    for s in mapstate[rnd]['spears']:
+        ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
         ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), color=getPlayerColor(p), label=player['name']+' - '+str(player['spears']))
+    for p in mapstate[rnd]['players']:
+        player = mapstate[rnd]['players'][p]
         if player['pinging']:
             ax.add_patch(patches.CirclePolygon((player['x'],player['y']), 3, alpha=0.5, color=getPlayerColor(p)))
-    for s in mapstate[rnd]['spears']:
-        ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
     # fig.savefig('Temp/ForGif_{:03d}.png'.format(rnd))
     plt.pause(0.05/float(args.delay))
