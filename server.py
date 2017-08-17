@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 12:46:09 PM PDT
+# Last Modified: Thu 17 Aug 2017 01:28:59 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -188,7 +188,9 @@ class Bot:
 
         return pinginfo
 
-
+    def handlePing( self, Map ):
+        info = self.computePingVision( Map )
+        lib.sendReply( self.sock, lib.CMDS['retping'], pickle.dump(info) )
 
 
     def checkStab( self, Map ):
@@ -410,10 +412,10 @@ if __name__ == '__main__':
         # Update latest vision and check stabs
         for p in PLAYERS:
             PLAYERS[p].msgrecv = False
-            if PLAYERS[p].ping:
-                PLAYERS[p].computePingVision(Map)
-            else:
-                PLAYERS[p].computeVision(Map)
+            # if PLAYERS[p].ping:
+                # PLAYERS[p].computePingVision(Map)
+            # else:
+            PLAYERS[p].computeVision(Map)
             PLAYERS[p].checkStab(Map)
             PLAYERS[p].checkIfMoved()
 
@@ -480,7 +482,7 @@ if __name__ == '__main__':
                                 Spear(PLAYERS[msg],Map)
                             PLAYERS[msg].msgrecv = True
                         if msgtype == lib.CMDS['ping']:
-                            PLAYERS[msg].ping = True
+                            PLAYERS[msg].handlePing(Map)
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have disconnected unexpectedly
                     except:
