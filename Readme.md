@@ -1,6 +1,6 @@
 # Digital Dodgeball :running:
 
-![Animation Gif](animation.gif)
+![Animation Gif](anim.gif)
 
 ## Coding Bots
 Bots are written as simple python scripts and should reside in the Bots folder. Several example bots are provided for reference. Each bot should always include several things:
