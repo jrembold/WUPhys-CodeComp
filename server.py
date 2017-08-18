@@ -148,20 +148,8 @@ class Bot:
             else:
                 targetx -= 1
 
-    # def computePingVision( self, Map ):
-        # ''' Gets list of values within 2 units of the bot
-        # in all directions '''
-        # maxval = Map.shape[0]
-        # pingrng = 3
-        # minx = max(self.x-pingrng, 0)
-        # miny = max(self.y-pingrng, 0)
-        # maxx = min(self.x+pingrng+1, maxval)
-        # maxy = min(self.y+pingrng+1, maxval)
-        # vision_chunk = Map[miny:maxy, minx:maxx]
-        # self.vision = list(vision_chunk.ravel())
-
     def computePingVision( self, Map ):
-        pingrng = 3
+        pingrng = 4
         maxval = Map.shape[0]
 
         def circ_pts( center, radius ):
