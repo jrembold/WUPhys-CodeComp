@@ -33,14 +33,14 @@ def getPlayerDirSym(player):
     if player['face'] == 3: return '<'
     return 'o'
 
-def getSpearDirSym(spear):
-    if spear[2] == 0: return '$↑$'
-    if spear[2] == 1: return '$→$'
-    if spear[2] == 2: return '$↓$'
-    if spear[2] == 3: return '$←$'
+def getBallDirSym(ball):
+    if ball[2] == 0: return '$↑$'
+    if ball[2] == 1: return '$→$'
+    if ball[2] == 2: return '$↓$'
+    if ball[2] == 3: return '$←$'
 
-def getSpearColor(spear):
-    if spear[3]: return 'red'
+def getBallColor(ball):
+    if ball[3]: return 'red'
     return 'gray'
 
 def getPlayerColor(player):
@@ -61,11 +61,11 @@ for rnd in range(numrounds+1):
     ax.cla()
     ax.imshow(mapstate['Map'], cmap='gray_r')
     fig.suptitle('Round {}'.format(rnd))
-    for s in mapstate[rnd]['spears']:
-        ax.scatter(s[0], s[1], marker=getSpearDirSym(s), color=getSpearColor(s))
+    for s in mapstate[rnd]['balls']:
+        ax.scatter(s[0], s[1], marker=getBallDirSym(s), color=getBallColor(s))
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
-        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), color=getPlayerColor(p), label=player['name']+' - '+str(player['spears']))
+        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), color=getPlayerColor(p), label=player['name']+' - '+str(player['balls']))
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
         if player['pinging']:
