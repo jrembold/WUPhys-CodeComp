@@ -27,7 +27,7 @@ while bot.active:           #for as long as the bot is alive, do the following
     if bot.active:         
 
         #Now we choose randomly from a list of our available moves
-        move = random.choice(['forward', 'rotCW', 'rotCCW', 'spear', 'ping'])
+        move = random.choice(['forward', 'rotCW', 'rotCCW', 'ball', 'ping'])
 
         #And then we send the move to server
         bot.sendMessage( move )

@@ -18,10 +18,10 @@ import numpy as np      #And I want numpy too in this case
 def calcMove( bot ):
     global tcount                       #utilize global tcount
     v = np.array(bot.vision[1:])        #convert vision list to numpy array
-    #If any enemy in front to me and I have spears, throw one!
-    if any(v>10) and bot.spearcount>0:
-        return 'spear'
-    #or, if there is a grounded spear in front of me, go grab it!
+    #If any enemy in front to me and I have balls, throw one!
+    if any(v>10) and bot.ballcount>0:
+        return 'ball'
+    #or, if there is a grounded ball in front of me, go grab it!
     elif any(v==3):
         tcount = 0                      #I moved, so return to 0
         return 'forward'

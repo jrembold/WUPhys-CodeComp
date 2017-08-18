@@ -39,15 +39,15 @@ def calcMove(bot):
     #If we just pinged:
     if rcnt % 5 == 0:
         #Check Ping Vision
-        #Was an active spear seen?
-        if len(bot.lastping['ASpear']):
+        #Was an active ball seen?
+        if len(bot.lastping['ABall']):
             #Yes?! Could it hit us?
-            for s in bot.lastping['ASpear']:
+            for s in bot.lastping['ABall']:
                 if s[0] == 0 or s[1] == 0:
                     #Take evasive action!
                     return 'rotCW'
-        #Was a fallen spear seen?
-        if len(bot.lastping['DSpear']):
+        #Was a fallen ball seen?
+        if len(bot.lastping['DBall']):
             #Yes? Can we get it easily?
             if any(vis[0:3]==3):
                 return 'forward'
@@ -55,7 +55,7 @@ def calcMove(bot):
         if len(bot.lastping['Enemy']):
             #Yes? Are we facing them?
             if any(vis[0:3]>10):
-                return 'spear'
+                return 'ball'
             else:
                 return 'rotCCW'
     if rcnt % 4 == 0:

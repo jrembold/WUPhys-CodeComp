@@ -21,7 +21,7 @@ track of everything, but is totally not necessary!'''
 # This function decides what the bot will do
 def calcMove( bot ):
     #Anything in my vision that is non-zero is either
-    #an enemy or a spear. So if I see one, go forwards!
+    #an enemy or a ball. So if I see one, go forwards!
     if any(bot.vision[1:]):     #any means if any of the values I see are >0, then go
         return 'forward'
     #If I see only zeros (air) then I'll turn looking for something else

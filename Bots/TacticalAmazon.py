@@ -72,19 +72,19 @@ def calcMove( bot):
         #I do! Is there empty space in front of me?
         if v[0] == 0:
             #There is! Do I still have ammunition availabe?
-            if bot.spearcount>0:
-                #I do! Is there a spear coming toward me from this direction?
+            if bot.ballcount>0:
+                #I do! Is there a ball coming toward me from this direction?
                 #If so, I better throw one to save myself
                 if any([opposite(getObjDir(i))==botdir for i in v if floor(i)==2]):
-                    return 'spear'
-                #If not, is there a spear I already threw moving away from me
-                #No sense wasting spears if I already threw one. Rotate.
+                    return 'ball'
+                #If not, is there a ball I already threw moving away from me
+                #No sense wasting balls if I already threw one. Rotate.
                 elif any([floor(i)==2 for i in v]):
                     return 'rotCW'
-                #No spears between me and target. Throw!!
+                #No balls between me and target. Throw!!
                 else:
-                    return 'spear'
-    # No enemies seen. Any fallen spears lying around?
+                    return 'ball'
+    # No enemies seen. Any fallen balls lying around?
     # If so, move forward to grab them
     if any(v==3) and not any(v>10):
         tcount = 0
