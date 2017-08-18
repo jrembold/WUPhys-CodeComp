@@ -69,7 +69,7 @@ for rnd in range(numrounds+1):
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
         if player['pinging']:
-            ax.add_patch(patches.CirclePolygon((player['x'],player['y']), 3, alpha=0.5, color=getPlayerColor(p)))
+            ax.add_patch(patches.CirclePolygon((player['x'],player['y']), 3, alpha=0.25, color=getPlayerColor(p)))
     ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
     # fig.savefig('Temp/ForGif_{:03d}.png'.format(rnd))
     plt.pause(0.05/float(args.delay))
