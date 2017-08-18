@@ -1,27 +1,33 @@
 #===================================================
 #
-# File Name: RandomMap.py
+# File Name: RandomMan.py
 # 
 # Purpose: A bot moving in random directions
-#
-# Creation Date: 20-06-2017
-#
-# Last Modified: Thu 22 Jun 2017 02:42:40 PM PDT
 #
 # Created by: Jed Rembold
 #
 #===================================================
 
-import sys
-sys.path.append('./')
-import library as lib
-import random
+# -- Imports --
+import sys              #importing sys for the below command
+sys.path.append('./')   #this lets us keep the bots in a separate directory
+import library as lib   #importing the main library functions
+import random           #This bot needs the random library
 
-bot = lib.CBot('Ia Rando')
+# -- Initial Bot --
+bot = lib.CBot('Ia Rando')  #this initializes our bot and gives it a name: "Ia Rando"
 
-while bot.active:
-    bot.getMapState()
+# -- Main Code --
+while bot.active:           #for as long as the bot is alive, do the following
+    bot.getMapState()       #get an update on the current mapstate, see readme for details
 
-    if bot.active:
-        move = random.choice(['forward', 'rotCW', 'rotCCW', 'forward'])
+    # It is possible the map just notified you that you are dead
+    # So we check once more before sending anything back as the
+    # server doesn't like dead bots trying to talk to it :)
+    if bot.active:         
+
+        #Now we choose randomly from a list of our available moves
+        move = random.choice(['forward', 'rotCW', 'rotCCW', 'spear', 'ping'])
+
+        #And then we send the move to server
         bot.sendMessage( move )
