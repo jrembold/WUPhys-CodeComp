@@ -1,9 +1,9 @@
-# Speary Bot! :running:← 
+# Digital Dodgeball :running:
 
 ![Animation Gif](animation.gif)
 
 ## Coding Bots
-Bots are written as simple python scripts and should reside in the same folder as server.py. Several example bots are provided for reference. Each bot should always include several things:
+Bots are written as simple python scripts and should reside in the Bots folder. Several example bots are provided for reference. Each bot should always include several things:
   1. Importing the library module
   2. Initialize the bot as the CBot class, giving in a fun name 
   3. For as long as the bot is active:
@@ -17,7 +17,7 @@ And that's it! Bot moves are sent as a string, and currently include:
   'forward' | Takes one step forward in currently facing direction
   'rotCW' | Rotates 90 degrees clockwise
   'rotCCW' | Rotates 90 degrees counter-clockwise
-  'spear' | Throws a spear in the facing direction
+  'ball' | Throws a dodgeball in the currently facing direction
   'ping' | Uses a turn to ping surroundings to get information
 
 *Please note that the server enforces a timebomb mechanic where if your bot does not move from a square in 120 turns, it explodes!*
@@ -26,8 +26,9 @@ To influence these moves, each bot is given particular information each round fr
 
   Attribute | Description
   --- | ---
+  .active | Returns true if the bot is still alive and the round still ongoing
   .playercount | Returns current number of bots still in the round
-  .spearcount | Returns the number of spears you currently have.
+  .ballcount | Returns the number of dodgeballs you currently have.
   .vision | A list of number values 'seen' by your bot in the direction in is facing. More details below
   .lastping | A dictionary of the last pinged information. More details below
 
@@ -37,9 +38,9 @@ The .vision attribute will return a list of values depicting everything your bot
   * 1 - There is a wall here
   * 2 digit number - Bot Identification number, there is a bot here
     * Bots will also have a decimal trailing after them which shows what direction they are facing. .0 is straight up, .1 is to the right, .2 is downwards, and .3 is to the left
-  * 2 - A traveling spear. *Dangerous!*
-    * Like bots, spears have a trailing decimal indicating their direction of flight
-	* Regardless of value, touching them will result in death!
+  * 2 - A traveling dodgeball. *Dangerous!*
+    * Like bots, dodgeballs have a trailing decimal indicating their direction of flight
+	* Regardless of value, touching them will result in a loss!
   * 3 - A spear that has struck something and fallen *Not dangerous*
 
 #### Last Ping
@@ -48,14 +49,14 @@ The .lastping attribute will return a dictionary which has the below keys. Each 
 Key | Description
   --- | ---
   'Terrain' | Any walls or pillars in the bots ping range
-  'ASpear' | Any active moving spears in the ping range. Does not give direction
-  'DSpear' | Any inactive or fallen spears on the ground nearby
+  'ABall' | Any active moving dodgeballs in the ping range. Does not give direction
+  'DBall' | Any inactive or fallen dodgeballs on the ground nearby
   'Enemy' | Any enemy bots in the nearby vicinity
 
 Recall that the map coordinates have (0,0) in the upper left, so a relative coordinate of (-2,1) means the object is two spaces above you and one space to the right.
 
 ## Running the Server
-The server is run from a command prompt or shell following normal python conventions. Bots to compete are added to the prompt following a -i option. For example, to run a competition between the Randomman.py and Simpleman.py, you'd write:
+The server is run from a command prompt or shell following normal python conventions. Bots to compete are added to the prompt following a -i option. For example, to run a competition between the RandomMan.py and SimpleMan.py, you'd write:
 ```Shell
 python server.py -i RandomMan.py SimpleMan.py
 ```
