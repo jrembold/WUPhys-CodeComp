@@ -24,7 +24,7 @@ import logging
 # Logging Config. Beyond the filename, you could keep the rest of this the same
 logging.basicConfig(
         # Filename to log to
-        filename = 'TacticalAmazon.log',
+        filename = 'Logs/TacticalAmazon.log',
         # Logging supports multiple levels and will show everything above
         # this level. Debug is the bottom, so it will show everything
         level = logging.DEBUG,
