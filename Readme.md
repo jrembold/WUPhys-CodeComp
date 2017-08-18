@@ -1,6 +1,5 @@
 # Speary Bot! :running:← 
 
-Hey now! Things are finally starting to look decent!
 ![Animation Gif](animation.gif)
 
 ## Coding Bots
