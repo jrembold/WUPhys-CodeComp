@@ -20,7 +20,7 @@ CMDS['leave'] = 'ab'
 CMDS['forward'] = 'ac'
 CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
-CMDS['spear'] = 'af'
+CMDS['ball'] = 'af'
 CMDS['ping'] = 'ag'
 
 CMDS['mapstate'] = 'ba'
@@ -139,7 +139,7 @@ class CBot:
         self.alive = True
         self.playercount = 1
         self.vision = []
-        self.spearcount = 2
+        self.ballcount = 2
         self.active = True
         self.lastping = {'Terrain':[], 'ASpear':[], 'DSpear':[], 'Enemy':[]}
         self.msg = ''
@@ -163,7 +163,7 @@ class CBot:
         self.msg = mapstate
         state = parseMapState( mapstate )
         self.alive = state['alive']
-        self.spearcount = state['spears']
+        self.ballcount = state['balls']
         self.playercount = state['pcount']
         self.vision = state['vision']
         self.lastping = state['lastping']
