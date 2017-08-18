@@ -70,10 +70,10 @@ bot1 = lib.CBot('Sir Henry')    #sweet name
 rcnt = 1                        #round counter
 
 # -- Main Loop --
-while bot1.alive:
+while bot1.active:
     bot1.getMapState()
 
-    if bot1.alive:
+    if bot1.active:
         bot1.sendMessage( calcMove(bot1) )
 
     rcnt += 1                   #increment round counter
