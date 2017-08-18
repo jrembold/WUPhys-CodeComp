@@ -25,7 +25,7 @@ PLAYERS = {}
 MAPSIZE = 10
 NUMPLAYERS = 0
 WINNER = ''
-SPEARS = []
+BALLS = []
 MAPSTATE = {}
 ROUNDCAP = 2000
 
@@ -36,7 +36,7 @@ class Bot:
         self.sock = sock
         self.vision = []
         self.msgrecv = False
-        self.spearcount = 2
+        self.ballcount = 2
         self.alive = True
         self.timebomb = 0
         self.ping = {}
@@ -99,20 +99,20 @@ class Bot:
             self.oldloc = (self.y,self.x)
             (self.y,self.x) = nextloc
 
-        #If moving onto moving spear, die!
+        #If moving onto moving ball, die!
         if math.floor(Map[nextloc]) == 2:
             self.alive = False
             Map[nextloc] = 3
 
         if Map[nextloc] == 3:
-            self.spearcount += 1
+            self.ballcount += 1
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
-            #Remove spear
-            for s in SPEARS:
+            #Remove ball
+            for s in BALLS:
                 if (s.y, s.x) == nextloc:
-                    SPEARS.remove(s)
+                    BALLS.remove(s)
 
         self.computeVision( Map )
 
@@ -176,15 +176,15 @@ class Bot:
         pts = circ_pts( (self.y, self.x), pingrng )
         fpts = list(filter(lambda x: x[0]>0 and x[0]<maxval and x[1]>0 and x[1]<maxval, pts))
 
-        pinginfo = {'Terrain':[], 'ASpear':[], 'DSpear':[], 'Enemy':[]}
+        pinginfo = {'Terrain':[], 'ABall':[], 'DBall':[], 'Enemy':[]}
         for p in fpts:
             p2 = tuple(map(sum, zip(p,(-self.y,-self.x))))
             if Map[p] == 1:
                 pinginfo['Terrain'].append(p2)
             elif Map[p] == 2:
-                pinginfo['ASpear'].append(p2)
+                pinginfo['ABall'].append(p2)
             elif Map[p] == 3:
-                pinginfo['DSpear'].append(p2)
+                pinginfo['DBall'].append(p2)
             elif Map[p] != 0:
                 pinginfo['Enemy'].append(p2)
 
@@ -216,16 +216,16 @@ class Bot:
         else:
             self.timebomb = 0
 
-class Spear:
+class Ball:
     def __init__(self, bot, Map):
         self.direction = bot.direction
         self.x = bot.x
         self.y = bot.y
-        # bot.spearcount -= 1
+        # bot.ballcount -= 1
         self.moving = True
         # self.getInitPosition(bot)
         # self.draw(Map)
-        self.placeSpear(Map,bot)
+        self.placeBall(Map,bot)
 
     def getFacingLoc(self):
         d = self.direction
@@ -237,20 +237,20 @@ class Spear:
             return (self.y+1,self.x)
         return (self.y, self.x-1)
 
-    def placeSpear(self, Map, bot):
+    def placeBall(self, Map, bot):
         loc = self.getFacingLoc()
         if Map[loc] == 0:
-            bot.spearcount -= 1
+            bot.ballcount -= 1
             (self.y, self.x) = loc
             Map[loc] = 2 + self.direction/10
-            SPEARS.append(self)
+            BALLS.append(self)
         else:
             self.moving = False
 
     def checkKill( self, Map ):
-        spearloc = Map(self.y,self.x)
-        if spearloc > 10:
-            ucode = str(math.floor(spearloc).zfill(2))
+        ballloc = Map(self.y,self.x)
+        if ballloc > 10:
+            ucode = str(math.floor(ballloc).zfill(2))
             PLAYERS[ucode].alive = False
             Map[self.y,self.x] = 3
             self.moving = False
@@ -264,7 +264,7 @@ class Spear:
             Map[(self.y,self.x)] = 0
             (self.y,self.x) = nextloc
 
-        #Hitting a wall, or any other spear
+        #Hitting a wall, or any other ball
         elif Map[nextloc] == 1 or Map[nextloc] == 3 or math.floor(Map[nextloc]) == 2:
             self.moving = False
             Map[self.y,self.x] = 3
@@ -319,14 +319,14 @@ def createMap( size ):
         Map[y,x] = 1
     return Map
 
-def genMapState(PLAYERS,SPEARS):
+def genMapState(PLAYERS,BALLS):
     players = {}
     for p in PLAYERS:
-        players[PLAYERS[p].ID] = {'x':PLAYERS[p].x, 'y':PLAYERS[p].y, 'face':PLAYERS[p].direction, 'spears':PLAYERS[p].spearcount, 'name':PLAYERS[p].name, 'pinging':PLAYERS[p].pinging}
-    spears = []
-    for s in SPEARS:
-        spears.append([ s.x, s.y, s.direction, s.moving ])
-    return {'players':players, 'spears':spears}
+        players[PLAYERS[p].ID] = {'x':PLAYERS[p].x, 'y':PLAYERS[p].y, 'face':PLAYERS[p].direction, 'balls':PLAYERS[p].ballcount, 'name':PLAYERS[p].name, 'pinging':PLAYERS[p].pinging}
+    balls = []
+    for s in BALLS:
+        balls.append([ s.x, s.y, s.direction, s.moving ])
+    return {'players':players, 'balls':balls}
 
 
 
@@ -401,7 +401,7 @@ if __name__ == '__main__':
         # Show current Map
         if not botnames.view:
             print(Map)
-        MAPSTATE[ROUND] = genMapState(PLAYERS,SPEARS)
+        MAPSTATE[ROUND] = genMapState(PLAYERS,BALLS)
         ROUND += 1
 
         # Delay
@@ -423,12 +423,12 @@ if __name__ == '__main__':
             PLAYERS[p].checkStab(Map)
             PLAYERS[p].checkIfMoved()
 
-        for s in SPEARS:
+        for s in BALLS:
             for i in range(2):
                 if s.moving:
                     s.move(Map)
             # if not s.moving:
-                # SPEARS.remove(s)
+                # BALLS.remove(s)
 
 
         if len(PLAYERS) == 1:
@@ -440,7 +440,7 @@ if __name__ == '__main__':
         # Send map data to all bots
         for p in PLAYERS:
             send_dict = {'vision':PLAYERS[p].vision,
-                         'spears':PLAYERS[p].spearcount,
+                         'balls':PLAYERS[p].ballcount,
                          'alive': PLAYERS[p].alive,
                          'pcount':len(PLAYERS),
                          'lastping':PLAYERS[p].ping
@@ -483,9 +483,9 @@ if __name__ == '__main__':
                         if msgtype == lib.CMDS['rotCCW']:
                             PLAYERS[msg].rotCCW(Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == lib.CMDS['spear']:
-                            if PLAYERS[msg].spearcount > 0:
-                                Spear(PLAYERS[msg],Map)
+                        if msgtype == lib.CMDS['ball']:
+                            if PLAYERS[msg].ballcount > 0:
+                                Ball(PLAYERS[msg],Map)
                             PLAYERS[msg].msgrecv = True
                         if msgtype == lib.CMDS['ping']:
                             PLAYERS[msg].handlePing(Map)
