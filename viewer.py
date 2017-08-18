@@ -33,11 +33,14 @@ def getPlayerDirSym(player):
     if player['face'] == 3: return '<'
     return 'o'
 
+# def getBallDirSym(ball):
+    # if ball[2] == 0: return '$↑$'
+    # if ball[2] == 1: return '$→$'
+    # if ball[2] == 2: return '$↓$'
+    # if ball[2] == 3: return '$←$'
+
 def getBallDirSym(ball):
-    if ball[2] == 0: return '$↑$'
-    if ball[2] == 1: return '$→$'
-    if ball[2] == 2: return '$↓$'
-    if ball[2] == 3: return '$←$'
+    return '.'
 
 def getBallColor(ball):
     if ball[3]: return 'red'
