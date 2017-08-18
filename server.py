@@ -356,7 +356,7 @@ if __name__ == '__main__':
     # Receive initial bot check-ins
     # ------------------------------------------
     for i in botnames.input:
-        subprocess.Popen([sys.executable, i])
+        subprocess.Popen([sys.executable, 'Bots/'+i])
 
     while len(PLAYERS)<NUMPLAYERS:
         read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
