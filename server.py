@@ -339,6 +339,8 @@ if __name__ == '__main__':
     Map = createMap(MAPSIZE)
     # print(Map)
     MAPSTATE['Map'] = Map.copy()
+    # Pause a moment to make sure server up and running before starting bots
+    time.sleep(0.5)
 
     # ------------------------------------------
     # Receive initial bot check-ins
