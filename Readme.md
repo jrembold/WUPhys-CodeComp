@@ -41,7 +41,7 @@ The .vision attribute will return a list of values depicting everything your bot
   * 2 - A traveling dodgeball. *Dangerous!*
     * Like bots, dodgeballs have a trailing decimal indicating their direction of flight
 	* Regardless of value, touching them will result in a loss!
-  * 3 - A spear that has struck something and fallen *Not dangerous*
+  * 3 - A dodgeball that has struck something and fallen *Not dangerous*
 
 #### Last Ping
 The .lastping attribute will return a dictionary which has the below keys. Each key returns a list of locations where that object was located. All x and y positions *are relative to the bot itself!*
