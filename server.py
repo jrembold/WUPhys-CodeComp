@@ -50,7 +50,7 @@ class Bot:
         self.timebomb = 0
         self.ping = {}
         self.pinging = False
-        print('New contender checks in! Player #{}.'.format(self.ID))
+        print('{} checks in! Player #{}.'.format(self.name, self.ID))
 
     def place(self, Map):
         '''Randomly place bot somewhere on map'''
@@ -339,6 +339,11 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE
     global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP
 
+    CONNECTION_LIST = []
+    PLAYERID = 50
+    WINNER = ''
+
+
     MAPSIZE = int(size)
     NUMPLAYERS = len(inputs)
 
@@ -518,11 +523,7 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
         subprocess.Popen(
                 [sys.executable, 'viewer.py', '-d', str(delay)])
 
-    CONNECTION_LIST = []
-    PLAYERID = 50
-    WINNER = ''
-
-    return WINNERNAME
+    return WINNER
 
 
 if __name__ == '__main__':
