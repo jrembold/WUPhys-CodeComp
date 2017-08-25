@@ -67,7 +67,7 @@ There are several other server flags that may be of use:
   -d *num* | 0 | Will delay the execution of each turn by *num* seconds so the motion can be followed
   -s *num* | 10 | Sets the square size of the arena
   -o *num* | 5 | Sets the maximum number of obstacles scattered about the map
-  -v | | Using this flag will suppress the viewer from playing after the battle is over
+  -v | | Using this flag will suppress the viewer from auto-playing after the battle is over
 
 Running the server with the -h option will output a help file showing these same flags.
 
