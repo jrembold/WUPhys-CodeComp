@@ -346,8 +346,8 @@ if __name__ == '__main__':
     parser.add_argument(
             '-o', '--obs', default=5, help='Maximum number of obstacles')
     parser.add_argument(
-            '-v', '--view', action='store_true',
-            help='Run viewer after completion?')
+            '-v', '--view', default=True, action='store_false',
+            help='Suppress viewer after completion?')
     botnames = parser.parse_args()
 
     NUMPLAYERS = len(botnames.input)
@@ -412,8 +412,8 @@ if __name__ == '__main__':
     # As long as a player is alive
     while len(PLAYERS) > 0:
         # Show current Map
-        if not botnames.view:
-            print(Map)
+        # if not botnames.view:
+            # print(Map)
         MAPSTATE[ROUND] = genMapState(PLAYERS, BALLS)
         ROUND += 1
 
