@@ -3,6 +3,7 @@
 
 ### Custom ###
 *.pickle
+*.json
 *.log
 
 ### Python ###
