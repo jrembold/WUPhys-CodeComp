@@ -307,10 +307,10 @@ def playerLeaves(sock, ucode, Map):
     del PLAYERS[ucode]
 
 
-def createMap(size):
+def createMap(size, obstacles):
     Map = np.ones((size, size))
     Map[1:size-1, 1:size-1] = np.zeros((size-2, size-2))
-    obs = random.randint(0, int(botnames.obs))
+    obs = random.randint(0, int(obstacles))
     for o in range(obs):
         x = random.randint(1, size-1)
         y = random.randint(1, size-1)
@@ -335,31 +335,19 @@ def genMapState(PLAYERS, BALLS):
     return {'players': players, 'balls': balls}
 
 
-if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-            '-i', '--input', nargs='*', help='List of python bots to compete')
-    parser.add_argument(
-            '-s', '--size', default=10, help='Square size of arena')
-    parser.add_argument(
-            '-d', '--delay', default=1, help='Speed multiplier for viewer playback')
-    parser.add_argument(
-            '-o', '--obs', default=5, help='Maximum number of obstacles')
-    parser.add_argument(
-            '-v', '--view', default=True, action='store_false',
-            help='Suppress viewer after completion?')
-    botnames = parser.parse_args()
+def main(inputs, size, obstacles, viewer, delay):
+    global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE
+    global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP
 
-    NUMPLAYERS = len(botnames.input)
-    MAPSIZE = int(botnames.size)
-    DELAYTIME = float(botnames.delay)
+    MAPSIZE = int(size)
+    NUMPLAYERS = len(inputs)
 
     # Create the Socket
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Start listening
     bindAndListen(server_sock, 'localhost', 10000)
-    Map = createMap(MAPSIZE)
+    Map = createMap(MAPSIZE, obstacles)
     # print(Map)
     MAPSTATE['Map'] = Map.copy()
     # Pause a moment to make sure server up and running before starting bots
@@ -368,7 +356,7 @@ if __name__ == '__main__':
     # ------------------------------------------
     # Receive initial bot check-ins
     # ------------------------------------------
-    for i in botnames.input:
+    for i in inputs:
         subprocess.Popen([sys.executable, 'Bots/'+i])
 
     while len(PLAYERS) < NUMPLAYERS:
@@ -524,5 +512,32 @@ if __name__ == '__main__':
     with open('lastgame.pickle', 'wb') as f:
         pickle.dump(MAPSTATE, f)
 
-    if botnames.view:
-        subprocess.Popen([sys.executable, 'viewer.py', '-d', str(botnames.delay)])
+    if viewer:
+        subprocess.Popen(
+                [sys.executable, 'viewer.py', '-d', str(delay)])
+
+    return WINNERNAME
+
+
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+            '-i', '--input', nargs='*', help='List of python bots to compete')
+    parser.add_argument(
+            '-s', '--size', default=10, help='Square size of arena')
+    parser.add_argument(
+            '-d', '--delay', default=1,
+            help='Speed multiplier for viewer playback')
+    parser.add_argument(
+            '-o', '--obs', default=5, help='Maximum number of obstacles')
+    parser.add_argument(
+            '-v', '--view', default=True, action='store_false',
+            help='Suppress viewer after completion?')
+    botnames = parser.parse_args()
+
+    main(
+            botnames.input,
+            botnames.size,
+            botnames.obs,
+            botnames.view,
+            botnames.delay)
