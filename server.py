@@ -335,7 +335,7 @@ def genMapState(PLAYERS, BALLS):
     return {'players': players, 'balls': balls}
 
 
-def main(inputs, size, obstacles, viewer, delay):
+def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE
     global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP
 
@@ -507,14 +507,20 @@ def main(inputs, size, obstacles, viewer, delay):
             WINNERNAME, WINNER, ROUND-1))
     else:
         print('There were no winners. Life is tough.')
+        WINNERNAME = None
 
     # Save MAPSTATE
-    with open('lastgame.pickle', 'wb') as f:
-        pickle.dump(MAPSTATE, f)
+    if replaysave:
+        with open('lastgame.pickle', 'wb') as f:
+            pickle.dump(MAPSTATE, f)
 
     if viewer:
         subprocess.Popen(
                 [sys.executable, 'viewer.py', '-d', str(delay)])
+
+    CONNECTION_LIST = []
+    PLAYERID = 50
+    WINNER = ''
 
     return WINNERNAME
 
