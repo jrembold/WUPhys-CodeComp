@@ -64,7 +64,7 @@ There are several other server flags that may be of use:
 
   Flag | Default | Use
   --- | --- | ---
-  -d *num* | 0 | Will delay the execution of each turn by *num* seconds so the motion can be followed
+  -d *num* | 0 | Playback multiplier to be passed to the viewer. Values of 1-5 will speed up, fractional values will slow down
   -s *num* | 10 | Sets the square size of the arena
   -o *num* | 5 | Sets the maximum number of obstacles scattered about the map
   -v | | Using this flag will suppress the viewer from auto-playing after the battle is over

@@ -342,7 +342,7 @@ if __name__ == '__main__':
     parser.add_argument(
             '-s', '--size', default=10, help='Square size of arena')
     parser.add_argument(
-            '-d', '--delay', default=0, help='Time to delay between turns')
+            '-d', '--delay', default=1, help='Speed multiplier for viewer playback')
     parser.add_argument(
             '-o', '--obs', default=5, help='Maximum number of obstacles')
     parser.add_argument(
@@ -418,7 +418,7 @@ if __name__ == '__main__':
         ROUND += 1
 
         # Delay
-        time.sleep(DELAYTIME)
+        # time.sleep(DELAYTIME)
 
         # Check roundcap:
         if ROUND >= ROUNDCAP:
@@ -525,4 +525,4 @@ if __name__ == '__main__':
         pickle.dump(MAPSTATE, f)
 
     if botnames.view:
-        subprocess.Popen([sys.executable, 'viewer.py'])
+        subprocess.Popen([sys.executable, 'viewer.py', '-d', str(botnames.delay)])
