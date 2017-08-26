@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 04:20:26 PM PDT
+# Last Modified: Sat 26 Aug 2017 12:52:50 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -36,6 +36,7 @@ WINNER = ''
 BALLS = []
 MAPSTATE = {}
 ROUNDCAP = 2000
+PLAYERORDER = []
 
 
 class Bot:
@@ -301,6 +302,7 @@ def playerLeaves(sock, ucode, Map):
     global CONNECTION_LIST, PLAYERS
     sock.close()
     CONNECTION_LIST.remove(sock)
+    PLAYERORDER.insert(0,ucode)
 
     # Find and remove player on map
     PLAYERS[ucode].remove(Map)
@@ -523,7 +525,7 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
         subprocess.Popen(
                 [sys.executable, 'viewer.py', '-d', str(delay)])
 
-    return WINNER
+    return PLAYERORDER
 
 
 if __name__ == '__main__':
