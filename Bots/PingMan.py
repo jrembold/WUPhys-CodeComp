@@ -66,7 +66,7 @@ def calcMove(bot):
 
 
 # -- Initialize Bot --
-bot1 = lib.CBot('Sir Henry')    #sweet name
+bot1 = lib.CBot(__file__)    #sweet name
 rcnt = 1                        #round counter
 
 # -- Main Loop --

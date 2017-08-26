@@ -37,7 +37,7 @@ def calcMove( bot ):
 
 
 # -- Initializing Bot --
-bot = lib.CBot('Amy the Amazon')    #Cool name granted
+bot = lib.CBot(__file__)    #Cool name granted
 
 #In an effort to keep from dying because of inactivity
 #I create a counter that increments each time I do NOT

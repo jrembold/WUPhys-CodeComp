@@ -101,7 +101,7 @@ def calcMove( bot):
 
 
 # -- Initialize --
-bot = lib.CBot('Ariel the Amazon')  #Cooler name
+bot = lib.CBot(__file__)  #Cooler name
 tcount = 0                          #Turns without moving
 roundnum = 0                        #Game round
 
