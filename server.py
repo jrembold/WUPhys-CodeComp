@@ -6,7 +6,7 @@
 #
 # Creation Date: 13-06-2017
 #
-# Last Modified: Sat 26 Aug 2017 12:52:50 PM PDT
+# Last Modified: Sat 26 Aug 2017 03:17:47 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -36,12 +36,13 @@ WINNER = ''
 BALLS = []
 MAPSTATE = {}
 ROUNDCAP = 2000
-PLAYERORDER = []
+PLAYERORDER = {}
 
 
 class Bot:
     def __init__(self, ucode, sock, name):
         self.name = name
+        self.fname = ''
         self.ID = int(ucode)
         self.sock = sock
         self.vision = []
@@ -298,11 +299,11 @@ def playerChecksIn(sock, name, Map):
     lib.sendReply(sock, lib.CMDS['checkin'], ucode.zfill(2))
 
 
-def playerLeaves(sock, ucode, Map):
+def playerLeaves(sock, ucode, Map, ROUND):
     global CONNECTION_LIST, PLAYERS
     sock.close()
     CONNECTION_LIST.remove(sock)
-    PLAYERORDER.insert(0,ucode)
+    PLAYERORDER[PLAYERS[ucode].name] = ROUND
 
     # Find and remove player on map
     PLAYERS[ucode].remove(Map)
@@ -339,9 +340,10 @@ def genMapState(PLAYERS, BALLS):
 
 def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE
-    global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP
+    global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP, PLAYERORDER
 
     CONNECTION_LIST = []
+    PLAYERORDER = {}
     PLAYERID = 50
     WINNER = ''
 
@@ -474,8 +476,11 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
                         [msgtype, msg, needsreply] = lib.parseMessage(inc_msg)
                         if msgtype == lib.CMDS['leave']:
                             PLAYERS[msg].msgrecv = True
-                            playerLeaves(sock, msg, Map)
+                            playerLeaves(sock, msg, Map, ROUND)
                             # print('Player {} has left!'.format(msg))
+                        # if msgtype == lib.CMDS['botfname']:
+                            # PLAYERS[msg[:2]].fname = msg[2:]
+                            # print(PLAYERS[msg[:2]].fname)
                         if msgtype == lib.CMDS['forward']:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
