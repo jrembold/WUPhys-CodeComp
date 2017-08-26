@@ -6,7 +6,7 @@
 #
 # Creation Date: 14-06-2017
 #
-# Last Modified: Thu 17 Aug 2017 02:21:19 PM PDT
+# Last Modified: Sat 26 Aug 2017 03:16:29 PM PDT
 #
 # Created by: Jed Rembold
 #
@@ -22,6 +22,7 @@ CMDS['rotCW'] = 'ad'
 CMDS['rotCCW'] = 'ae'
 CMDS['ball'] = 'af'
 CMDS['ping'] = 'ag'
+CMDS['botfname'] = 'ah'
 
 CMDS['mapstate'] = 'ba'
 CMDS['retping'] = 'bg'
@@ -132,7 +133,7 @@ def sendReply( socket_conn, msgtype, msg ):
 
 class CBot:
     def __init__(self, name):
-        self.name = name
+        self.name = name[5:]
         self.HOST = 'localhost'
         self.PORT = 10000
         self.UCODE = ''
@@ -153,6 +154,8 @@ class CBot:
         [msgtype, msg, needsreply] = parseMessage( reply )
         # print('You are contenter #{}'.format(msg))
         self.UCODE = msg
+        # msg = createMessage(CMDS['botfname'], self.UCODE + self.fname)
+        # self.SOCK.sendall(msg)
 
     def sendMessage( self, cmdstr ):
         msg = createMessage( CMDS[cmdstr], self.UCODE )
