@@ -15,7 +15,7 @@ import library as lib   #importing the main library functions
 import random           #This bot needs the random library
 
 # -- Initial Bot --
-bot = lib.CBot(__file__)  #this initializes our bot and gives it a name: "Ia Rando"
+bot = lib.CBot(__file__)  #this initializes our bot and lets the server know what script ran it (the __file__ part)
 
 # -- Main Code --
 while bot.active:           #for as long as the bot is alive, do the following

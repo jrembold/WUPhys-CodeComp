@@ -30,7 +30,7 @@ def calcMove( bot ):
 
 
 # -- Initializing the Bot --
-bot = lib.CBot(__file__)  #Giving it a cool (not really) name!
+bot = lib.CBot(__file__)  #Initializes the bot and lets the server know the script name
 
 # -- Main Loop --
 while bot.active:               #while alive,

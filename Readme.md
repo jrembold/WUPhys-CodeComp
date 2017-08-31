@@ -5,7 +5,7 @@
 ## Coding Bots
 Bots are written as simple python scripts and should reside in the Bots folder. Several example bots are provided for reference. Each bot should always include several things:
   1. Importing the library module
-  2. Initialize the bot as the CBot class, giving in a fun name 
+  2. Initialize the bot as the CBot class and pass the ```__file__``` so the server can identify bot to script
   3. For as long as the bot is active:
      * Get the current state of the map from the server
 	 * Send a response for what action the bot should take for that round
