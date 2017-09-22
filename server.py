@@ -214,8 +214,6 @@ class Bot:
     def checkIfMoved(self):
         ''' Check to see if bot has moved this round.
         If not, increment time bomb'''
-        if self.name == 'SimpleMan.py':
-            print('Location:',self.oldloc,(self.y,self.x))
         if (self.y, self.x) == self.oldloc:
             self.timebomb += 1
             if self.timebomb > 120:
@@ -367,7 +365,6 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     # Start listening
     bindAndListen(server_sock, 'localhost', 10000)
     Map = createMap(MAPSIZE, obstacles)
-    # print(Map)
     MAPSTATE['Map'] = Map.copy()
     # Pause a moment to make sure server up and running before starting bots
     time.sleep(0.5)
@@ -387,7 +384,6 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
             if sock == server_sock:
                 sockfd, addr = server_sock.accept()
                 CONNECTION_LIST.append(sockfd)
-                # print('Client ({}, {}) connected'.format(addr[0], addr[1]))
 
             # Incoming client message
             else:
@@ -418,14 +414,8 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
 
     # As long as a player is alive
     while len(PLAYERS) > 0:
-        # Show current Map
-        # if not botnames.view:
-            # print(Map)
         MAPSTATE[ROUND] = genMapState(PLAYERS, BALLS)
         ROUND += 1
-
-        # Delay
-        # time.sleep(DELAYTIME)
 
         # Check roundcap:
         if ROUND >= ROUNDCAP:
@@ -444,14 +434,11 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
             for i in range(2):
                 if s.moving:
                     s.move(Map)
-            # if not s.moving:
-                # BALLS.remove(s)
 
         if len(PLAYERS) == 1:
             for key in PLAYERS:
                 WINNER = key
                 WINNERNAME = PLAYERS[key].name
-                # print('Player {} is victorious!'.format(key))
 
         # Send map data to all bots
         for p in PLAYERS:
@@ -487,10 +474,6 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
                         if msgtype == lib.CMDS['leave']:
                             PLAYERS[msg].msgrecv = True
                             playerLeaves(sock, msg, Map, ROUND)
-                            # print('Player {} has left!'.format(msg))
-                        # if msgtype == lib.CMDS['botfname']:
-                            # PLAYERS[msg[:2]].fname = msg[2:]
-                            # print(PLAYERS[msg[:2]].fname)
                         if msgtype == lib.CMDS['forward']:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
