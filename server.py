@@ -74,10 +74,14 @@ class Bot:
         # print('Player {} placed'.format(self.ID))
 
     def getNeighbors(self, Map):
+        '''Determine neighboring indices about a point'''
+        ymax, xmax = Map.shape
+        check_dist = 5
         neighbors = []
-        for i in [-1, 1]:
-            neighbors.append((self.y+i, self.x))
-            neighbors.append((self.y, self.x+i))
+        for i in np.arange(-check_dist, check_dist, 1):
+            for j in np.arange(-check_dist, check_dist, 1):
+                if 0<self.y+i<ymax and 0<self.x+j<xmax:
+                    neighbors.append((self.y+i, self.x+j))
         return neighbors
 
     def remove(self, Map):
@@ -118,6 +122,7 @@ class Bot:
             self.ballcount += 1
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
+            self.oldloc = (self.y, self.x)
             (self.y, self.x) = nextloc
             # Remove ball
             for s in BALLS:
@@ -206,6 +211,7 @@ class Bot:
     def checkIfMoved(self):
         ''' Check to see if bot has moved this round.
         If not, increment time bomb'''
+        print('Location:',self.oldloc,(self.y,self.x))
         if (self.y, self.x) == self.oldloc:
             self.timebomb += 1
             if self.timebomb > 120:
