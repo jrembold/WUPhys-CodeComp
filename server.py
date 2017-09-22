@@ -108,9 +108,9 @@ class Bot:
 
         # Only move into empty spaces
         if Map[nextloc] == 0:
+            self.oldloc = (self.y, self.x)
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
-            self.oldloc = (self.y, self.x)
             (self.y, self.x) = nextloc
 
         # If moving onto moving ball, die!
@@ -133,12 +133,14 @@ class Bot:
 
     def rotCW(self, Map):
         ''' Rotates bot clockwise'''
+        self.oldloc = (self.y, self.x)
         self.direction = (self.direction+1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
         self.computeVision(Map)
 
     def rotCCW(self, Map):
         ''' Rotates bot CCW '''
+        self.oldloc = (self.y, self.x)
         self.direction = (self.direction-1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
         self.computeVision(Map)
@@ -194,6 +196,7 @@ class Bot:
         return pinginfo
 
     def handlePing(self, Map):
+        self.oldloc = (self.y, self.x)
         info = self.computePingVision(Map)
         # lib.sendReply( self.sock, lib.CMDS['retping'], pickle.dump(info) )
         self.pinging = True
@@ -211,7 +214,8 @@ class Bot:
     def checkIfMoved(self):
         ''' Check to see if bot has moved this round.
         If not, increment time bomb'''
-        print('Location:',self.oldloc,(self.y,self.x))
+        if self.name == 'SimpleMan.py':
+            print('Location:',self.oldloc,(self.y,self.x))
         if (self.y, self.x) == self.oldloc:
             self.timebomb += 1
             if self.timebomb > 120:
