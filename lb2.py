@@ -6,7 +6,7 @@
 #
 # Creation Date: 26-08-2017
 #
-# Last Modified: Sat 26 Aug 2017 03:18:25 PM PDT
+# Last Modified: Sun 27 Aug 2017 01:28:33 AM PDT
 #
 # Created by: Jed Rembold
 #
@@ -20,7 +20,7 @@ import numpy as np
 import json
 
 initval = 1000
-desgames = 20
+desgames = 10000
 
 
 def calcnew(currbot, results, bots, ratings):
@@ -29,7 +29,7 @@ def calcnew(currbot, results, bots, ratings):
     rating based on the results of a match
     '''
     # K factor. Higher = faster adjustments
-    k=32
+    k=max(32-.01*len(ratings[currbot]), 10)
 
     # Calculate actual points earned
     act_points = 0
