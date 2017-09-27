@@ -74,10 +74,14 @@ class Bot:
         # print('Player {} placed'.format(self.ID))
 
     def getNeighbors(self, Map):
+        '''Determine neighboring indices about a point'''
+        ymax, xmax = Map.shape
+        check_dist = 5
         neighbors = []
-        for i in [-1, 1]:
-            neighbors.append((self.y+i, self.x))
-            neighbors.append((self.y, self.x+i))
+        for i in np.arange(-check_dist, check_dist, 1):
+            for j in np.arange(-check_dist, check_dist, 1):
+                if 0<self.y+i<ymax and 0<self.x+j<xmax:
+                    neighbors.append((self.y+i, self.x+j))
         return neighbors
 
     def remove(self, Map):
@@ -104,9 +108,9 @@ class Bot:
 
         # Only move into empty spaces
         if Map[nextloc] == 0:
+            self.oldloc = (self.y, self.x)
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
-            self.oldloc = (self.y, self.x)
             (self.y, self.x) = nextloc
 
         # If moving onto moving ball, die!
@@ -118,6 +122,7 @@ class Bot:
             self.ballcount += 1
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
+            self.oldloc = (self.y, self.x)
             (self.y, self.x) = nextloc
             # Remove ball
             for s in BALLS:
@@ -128,12 +133,14 @@ class Bot:
 
     def rotCW(self, Map):
         ''' Rotates bot clockwise'''
+        self.oldloc = (self.y, self.x)
         self.direction = (self.direction+1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
         self.computeVision(Map)
 
     def rotCCW(self, Map):
         ''' Rotates bot CCW '''
+        self.oldloc = (self.y, self.x)
         self.direction = (self.direction-1) % 4
         Map[(self.y, self.x)] = self.ID + self.direction/10
         self.computeVision(Map)
@@ -189,6 +196,7 @@ class Bot:
         return pinginfo
 
     def handlePing(self, Map):
+        self.oldloc = (self.y, self.x)
         info = self.computePingVision(Map)
         # lib.sendReply( self.sock, lib.CMDS['retping'], pickle.dump(info) )
         self.pinging = True
@@ -357,7 +365,6 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     # Start listening
     bindAndListen(server_sock, 'localhost', 10000)
     Map = createMap(MAPSIZE, obstacles)
-    # print(Map)
     MAPSTATE['Map'] = Map.copy()
     # Pause a moment to make sure server up and running before starting bots
     time.sleep(0.5)
@@ -377,7 +384,6 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
             if sock == server_sock:
                 sockfd, addr = server_sock.accept()
                 CONNECTION_LIST.append(sockfd)
-                # print('Client ({}, {}) connected'.format(addr[0], addr[1]))
 
             # Incoming client message
             else:
@@ -408,14 +414,8 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
 
     # As long as a player is alive
     while len(PLAYERS) > 0:
-        # Show current Map
-        # if not botnames.view:
-            # print(Map)
         MAPSTATE[ROUND] = genMapState(PLAYERS, BALLS)
         ROUND += 1
-
-        # Delay
-        # time.sleep(DELAYTIME)
 
         # Check roundcap:
         if ROUND >= ROUNDCAP:
@@ -434,14 +434,11 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
             for i in range(2):
                 if s.moving:
                     s.move(Map)
-            # if not s.moving:
-                # BALLS.remove(s)
 
         if len(PLAYERS) == 1:
             for key in PLAYERS:
                 WINNER = key
                 WINNERNAME = PLAYERS[key].name
-                # print('Player {} is victorious!'.format(key))
 
         # Send map data to all bots
         for p in PLAYERS:
@@ -477,10 +474,6 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
                         if msgtype == lib.CMDS['leave']:
                             PLAYERS[msg].msgrecv = True
                             playerLeaves(sock, msg, Map, ROUND)
-                            # print('Player {} has left!'.format(msg))
-                        # if msgtype == lib.CMDS['botfname']:
-                            # PLAYERS[msg[:2]].fname = msg[2:]
-                            # print(PLAYERS[msg[:2]].fname)
                         if msgtype == lib.CMDS['forward']:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
