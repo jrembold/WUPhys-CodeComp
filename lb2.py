@@ -19,17 +19,22 @@ import random
 import numpy as np
 import json
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+from tqdm import tqdm
+
 initval = 1000
-desgames = 10000
+desgames = 250
 
 
-def calcnew(currbot, results, bots, ratings):
+def calcnew(currbot, results, bots, ratings, history):
     '''
     Function to use pairwise elo ratings to update a bots
     rating based on the results of a match
     '''
     # K factor. Higher = faster adjustments
-    k=max(32-.01*len(ratings[currbot]), 10)
+    k=max(32-.1*history[currbot], 10)
 
     # Calculate actual points earned
     act_points = 0
@@ -45,13 +50,13 @@ def calcnew(currbot, results, bots, ratings):
     # Calculate estimated points earned
     est_points = 0
     for bot in other_bots:
-        est_points += 1/(1+10**((ratings[bot][-1]-ratings[currbot][-1])/400))
+        est_points += 1/(1+10**((ratings[bot]-ratings[currbot])/400))
     print('For {}: A-E = {} - {}'.format(currbot, act_points,est_points))
 
     # Calculate score update
-    return ratings[currbot][-1] + k*(act_points-est_points)
+    return ratings[currbot] + k*(act_points-est_points)
 
-for i in range(desgames):
+for i in tqdm(range(desgames)):
     # Read in the ratings if they exist
     if os.path.isfile('scores.json'):
         with open('scores.json', 'r') as f:
@@ -75,7 +80,9 @@ for i in range(desgames):
     results = server.main(bots, size=20, obstacles=10, viewer=False, delay=1, replaysave=False)
 
     # Calculate new bot ratings
-    newrating = {currbot: calcnew(currbot, results, bots, ratings) for currbot in bots}
+    rating_now = {currbot: ratings[currbot][-1] for currbot in bots}
+    history = {currbot: len(ratings[currbot]) for currbot in bots}
+    newrating = {currbot: calcnew(currbot, results, bots, rating_now, history) for currbot in bots}
 
     # Append new ratings to ratings
     for bot in bots:
@@ -84,4 +91,10 @@ for i in range(desgames):
     # Save ratings
     with open('scores.json', 'w') as f:
         f.write(json.dumps(ratings, indent=4, sort_keys=True))
+
+for i in ratings.keys():
+    plt.plot(ratings[i], label=i)
+
+plt.legend()
+plt.show()
 
