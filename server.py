@@ -407,7 +407,7 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     # ---------------------------------------
 
     # Pause a moment to make sure all check-ins complete
-    time.sleep(0.5)
+    # time.sleep(0.5)
 
     # Round counter
     ROUND = 0
