@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 initval = 1000
-desgames = 250
+desgames = 2000
 
 
 def calcnew(currbot, results, bots, ratings, history):
@@ -34,7 +34,7 @@ def calcnew(currbot, results, bots, ratings, history):
     rating based on the results of a match
     '''
     # K factor. Higher = faster adjustments
-    k=max(32-.1*history[currbot], 10)
+    k=max(16-.03*history[currbot], 1)
 
     # Calculate actual points earned
     act_points = 0
@@ -51,7 +51,7 @@ def calcnew(currbot, results, bots, ratings, history):
     est_points = 0
     for bot in other_bots:
         est_points += 1/(1+10**((ratings[bot]-ratings[currbot])/400))
-    print('For {}: A-E = {} - {}'.format(currbot, act_points,est_points))
+    # print('For {}: A-E = {} - {}'.format(currbot, act_points,est_points))
 
     # Calculate score update
     return ratings[currbot] + k*(act_points-est_points)
