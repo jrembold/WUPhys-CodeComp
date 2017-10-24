@@ -349,9 +349,12 @@ def genMapState(PLAYERS, BALLS):
     return {'players': players, 'balls': balls}
 
 
-def main(inputs, size, obstacles, viewer, delay, replaysave=True):
-    global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE
+def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False):
+    global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE, PRINTOUT
     global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP, PLAYERORDER
+    
+    if noprint:
+        PRINTOUT = False
 
     CONNECTION_LIST = []
     PLAYERORDER = {}
@@ -550,12 +553,11 @@ if __name__ == '__main__':
             help='Suppress all printed output to screen')
     botnames = parser.parse_args()
 
-    if botnames.noprint:
-        PRINTOUT = False
 
     main(
             botnames.input,
             botnames.size,
             botnames.obs,
             botnames.view,
-            botnames.delay)
+            botnames.delay,
+            botnames.noprint)
