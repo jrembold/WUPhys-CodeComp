@@ -37,6 +37,7 @@ BALLS = []
 MAPSTATE = {}
 ROUNDCAP = 2000
 PLAYERORDER = {}
+PRINTOUT = True
 
 
 class Bot:
@@ -52,7 +53,8 @@ class Bot:
         self.timebomb = 0
         self.ping = {}
         self.pinging = False
-        print('{} checks in! Player #{}.'.format(self.name, self.ID))
+        if PRINTOUT:
+            print('{} checks in! Player #{}.'.format(self.name, self.ID))
 
     def place(self, Map):
         '''Randomly place bot somewhere on map'''
@@ -290,7 +292,8 @@ def bindAndListen(sock, host, port):
     '''Function to initialize listening on a
     server and particular port'''
 
-    print('Starting server up on {} on port {}'.format(host, port))
+    if PRINTOUT:
+        print('Starting server up on {} on port {}'.format(host, port))
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host, port))
     sock.listen(1)
@@ -508,10 +511,12 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
 
     # Winner text!
     if WINNER != '':
-        print('{} (#{}) was victorious in {} rounds!'.format(
+        if PRINTOUT:
+            print('{} (#{}) was victorious in {} rounds!'.format(
             WINNERNAME, WINNER, ROUND-1))
     else:
-        print('There were no winners. Life is tough.')
+        if PRINTOUT:
+            print('There were no winners. Life is tough.')
         WINNERNAME = None
 
     # Save MAPSTATE
@@ -540,7 +545,13 @@ if __name__ == '__main__':
     parser.add_argument(
             '-v', '--view', default=True, action='store_false',
             help='Suppress viewer after completion?')
+    parser.add_argument(
+            '--noprint', default=False, action='store_true',
+            help='Suppress all printed output to screen')
     botnames = parser.parse_args()
+
+    if botnames.noprint:
+        PRINTOUT = False
 
     main(
             botnames.input,
