@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 initval = 1000
-desgames = 2000
+desgames = 100
 
 
 def calcnew(currbot, results, bots, ratings, history):
@@ -34,7 +34,7 @@ def calcnew(currbot, results, bots, ratings, history):
     rating based on the results of a match
     '''
     # K factor. Higher = faster adjustments
-    k=max(16-.03*history[currbot], 1)
+    k=max(16-.015*history[currbot], 1)
 
     # Calculate actual points earned
     act_points = 0
@@ -65,16 +65,45 @@ for i in tqdm(range(desgames)):
         ratings = {}
 
     # Choose a random subset of the Bots
-    bots = np.random.choice(
-            os.listdir('Bots'),
-            size = np.random.randint(2,5),
-            replace = False,
-            )
+    # bots = np.random.choice(
+            # os.listdir('Bots'),
+            # size = np.random.randint(2,5),
+            # replace = False,
+            # )
+
+    def botchooser(ratings):
+        # Choose a random subset of Bots with matchmaking
+        bots = []
+        botlist = os.listdir('Bots')
+        for tbot in botlist:
+            if tbot not in ratings.keys():
+                ratings[tbot] = [initval]
+        matchesplayed = {currbot: len(ratings[currbot]) for currbot in botlist}
+        leastplayed = min(matchesplayed, key=matchesplayed.get)
+        bots.append(leastplayed)
+        botlist.remove(leastplayed)
+        random.shuffle(botlist)
+        # bots.append(botlist.pop(0))
+        target = 50
+        while len(bots) < random.randint(2,5):
+            for i in range(len(botlist)-1):
+                tbot = botlist[i]
+                diff = abs(ratings[tbot][-1]-ratings[bots[0]][-1])
+                if diff < target:
+                    bots.append(botlist.pop(i))
+                    target = 50
+                    break
+            target += 50
+        print('Competing bots: {}'.format(bots))
+        return bots
+
+    bots = botchooser(ratings)
+
 
     # If a new bot, initialize its rating
-    for bot in bots:
-        if bot not in ratings.keys():
-            ratings[bot] = [initval]
+    # for bot in bots:
+        # if bot not in ratings.keys():
+            # ratings[bot] = [initval]
 
     # Play competition
     results = server.main(bots, size=20, obstacles=10, viewer=False, delay=1, replaysave=False)
