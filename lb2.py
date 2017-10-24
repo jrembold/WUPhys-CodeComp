@@ -94,7 +94,7 @@ for i in tqdm(range(desgames)):
                     target = 50
                     break
             target += 50
-        print('Competing bots: {}'.format(bots))
+        #print('Competing bots: {}'.format(bots))
         return bots
 
     bots = botchooser(ratings)
@@ -106,7 +106,7 @@ for i in tqdm(range(desgames)):
             # ratings[bot] = [initval]
 
     # Play competition
-    results = server.main(bots, size=20, obstacles=10, viewer=False, delay=1, replaysave=False)
+    results = server.main(bots, size=20, obstacles=10, viewer=False, delay=1, replaysave=False, noprint=True)
 
     # Calculate new bot ratings
     rating_now = {currbot: ratings[currbot][-1] for currbot in bots}
