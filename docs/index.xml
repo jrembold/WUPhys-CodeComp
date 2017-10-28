@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 27 Oct 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 28 Oct 2017 12:59:16 -0700</lastBuildDate>
     
 	<atom:link href="https://jrembold.github.io/WUPhys-CodeComp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Getting Started</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/teaching/</link>
+      <pubDate>Sat, 28 Oct 2017 12:59:16 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/teaching/</guid>
+      <description>Installation As Digital Dodgeball is a game based on the Python programming language, you are going to need a working version of Python 3.
+ For Windows or Mac users, the easiest method is likely installing the Anaconda Distribution, which can be found here. This will get you all the needed packages and modules as well as the Spyder IDE. For Linux users, you should just be able to install Python 3 through your distribution&amp;rsquo;s package manager.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/about/</link>
+      <pubDate>Sat, 28 Oct 2017 12:16:38 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/about/</guid>
+      <description>In the Spring of 2017 I noticed that my Mechanics class, despite homework practice and having used it in previous classes, was struggling some with basic concepts and everyday usage of Python. It felt like they were proficient in the narrow applications of what they&amp;rsquo;d done in class, but suddenly were in deep water if doing even basic things outside their comfort zone. I made Digital Dodgeball as a tentative idea in how to address that issue in an outside-of-the-classroom and fun fashion.</description>
+    </item>
     
     <item>
       <title>New Website Created!</title>
