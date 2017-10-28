@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Digital Dodgeball</title>
+    <link>http://example.org/post/</link>
+    <description>Recent content in Posts on Digital Dodgeball</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>&amp;copy; 2017. All rights reserved.</copyright>
+    <lastBuildDate>Fri, 27 Oct 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://example.org/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>New Website Created!</title>
+      <link>http://example.org/post/newwebsite/</link>
+      <pubDate>Fri, 27 Oct 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://example.org/post/newwebsite/</guid>
+      <description>Celebrate! This new and improved website has been created with the intention of streamlining and better explaining the logic and ideas behind Digital Dodgeball! Hopefully it serves as a better introduction to the game and as a source of ideas for new players to investigate.
+Useful links about getting started, documentation for the game, and ideas for bot algorithms can be found on the sidebar.</description>
+    </item>
+    
+  </channel>
+</rss>
