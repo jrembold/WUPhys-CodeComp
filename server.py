@@ -99,6 +99,7 @@ class Bot:
     def forward(self, Map):
         ''' Move bot in direction it is facing if
         nothing is there '''
+        self.oldloc = (self.y, self.x)
         if self.direction == 0:
             nextloc = (self.y-1, self.x)
         elif self.direction == 1:
@@ -110,7 +111,6 @@ class Bot:
 
         # Only move into empty spaces
         if Map[nextloc] == 0:
-            self.oldloc = (self.y, self.x)
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
             (self.y, self.x) = nextloc
@@ -124,7 +124,6 @@ class Bot:
             self.ballcount += 1
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
-            self.oldloc = (self.y, self.x)
             (self.y, self.x) = nextloc
             # Remove ball
             for s in BALLS:
