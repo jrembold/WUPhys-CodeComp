@@ -165,7 +165,7 @@ class Bot:
                 targetx -= 1
 
     def computePingVision(self, Map):
-        pingrng = 4
+        pingrng = 8
         maxval = Map.shape[0]
 
         def circ_pts(center, radius):
