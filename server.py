@@ -53,6 +53,7 @@ class Bot:
         self.timebomb = 0
         self.ping = {}
         self.pinging = False
+        self.oldloc = (0,0)
         if PRINTOUT:
             print('{} checks in! Player #{}.'.format(self.name, self.ID))
 
@@ -222,17 +223,27 @@ class Bot:
         else:
             self.timebomb = 0
 
+    def dropballs(self,Map):
+        ''' Drop all dodgeballs in inventory if bot
+        dies in an area around it '''
+        while self.ballcount > 0:
+            Ball(self, Map, thrown=False)
+
 
 class Ball:
-    def __init__(self, bot, Map):
+    def __init__(self, bot, Map, thrown=True):
         self.direction = bot.direction
         self.x = bot.x
         self.y = bot.y
         # bot.ballcount -= 1
-        self.moving = True
+        self.moving = thrown
         # self.getInitPosition(bot)
         # self.draw(Map)
-        self.placeBall(Map, bot)
+        if self.moving:
+            self.placeBall(Map, bot)
+        else:
+            self.placeDeadBall(Map, bot)
+    
 
     def getFacingLoc(self):
         d = self.direction
@@ -253,6 +264,23 @@ class Ball:
             BALLS.append(self)
         else:
             self.moving = False
+
+    def placeDeadBall(self, Map, bot):
+
+        def gen_locs(self):
+                locs = [(y+self.y,x+self.x) for y in np.arange(-3,4) for x in np.arange(-3,4) if 0<y+self.y<Map.shape[0] and 0<x+self.x<Map.shape[1]]
+                locs.sort(key=lambda p: (p[0]-self.y)**2+(p[1]-self.x)**2)
+                return locs
+
+        pot_locs = gen_locs(self)
+        for loc in pot_locs:
+            if Map[loc] == 0:
+                Map[loc] = 3
+                (self.y,self.x) = loc
+                BALLS.append(self)
+                bot.ballcount -= 1
+                break
+        
 
     def checkKill(self, Map):
         ballloc = Map(self.y, self.x)
@@ -317,6 +345,7 @@ def playerLeaves(sock, ucode, Map, ROUND):
 
     # Find and remove player on map
     PLAYERS[ucode].remove(Map)
+    PLAYERS[ucode].dropballs(Map)
     del PLAYERS[ucode]
 
 
@@ -538,12 +567,12 @@ if __name__ == '__main__':
     parser.add_argument(
             '-i', '--input', nargs='*', help='List of python bots to compete')
     parser.add_argument(
-            '-s', '--size', default=10, help='Square size of arena')
+            '-s', '--size', default=MAPSIZE, help='Square size of arena')
     parser.add_argument(
             '-d', '--delay', default=1,
             help='Speed multiplier for viewer playback')
     parser.add_argument(
-            '-o', '--obs', default=5, help='Maximum number of obstacles')
+            '-o', '--obs', default=10, help='Maximum number of obstacles')
     parser.add_argument(
             '-v', '--view', default=True, action='store_false',
             help='Suppress viewer after completion?')
@@ -559,4 +588,4 @@ if __name__ == '__main__':
             botnames.obs,
             botnames.view,
             botnames.delay,
-            botnames.noprint)
+            noprint=botnames.noprint)
