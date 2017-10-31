@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017. All rights reserved.</copyright>
-    <lastBuildDate>Sat, 28 Oct 2017 15:55:18 -0700</lastBuildDate>
+    <lastBuildDate>Tue, 31 Oct 2017 15:53:29 -0700</lastBuildDate>
     
 	<atom:link href="https://jrembold.github.io/WUPhys-CodeComp/post/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Halloween Patch Update!</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/post/halloweenpatch/</link>
+      <pubDate>Tue, 31 Oct 2017 15:53:29 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/post/halloweenpatch/</guid>
+      <description>I recently pushed out some updates to fix a few issues and add another. Explanations are worked into the documentation page, but changes included:
+ Increasing the radius of the ping functionality. It will now get information on everything in a 8 square radius. Increased the default map size to 20x20 and the default max number of obstacles to 10. These are of course still configurable, but these will be the defaults that the leaderboards use.</description>
+    </item>
     
     <item>
       <title>Documentation Updated</title>

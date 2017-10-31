@@ -5,7 +5,7 @@
   <meta http-equiv="content-type" content="text/html; charset=utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
-  <meta name="generator" content="Hugo 0.30.2" />
+  <meta name="generator" content="Hugo 0.30" />
 
   <title>Documentation &middot; Digital Dodgeball</title>
 
@@ -261,7 +261,7 @@
 
 <tr>
 <td><strong>&lsquo;ping&rsquo;</strong></td>
-<td>The bot stays stationary for a turn to gather information about it&rsquo;s surroundings. More information in the vision section below.</td>
+<td>The bot stays stationary for a turn to gather information about its surroundings in an 8 block radius. More information in the vision section below.</td>
 </tr>
 </tbody>
 </table>
@@ -406,6 +406,8 @@
 
 <p>this would indicate that there is an active dodgeball 5 squares to the West and 1 square South, as well as another active dodgeball 3 squares to the East and 5 squares North.</p>
 
+<p><strong>Ping will return all objects of interest in an 8-block radius from your current position!</strong></p>
+
 <h1 id="running-the-server">Running the Server</h1>
 
 <p>The server is run from a command prompt or shell following normal python conventions. Bots to compete are added to the prompt following a <code>-i</code> option. For example, to run a competition between the RandomMan.py and SimpleMan.py, you&rsquo;d write:</p>
@@ -439,13 +441,13 @@
 
 <tr>
 <td>-s <em>num</em></td>
-<td>10</td>
+<td>20</td>
 <td>Sets the square size of the arena</td>
 </tr>
 
 <tr>
 <td>-o <em>num</em></td>
-<td>5</td>
+<td>10</td>
 <td>Sets the maximum number of obstacles scattered about the map</td>
 </tr>
 
