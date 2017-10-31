@@ -2,22 +2,69 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Digital Dodgeball</title>
-    <link>http://example.org/</link>
+    <link>https://jrembold.github.io/WUPhys-CodeComp/</link>
     <description>Recent content on Digital Dodgeball</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017. All rights reserved.</copyright>
-    <lastBuildDate>Fri, 27 Oct 2017 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sat, 28 Oct 2017 15:55:18 -0700</lastBuildDate>
     
-	<atom:link href="http://example.org/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://jrembold.github.io/WUPhys-CodeComp/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
+      <title>Documentation Updated</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/post/docsposted/</link>
+      <pubDate>Sat, 28 Oct 2017 15:55:18 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/post/docsposted/</guid>
+      <description>I&amp;rsquo;ve moved the readme material from the GitHub page over to the Documentation link to the left! I also went through and cleaned up and fleshout out some of the descriptions. If there is some bit of information that you&amp;rsquo;d like to know that I haven&amp;rsquo;t included, please let me know so I can get it added! Thanks!</description>
+    </item>
+    
+    <item>
+      <title>Documentation</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/documentation/</link>
+      <pubDate>Sat, 28 Oct 2017 14:08:29 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/documentation/</guid>
+      <description>Bot Basics There are some general rules you should be aware of
+ Bots move forward one space when moving Dodgeballs move forward two spaces each turn All bot moves are received by the server and then the moves executed. For this reason, it is totally possible for two bots to kill each other on the same turn If a bot stays on a single space for more than 120 turns, it will be killed due to a timebomb mechanic.</description>
+    </item>
+    
+    <item>
+      <title>Getting Started Guide Posted!</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/post/guideposted/</link>
+      <pubDate>Sat, 28 Oct 2017 13:58:34 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/post/guideposted/</guid>
+      <description>The About and Getting Started pages to the website have been updated. Getting Started now walks you through the process of getting started creating your first bot, from downloading the needed files to running the game server. I&amp;rsquo;ll be writing and updating the documentation section next!</description>
+    </item>
+    
+    <item>
+      <title>Getting Started</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/teaching/</link>
+      <pubDate>Sat, 28 Oct 2017 12:59:16 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/teaching/</guid>
+      <description>Installation As Digital Dodgeball is a game based on the Python programming language, you are going to need a working version of Python 3.
+ For Windows or Mac users, the easiest method is likely installing the Anaconda Distribution, which can be found here. This will get you all the needed packages and modules as well as the Spyder IDE. For Linux users, you should just be able to install Python 3 through your distribution&amp;rsquo;s package manager.</description>
+    </item>
+    
+    <item>
+      <title>About</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/about/</link>
+      <pubDate>Sat, 28 Oct 2017 12:16:38 -0700</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/about/</guid>
+      <description>In the Spring of 2017 I noticed that my Mechanics class, despite homework practice and having used it in previous classes, was struggling some with basic concepts and everyday usage of Python. It felt like they were proficient in the narrow applications of what they&amp;rsquo;d done in class, but suddenly were in deep water if doing even basic things outside their comfort zone. I made Digital Dodgeball as a tentative idea in how to address that issue in an outside-of-the-classroom and fun fashion.</description>
+    </item>
+    
+    <item>
       <title>New Website Created!</title>
-      <link>http://example.org/post/newwebsite/</link>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/post/newwebsite/</link>
       <pubDate>Fri, 27 Oct 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://example.org/post/newwebsite/</guid>
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/post/newwebsite/</guid>
       <description>Celebrate! This new and improved website has been created with the intention of streamlining and better explaining the logic and ideas behind Digital Dodgeball! Hopefully it serves as a better introduction to the game and as a source of ideas for new players to investigate.
 Useful links about getting started, documentation for the game, and ideas for bot algorithms can be found on the sidebar.</description>
     </item>
