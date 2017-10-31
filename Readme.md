@@ -2,6 +2,8 @@
 
 ![Animation Gif](anim.gif)
 
+**A new and improved website is available [here](https://jrembold.github.io/WUPhys-CodeComp/)**
+
 ## Coding Bots
 Bots are written as simple python scripts and should reside in the Bots folder. Several example bots are provided for reference. Each bot should always include several things:
   1. Importing the library module
@@ -65,8 +67,8 @@ There are several other server flags that may be of use:
   Flag | Default | Use
   --- | --- | ---
   -d *num* | 0 | Playback multiplier to be passed to the viewer. Values of 1-5 will speed up, fractional values will slow down
-  -s *num* | 10 | Sets the square size of the arena
-  -o *num* | 5 | Sets the maximum number of obstacles scattered about the map
+  -s *num* | 20 | Sets the square size of the arena
+  -o *num* | 10 | Sets the maximum number of obstacles scattered about the map
   -v | | Using this flag will suppress the viewer from auto-playing after the battle is over
 
 Running the server with the -h option will output a help file showing these same flags.

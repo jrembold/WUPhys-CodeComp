@@ -30,13 +30,14 @@ CONNECTION_LIST = []
 PLAYERID = 50
 PORT = 10000
 PLAYERS = {}
-MAPSIZE = 10
+MAPSIZE = 20
 NUMPLAYERS = 0
 WINNER = ''
 BALLS = []
 MAPSTATE = {}
 ROUNDCAP = 2000
 PLAYERORDER = {}
+PRINTOUT = True
 
 
 class Bot:
@@ -52,7 +53,9 @@ class Bot:
         self.timebomb = 0
         self.ping = {}
         self.pinging = False
-        print('{} checks in! Player #{}.'.format(self.name, self.ID))
+        self.oldloc = (0,0)
+        if PRINTOUT:
+            print('{} checks in! Player #{}.'.format(self.name, self.ID))
 
     def place(self, Map):
         '''Randomly place bot somewhere on map'''
@@ -97,6 +100,7 @@ class Bot:
     def forward(self, Map):
         ''' Move bot in direction it is facing if
         nothing is there '''
+        self.oldloc = (self.y, self.x)
         if self.direction == 0:
             nextloc = (self.y-1, self.x)
         elif self.direction == 1:
@@ -108,7 +112,6 @@ class Bot:
 
         # Only move into empty spaces
         if Map[nextloc] == 0:
-            self.oldloc = (self.y, self.x)
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
             (self.y, self.x) = nextloc
@@ -122,7 +125,6 @@ class Bot:
             self.ballcount += 1
             Map[nextloc] = self.ID + self.direction/10
             Map[(self.y, self.x)] = 0
-            self.oldloc = (self.y, self.x)
             (self.y, self.x) = nextloc
             # Remove ball
             for s in BALLS:
@@ -163,7 +165,7 @@ class Bot:
                 targetx -= 1
 
     def computePingVision(self, Map):
-        pingrng = 4
+        pingrng = 8
         maxval = Map.shape[0]
 
         def circ_pts(center, radius):
@@ -221,17 +223,27 @@ class Bot:
         else:
             self.timebomb = 0
 
+    def dropballs(self,Map):
+        ''' Drop all dodgeballs in inventory if bot
+        dies in an area around it '''
+        while self.ballcount > 0:
+            Ball(self, Map, thrown=False)
+
 
 class Ball:
-    def __init__(self, bot, Map):
+    def __init__(self, bot, Map, thrown=True):
         self.direction = bot.direction
         self.x = bot.x
         self.y = bot.y
         # bot.ballcount -= 1
-        self.moving = True
+        self.moving = thrown
         # self.getInitPosition(bot)
         # self.draw(Map)
-        self.placeBall(Map, bot)
+        if self.moving:
+            self.placeBall(Map, bot)
+        else:
+            self.placeDeadBall(Map, bot)
+    
 
     def getFacingLoc(self):
         d = self.direction
@@ -252,6 +264,23 @@ class Ball:
             BALLS.append(self)
         else:
             self.moving = False
+
+    def placeDeadBall(self, Map, bot):
+
+        def gen_locs(self):
+                locs = [(y+self.y,x+self.x) for y in np.arange(-3,4) for x in np.arange(-3,4) if 0<y+self.y<Map.shape[0] and 0<x+self.x<Map.shape[1]]
+                locs.sort(key=lambda p: (p[0]-self.y)**2+(p[1]-self.x)**2)
+                return locs
+
+        pot_locs = gen_locs(self)
+        for loc in pot_locs:
+            if Map[loc] == 0:
+                Map[loc] = 3
+                (self.y,self.x) = loc
+                BALLS.append(self)
+                bot.ballcount -= 1
+                break
+        
 
     def checkKill(self, Map):
         ballloc = Map(self.y, self.x)
@@ -290,7 +319,8 @@ def bindAndListen(sock, host, port):
     '''Function to initialize listening on a
     server and particular port'''
 
-    print('Starting server up on {} on port {}'.format(host, port))
+    if PRINTOUT:
+        print('Starting server up on {} on port {}'.format(host, port))
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host, port))
     sock.listen(1)
@@ -315,6 +345,7 @@ def playerLeaves(sock, ucode, Map, ROUND):
 
     # Find and remove player on map
     PLAYERS[ucode].remove(Map)
+    PLAYERS[ucode].dropballs(Map)
     del PLAYERS[ucode]
 
 
@@ -346,9 +377,12 @@ def genMapState(PLAYERS, BALLS):
     return {'players': players, 'balls': balls}
 
 
-def main(inputs, size, obstacles, viewer, delay, replaysave=True):
-    global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE
+def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False):
+    global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE, PRINTOUT
     global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP, PLAYERORDER
+    
+    if noprint:
+        PRINTOUT = False
 
     CONNECTION_LIST = []
     PLAYERORDER = {}
@@ -407,7 +441,7 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
     # ---------------------------------------
 
     # Pause a moment to make sure all check-ins complete
-    time.sleep(0.5)
+    # time.sleep(0.5)
 
     # Round counter
     ROUND = 0
@@ -508,10 +542,12 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True):
 
     # Winner text!
     if WINNER != '':
-        print('{} (#{}) was victorious in {} rounds!'.format(
+        if PRINTOUT:
+            print('{} (#{}) was victorious in {} rounds!'.format(
             WINNERNAME, WINNER, ROUND-1))
     else:
-        print('There were no winners. Life is tough.')
+        if PRINTOUT:
+            print('There were no winners. Life is tough.')
         WINNERNAME = None
 
     # Save MAPSTATE
@@ -531,20 +567,25 @@ if __name__ == '__main__':
     parser.add_argument(
             '-i', '--input', nargs='*', help='List of python bots to compete')
     parser.add_argument(
-            '-s', '--size', default=10, help='Square size of arena')
+            '-s', '--size', default=MAPSIZE, help='Square size of arena')
     parser.add_argument(
             '-d', '--delay', default=1,
             help='Speed multiplier for viewer playback')
     parser.add_argument(
-            '-o', '--obs', default=5, help='Maximum number of obstacles')
+            '-o', '--obs', default=10, help='Maximum number of obstacles')
     parser.add_argument(
             '-v', '--view', default=True, action='store_false',
             help='Suppress viewer after completion?')
+    parser.add_argument(
+            '--noprint', default=False, action='store_true',
+            help='Suppress all printed output to screen')
     botnames = parser.parse_args()
+
 
     main(
             botnames.input,
             botnames.size,
             botnames.obs,
             botnames.view,
-            botnames.delay)
+            botnames.delay,
+            noprint=botnames.noprint)
