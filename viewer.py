@@ -17,7 +17,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
-pingrng = 4
+pingrng = 8
 
 p = argparse.ArgumentParser()
 p.add_argument('-i', '--input', default='lastgame.pickle', help='Saved replay file to load')
