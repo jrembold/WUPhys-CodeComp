@@ -68,14 +68,19 @@ for rnd in range(numrounds+1):
     fig.suptitle('Round {}'.format(rnd))
     for s in mapstate[rnd]['balls']:
         ax.scatter(s[0], s[1], marker=getBallDirSym(s), color=getBallColor(s))
+    # New method for generating legend since new versions
+    # of matplotlib don't like identical legend entries
+    playersym = []
+    playerstatus = []
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
-        ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), color=getPlayerColor(p), label=player['name']+' - '+str(player['balls']))
+        playersym.append(ax.scatter(player['x'], player['y'], marker=getPlayerDirSym(player), color=getPlayerColor(p)))
+        playerstatus.append(player['name']+' - '+str(player['balls']))
     for p in mapstate[rnd]['players']:
         player = mapstate[rnd]['players'][p]
         if player['pinging']:
             ax.add_patch(patches.CirclePolygon((player['x'],player['y']), pingrng, alpha=0.15, color=getPlayerColor(p)))
-    ax.legend(loc='center left', bbox_to_anchor=(1,0.5))
+    ax.legend(playersym, playerstatus,loc='center left', bbox_to_anchor=(1,0.5))
     # fig.savefig('Temp/ForGif_{:03d}.png'.format(rnd))
     plt.pause(0.05/float(args.delay))
 
