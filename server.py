@@ -188,11 +188,11 @@ class Bot:
             p2 = tuple(map(sum, zip(p, (-self.y, -self.x))))
             if Map[p] == 1:
                 pinginfo['Terrain'].append(p2)
-            elif Map[p] == 2:
+            elif round(Map[p]) == 2:
                 pinginfo['ABall'].append(p2)
             elif Map[p] == 3:
                 pinginfo['DBall'].append(p2)
-            elif Map[p] != 0:
+            elif Map[p] != 0 and Map[p] != Map[(self.y, self.x)]:
                 pinginfo['Enemy'].append(p2)
 
         return pinginfo
