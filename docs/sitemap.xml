@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
     <loc>https://jrembold.github.io/WUPhys-CodeComp/post/halloweenpatch/</loc>
@@ -19,6 +20,11 @@
   <url>
     <loc>https://jrembold.github.io/WUPhys-CodeComp/post/guideposted/</loc>
     <lastmod>2017-10-28T13:58:34-07:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://jrembold.github.io/WUPhys-CodeComp/leaderboard/</loc>
+    <lastmod>2017-10-28T12:59:16-07:00</lastmod>
   </url>
   
   <url>
