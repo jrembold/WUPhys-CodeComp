@@ -7,10 +7,20 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>&amp;copy; 2017. All rights reserved.</copyright>
-    <lastBuildDate>Tue, 09 Jan 2018 12:03:23 -0800</lastBuildDate>
+    <lastBuildDate>Wed, 10 Jan 2018 14:30:25 -0800</lastBuildDate>
     
 	<atom:link href="https://jrembold.github.io/WUPhys-CodeComp/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>End of Fall Season</title>
+      <link>https://jrembold.github.io/WUPhys-CodeComp/post/fallseason/</link>
+      <pubDate>Wed, 10 Jan 2018 14:30:25 -0800</pubDate>
+      
+      <guid>https://jrembold.github.io/WUPhys-CodeComp/post/fallseason/</guid>
+      <description>The Fall Season of Digital Dodgeball will be ending on Tuesday the 16th! Get your bot submitted by the end of Monday for a chance to come out atop the leaderboards! The victor will get a prize as well as their name immortalized in the Hall of Fame to the left. So basically huge stakes. :)
+A few bug fixes have gone in recently, so make sure you grab the latest files if you haven&amp;rsquo;t.</description>
+    </item>
     
     <item>
       <title>The Hall of Fame</title>
@@ -67,7 +77,7 @@
       
       <guid>https://jrembold.github.io/WUPhys-CodeComp/leaderboard/</guid>
       <description>
-   RankNameRating    1  SirAmbush  1280   2  TheNewt  1260   3  Theseus  1223   4  TacticalAmazon  1203   5  Apollo  1183   6  Artemis  1165   7  SimpleAmazon  1162   8  Kricia  1160   9  PingMan  1031   10  RandomMan  999   11  NewtySimple  791   12  Filius  624   13  SimpleMan  323     Last Modified: Jan 10, 2018 14:36 </description>
+   RankNameRating    1  SirAmbush  1280   2  TheNewt  1260   3  Theseus  1223   4  TacticalAmazon  1203   5  Apollo  1183   6  Artemis  1165   7  SimpleAmazon  1162   8  Kricia  1160   9  PingMan  1031   10  RandomMan  999   11  NewtySimple  791   12  Filius  624   13  SimpleMan  323     Last Modified: Jan 10, 2018 14:42 </description>
     </item>
     
     <item>
