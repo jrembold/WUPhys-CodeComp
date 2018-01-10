@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 initval = 1000
-desgames = 20
+desgames = 2000
 
 
 def calcnew(currbot, results, bots, ratings, history):
@@ -131,7 +131,7 @@ sorted_results.reverse()
 output = {bot: results[bot] for bot in sorted_results}
 with open('results.csv', 'w') as f:
     for i,entry in enumerate(output):
-        f.write('{}, {}, {:0.0f}\n'.format(i, entry, output[entry]))
+        f.write('{}, {}, {:0.0f}\n'.format(i+1, entry, output[entry]))
 
 plt.legend()
 plt.show()
