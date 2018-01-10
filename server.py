@@ -188,11 +188,11 @@ class Bot:
             p2 = tuple(map(sum, zip(p, (-self.y, -self.x))))
             if Map[p] == 1:
                 pinginfo['Terrain'].append(p2)
-            elif Map[p] == 2:
+            elif round(Map[p]) == 2:
                 pinginfo['ABall'].append(p2)
             elif Map[p] == 3:
                 pinginfo['DBall'].append(p2)
-            elif Map[p] != 0:
+            elif Map[p] != 0 and Map[p] != Map[(self.y, self.x)]:
                 pinginfo['Enemy'].append(p2)
 
         return pinginfo
@@ -377,13 +377,15 @@ def genMapState(PLAYERS, BALLS):
     return {'players': players, 'balls': balls}
 
 
-def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False):
+def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False, replaysample=False):
     global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE, PRINTOUT
     global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP, PLAYERORDER
     
     if noprint:
         PRINTOUT = False
 
+    MAPSTATE = {}
+    BALLS=[]
     CONNECTION_LIST = []
     PLAYERORDER = {}
     PLAYERID = 50
@@ -553,6 +555,16 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False)
     # Save MAPSTATE
     if replaysave:
         with open('lastgame.pickle', 'wb') as f:
+            pickle.dump(MAPSTATE, f)
+
+    # Save sample replays
+    if replaysample:
+        if WINNERNAME:
+            victor = WINNERNAME[:-3]
+        else:
+            victor = 'Tie'
+        rep_name = 'Replays/{}_{}.pickle'.format(victor, random.randint(1,10))
+        with open(rep_name, 'wb') as f:
             pickle.dump(MAPSTATE, f)
 
     if viewer:
