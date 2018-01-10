@@ -48,7 +48,7 @@
       
       <guid>https://jrembold.github.io/WUPhys-CodeComp/documentation/</guid>
       <description>Bot Basics There are some general rules you should be aware of
- Bots move forward one space when moving Dodgeballs move forward two spaces each turn All bot moves are received by the server and then the moves executed. For this reason, it is totally possible for two bots to kill each other on the same turn If a bot stays on a single space for more than 120 turns, it will be killed due to a timebomb mechanic.</description>
+ Bots move forward one space when moving Dodgeballs move forward two spaces each turn All bot moves are received by the server and then the moves executed. For this reason, it is totally possible for two bots to eliminate each other on the same turn If a bot stays on a single space for more than 120 turns, it will be killed due to a timebomb mechanic.</description>
     </item>
     
     <item>
@@ -67,7 +67,7 @@
       
       <guid>https://jrembold.github.io/WUPhys-CodeComp/leaderboard/</guid>
       <description>
-   NameRating    SirAmbush  1251   TheNewt  1232   Theseus  1187   Apollo  1169   TacticalAmazon  1147   Artemis  1140   SimpleAmazon  1130   Kricia  1114   PingMan  1017   RandomMan  980   NewtySimple  880   Filius  726   SimpleMan  430     Last Modified: Jan 9, 2018 13:30 </description>
+   RankNameRating    1  SirAmbush  1247   2  TheNewt  1233   3  Theseus  1194   4  TacticalAmazon  1178   5  Apollo  1177   6  SimpleAmazon  1154   7  Artemis  1152   8  Kricia  1151   9  PingMan  1033   10  RandomMan  985   11  NewtySimple  833   12  Filius  667   13  SimpleMan  399     Last Modified: Jan 9, 2018 16:57 </description>
     </item>
     
     <item>

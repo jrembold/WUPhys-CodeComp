@@ -251,7 +251,7 @@
 
 <h2 id="writing-a-basic-bot">Writing a basic bot</h2>
 
-<p>With the files on your system, you are all set to start constructing your first bot! First understand that a &ldquo;game&rdquo; of Digital Dodgeball involves two separate programs running: the individual code for your bot and the server code that actually runs the game. As such, you will <em>never run your bot&rsquo;s code directly</em>! You will always write or edit the bot code, same it, and then run the separate server script to actually run the game. This is counter to most programs where you write and run them directly, so don&rsquo;t get this confused!</p>
+<p>With the files on your system, you are all set to start constructing your first bot! First understand that a &ldquo;game&rdquo; of Digital Dodgeball involves two separate programs running: the individual code for your bot and the server code that actually runs the game. As such, you will <em>never run your bot&rsquo;s code directly</em>! You will always write or edit the bot code, save it, and then run the separate server script to actually run the game. This is counter to most programs where you write and run them directly, so don&rsquo;t get this confused!</p>
 
 <p>To walk you through the basics of bot creation, I&rsquo;ll step you through the basics of <code>RandomMan.py</code>. There are 5 example bots included in the Bots folder which are heavily commented to describe what is happening. Check those out if you have questions or are curious about different ways of implementing the code. For now, open up a text editor (or Spyder) and follow along with the creation of <code>RandomMan.py</code>!</p>
 
@@ -264,7 +264,7 @@ import library as lib
 
 <p>The first two lines import the <code>sys</code> module for the sole purpose of running the second line. This is necessary so that we can keep the bots in a separate folder from the main directory. The 3rd line imports the core library files that your bot needs to understand to know how to talk to the game server and process moves.</p>
 
-<p>In addition, we are creating a bot that will move randomly here, so we&rsquo;ll go ahead and import the <code>random</code> module as well</p>
+<p>In addition, we are creating a bot that will move randomly here, so we&rsquo;ll go ahead and import the <code>random</code> module as well:</p>
 
 <pre><code>import random
 </code></pre>
@@ -278,12 +278,12 @@ import library as lib
 
 <p>Some of the naming conventions you could change if you wanted and understand what you are doing, but the <code>CBot(__file__)</code> portion should stay unchanged. <code>CBot</code> is the needed class from the <code>library</code> module and <code>__file__</code> tells the server that your bot&rsquo;s name is the same as whatever you called the filename. Otherwise, the server won&rsquo;t know what script to associate with your wins!</p>
 
-<p>Now that the server knows of your existence, you should pause to get the latest information from the server. To do this, you can use the:</p>
+<p>Now that the server knows of your existence, you should pause to get the latest information from the server. To do this, you can use:</p>
 
 <pre><code>bot.getMapState()
 </code></pre>
 
-<p>command. This will cause your bot code to wait until it hears back from the server about how the game is progressing. You&rsquo;ll want to run it each turn. Then, as long as the server hasn&rsquo;t told us we are dead (which can&rsquo;t happen the first turn!), we want to issue commands to our bot! For <code>RandomMan.py</code>, he just chooses 1 of the 5 possible moves randomly each turn. Put together, this will look like</p>
+<p>This will cause your bot code to wait until it hears back from the server about how the game is progressing. You&rsquo;ll want to run it each turn. Then, as long as the server hasn&rsquo;t told us we are dead (which can&rsquo;t happen the first turn!), we want to issue commands to our bot! For <code>RandomMan.py</code>, he just chooses 1 of the 5 possible moves randomly each turn. Put together, this will look like</p>
 
 <pre><code>while bot.active:
     move = random.choice(['forward', 'rotCW', 'rotCCW', 'ball', 'ping'])
@@ -323,14 +323,14 @@ while bot.active:           #for as long as the bot is alive, do the following
 
 <h2 id="running-the-server">Running the Server</h2>
 
-<p>At the moment the server can only be run from a command prompt. If you are comfortable with a command prompt, you just need to open a terminal and then navigate your way to the game directory using <code>cd</code>. In windows, you can simplify your life being holding <code>Control</code> and then right-clicking in the game directory. In the menu that pops up, one of the options should be something like &ldquo;Open command prompt here&rdquo;. Clicking this will open a terminal already navigated to the correct folder. There may be a similar command with Mac&rsquo;s, but I don&rsquo;t know it so someone feel free to enlighten me!</p>
+<p>At the moment the server can only be run from a command prompt. If you are comfortable with a command prompt, you just need to open a terminal and then navigate your way to the game directory using <code>cd</code>. In windows, you can simplify your life by holding <code>Control</code> and then right-clicking in the game directory. In the menu that pops up, one of the options should be something like &ldquo;Open command prompt here&rdquo;. Clicking this will open a terminal already navigated to the correct folder. There may be a similar command with Mac&rsquo;s, but I don&rsquo;t know it so someone feel free to enlighten me!</p>
 
 <p>The server is another python script, so you can run it via</p>
 
-<pre><code>python server.py -i &quot;RandomMan.py&quot; &quot;RandomMan.py&quot;
+<pre><code>python server.py -i RandomMan.py RandomMan.py
 </code></pre>
 
-<p>The <code>-i</code> flag always precedes a list of which bots you want to compete. You can think of it as standing for which bots are <strong>I</strong>n the game. Here we are just running two copies of <code>RandomMan.py</code> against one another. You can add as many different or duplicate bots as you like, though if the map is too small the server won&rsquo;t be able to place them all far enough from each other at the start. After the match concludes, a matplotlib window should pop up which shows you a graphical depiction of what happened in the game. There are some other option parameters you can pass to the server, which are detailed in the Documentation link to the left.</p>
+<p>The <code>-i</code> flag always precedes a list of which bots you want to compete. You can think of it as standing for which bots are <strong>i</strong>n the game. Here we are just running two copies of <code>RandomMan.py</code> against one another. You can add as many different or duplicate bots as you like, though if the map is too small the server won&rsquo;t be able to place them all far enough from each other at the start. After the match concludes, a matplotlib window should pop up which shows you a graphical depiction of what happened in the game. There are some other option parameters you can pass to the server, which are detailed in the Documentation link to the left.</p>
 
 <p>Those are the basics! If you get hung up on anything, be sure to check out the documentation, or come talk to me in Collins 311!</p>
 
