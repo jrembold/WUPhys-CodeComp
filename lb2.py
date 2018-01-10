@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 initval = 1000
-desgames = 2000
+desgames = 20000
 
 
 def calcnew(currbot, results, bots, ratings, history):
