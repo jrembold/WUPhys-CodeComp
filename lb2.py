@@ -25,7 +25,7 @@ import matplotlib.pyplot as plt
 from tqdm import tqdm
 
 initval = 1000
-desgames = 2000
+desgames = 20
 
 
 def calcnew(currbot, results, bots, ratings, history):
@@ -106,7 +106,7 @@ for i in tqdm(range(desgames)):
             # ratings[bot] = [initval]
 
     # Play competition
-    results = server.main(bots, size=20, obstacles=10, viewer=False, delay=1, replaysave=False, noprint=True)
+    results = server.main(bots, size=20, obstacles=10, viewer=False, delay=1, replaysave=False, noprint=True, replaysample=True)
 
     # Calculate new bot ratings
     rating_now = {currbot: ratings[currbot][-1] for currbot in bots}
@@ -129,9 +129,9 @@ results = {currbot[:-3]: ratings[currbot][-1] for currbot in ratings.keys()}
 sorted_results = sorted(results, key=results.get)
 sorted_results.reverse()
 output = {bot: results[bot] for bot in sorted_results}
-with open('results.json', 'w') as f:
-    for entry in output:
-        f.write('{}, {:0.0f}\n'.format(entry, output[entry]))
+with open('results.csv', 'w') as f:
+    for i,entry in enumerate(output):
+        f.write('{}, {}, {:0.0f}\n'.format(i, entry, output[entry]))
 
 plt.legend()
 plt.show()
