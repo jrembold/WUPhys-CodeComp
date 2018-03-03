@@ -64,7 +64,7 @@ player_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 numrounds = max([x for x in mapstate.keys() if isinstance(x,int)])
 for rnd in range(numrounds+1):
     ax.cla()
-    ax.imshow(mapstate['Map'], cmap='gray_r')
+    ax.imshow(mapstate[rnd]['map'], cmap='gray_r')
     fig.suptitle('Round {}'.format(rnd))
     for s in mapstate[rnd]['balls']:
         ax.scatter(s[0], s[1], marker=getBallDirSym(s), color=getBallColor(s))
