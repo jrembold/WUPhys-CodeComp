@@ -360,7 +360,71 @@ def createMap(size, obstacles):
     return Map
 
 
-def genMapState(PLAYERS, BALLS):
+def shrinkMap(Map, turn_counter):
+
+    limit = turn_counter**2
+    if random.randint(0,250000)<limit:
+        #Then shrink in the map
+        mlen = Map.shape[0]
+        starting_point = random.randint(0,mlen-1)
+        side = np.random.choice(['N', 'S', 'E', 'W'])
+        placed = False
+
+        # What follows is ugly as hell, but I couldn't
+        # figure out how to compact it nicely given
+        # the need for the different rows and columns
+        if side=='N':
+            start = 0
+            direct = 1
+            while not placed:
+                check = Map[start,starting_point]
+                if not check:
+                    Map[start,starting_point] = 1
+                    placed=True
+                if start<mlen-1:
+                    start += direct
+                else:
+                    break
+        elif side=='S':
+            start = mlen-1
+            direct = -1
+            while not placed:
+                check = Map[start,starting_point]
+                if not check:
+                    Map[start,starting_point] = 1
+                    placed=True
+                if start>0:
+                    start += direct
+                else:
+                    break
+        elif side=='W':
+            start = 0
+            direct = 1
+            while not placed:
+                check = Map[starting_point,start]
+                if not check:
+                    Map[starting_point,start] = 1
+                    placed=True
+                if start<mlen-1:
+                    start += direct
+                else:
+                    break
+        else:
+            start = mlen-1
+            direct = -1
+            while not placed:
+                check = Map[starting_point,start]
+                if not check:
+                    Map[starting_point,start] = 1
+                    placed=True
+                if start>0:
+                    start += direct
+                else:
+                    break
+
+    return Map
+
+def genMapState(PLAYERS, BALLS, Map):
     players = {}
     for p in PLAYERS:
         players[PLAYERS[p].ID] = {
@@ -369,12 +433,14 @@ def genMapState(PLAYERS, BALLS):
                 'face': PLAYERS[p].direction,
                 'balls': PLAYERS[p].ballcount,
                 'name': PLAYERS[p].name,
-                'pinging': PLAYERS[p].pinging
+                'pinging': PLAYERS[p].pinging,
                 }
     balls = []
     for s in BALLS:
         balls.append([s.x, s.y, s.direction, s.moving])
-    return {'players': players, 'balls': balls}
+    M2 = Map.copy()
+    M2[M2>1]=0
+    return {'players': players, 'balls': balls, 'map':M2}
 
 
 def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False, replaysample=False):
@@ -450,7 +516,8 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
 
     # As long as a player is alive
     while len(PLAYERS) > 0:
-        MAPSTATE[ROUND] = genMapState(PLAYERS, BALLS)
+        Map = shrinkMap(Map, ROUND)
+        MAPSTATE[ROUND] = genMapState(PLAYERS, BALLS, Map)
         ROUND += 1
 
         # Check roundcap:
