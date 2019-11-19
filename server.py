@@ -605,7 +605,7 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
                                 ucode = str(PLAYERS[p].ID)
                         print('{} crashed and loses.'.format(
                             PLAYERS[ucode].name))
-                        playerLeaves(sock, ucode, Map)
+                        playerLeaves(sock, ucode, Map, ROUND)
 
     server_sock.close()
 
