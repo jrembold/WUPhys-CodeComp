@@ -268,9 +268,9 @@ class Ball:
     def placeDeadBall(self, Map, bot):
 
         def gen_locs(self):
-                locs = [(y+self.y,x+self.x) for y in np.arange(-3,4) for x in np.arange(-3,4) if 0<y+self.y<Map.shape[0] and 0<x+self.x<Map.shape[1]]
-                locs.sort(key=lambda p: (p[0]-self.y)**2+(p[1]-self.x)**2)
-                return locs
+            locs = [(y+self.y,x+self.x) for y in np.arange(-4,5) for x in np.arange(-4,5) if 0<y+self.y<Map.shape[0] and 0<x+self.x<Map.shape[1]]
+            locs.sort(key=lambda p: (p[0]-self.y)**2+(p[1]-self.x)**2)
+            return locs
 
         pot_locs = gen_locs(self)
         for loc in pot_locs:
@@ -279,7 +279,8 @@ class Ball:
                 (self.y,self.x) = loc
                 BALLS.append(self)
                 bot.ballcount -= 1
-                break
+                return
+        bot.ballcount -= 1
         
 
     def checkKill(self, Map):
@@ -340,7 +341,10 @@ def playerChecksIn(sock, name, Map):
 def playerLeaves(sock, ucode, Map, ROUND):
     global CONNECTION_LIST, PLAYERS
     sock.close()
-    CONNECTION_LIST.remove(sock)
+    try:
+        CONNECTION_LIST.remove(sock)
+    except ValueError:
+        pass
     PLAYERORDER[PLAYERS[ucode].name] = ROUND
 
     # Find and remove player on map
@@ -381,6 +385,8 @@ def shrinkMap(Map, turn_counter):
                 if not check:
                     Map[start,starting_point] = 1
                     placed=True
+                elif check > 1:
+                    break
                 if start<mlen-1:
                     start += direct
                 else:
@@ -393,6 +399,8 @@ def shrinkMap(Map, turn_counter):
                 if not check:
                     Map[start,starting_point] = 1
                     placed=True
+                elif check > 1:
+                    break
                 if start>0:
                     start += direct
                 else:
@@ -405,6 +413,8 @@ def shrinkMap(Map, turn_counter):
                 if not check:
                     Map[starting_point,start] = 1
                     placed=True
+                elif check > 1:
+                    break
                 if start<mlen-1:
                     start += direct
                 else:
@@ -417,6 +427,8 @@ def shrinkMap(Map, turn_counter):
                 if not check:
                     Map[starting_point,start] = 1
                     placed=True
+                elif check > 1:
+                    break
                 if start>0:
                     start += direct
                 else:
