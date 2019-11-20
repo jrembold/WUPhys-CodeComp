@@ -661,8 +661,10 @@ def main(
         with open(rep_name, "wb") as f:
             pickle.dump(MAPSTATE, f)
 
-    if viewer:
+    if viewer.lower() == 'mpl':
         subprocess.Popen([sys.executable, "viewer.py", "-d", str(delay)])
+    elif viewer.lower() == 'tk':
+        subprocess.Popen([sys.executable, "viewer_tkinter.py"])
 
     return PLAYERORDER
 
@@ -680,9 +682,8 @@ if __name__ == "__main__":
     parser.add_argument(
         "-v",
         "--view",
-        default=True,
-        action="store_false",
-        help="Suppress viewer after completion?",
+        default='MPL',
+        help="Viewer to show after match completion. None to suppress."
     )
     parser.add_argument(
         "--noprint",
