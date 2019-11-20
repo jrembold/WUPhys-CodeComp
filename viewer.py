@@ -57,6 +57,7 @@ fig = plt.figure()
 ax = fig.add_subplot(111, aspect='equal')
 ax.xaxis.set_visible(False)
 ax.yaxis.set_visible(False)
+fig.subplots_adjust(left=.05, right=.65)
 
 player_colors = plt.rcParams['axes.prop_cycle'].by_key()['color']
 
