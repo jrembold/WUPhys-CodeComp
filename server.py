@@ -24,7 +24,7 @@ import argparse
 import numpy as np
 import library as lib
 
-np.set_printoptions(formatter={'float': ' {:4.1f} '.format})
+np.set_printoptions(formatter={"float": " {:4.1f} ".format})
 
 CONNECTION_LIST = []
 PLAYERID = 50
@@ -32,7 +32,7 @@ PORT = 10000
 PLAYERS = {}
 MAPSIZE = 20
 NUMPLAYERS = 0
-WINNER = ''
+WINNER = ""
 BALLS = []
 MAPSTATE = {}
 ROUNDCAP = 2000
@@ -43,7 +43,7 @@ PRINTOUT = True
 class Bot:
     def __init__(self, ucode, sock, name):
         self.name = name
-        self.fname = ''
+        self.fname = ""
         self.ID = int(ucode)
         self.sock = sock
         self.vision = []
@@ -53,18 +53,18 @@ class Bot:
         self.timebomb = 0
         self.ping = {}
         self.pinging = False
-        self.oldloc = (0,0)
+        self.oldloc = (0, 0)
         if PRINTOUT:
-            print('{} checks in! Player #{}.'.format(self.name, self.ID))
+            print("{} checks in! Player #{}.".format(self.name, self.ID))
 
     def place(self, Map):
-        '''Randomly place bot somewhere on map'''
+        """Randomly place bot somewhere on map"""
         # self.x = random.randrange(1,MAPSIZE-2)
         # self.y = random.randrange(1,MAPSIZE-2)
         acceptable = False
         while not acceptable:
-            self.x = random.randrange(0, MAPSIZE-1)
-            self.y = random.randrange(0, MAPSIZE-1)
+            self.x = random.randrange(0, MAPSIZE - 1)
+            self.y = random.randrange(0, MAPSIZE - 1)
             self.direction = random.randrange(0, 3)
 
             nbs = [Map[loc] for loc in self.getNeighbors(Map)]
@@ -72,25 +72,25 @@ class Bot:
             if not any(np.array(nbs) > 10) and Map[self.y, self.x] == 0:
                 acceptable = True
 
-        Map[self.y, self.x] = self.ID + self.direction/10
+        Map[self.y, self.x] = self.ID + self.direction / 10
         self.oldloc = (self.y, self.x)
         # print('Player {} placed'.format(self.ID))
 
     def getNeighbors(self, Map):
-        '''Determine neighboring indices about a point'''
+        """Determine neighboring indices about a point"""
         ymax, xmax = Map.shape
         check_dist = 5
         neighbors = []
         for i in np.arange(-check_dist, check_dist, 1):
             for j in np.arange(-check_dist, check_dist, 1):
-                if 0<self.y+i<ymax and 0<self.x+j<xmax:
-                    neighbors.append((self.y+i, self.x+j))
+                if 0 < self.y + i < ymax and 0 < self.x + j < xmax:
+                    neighbors.append((self.y + i, self.x + j))
         return neighbors
 
     def remove(self, Map):
-        '''Delete bot from map'''
+        """Delete bot from map"""
         try:
-            loc = tuple(np.argwhere(Map == self.ID+self.direction/10)[0])
+            loc = tuple(np.argwhere(Map == self.ID + self.direction / 10)[0])
             Map[loc] = 0
         # if it isn't on the map, something must have already overwritten it
         # no worries then, proceed
@@ -98,21 +98,21 @@ class Bot:
             pass
 
     def forward(self, Map):
-        ''' Move bot in direction it is facing if
-        nothing is there '''
+        """ Move bot in direction it is facing if
+        nothing is there """
         self.oldloc = (self.y, self.x)
         if self.direction == 0:
-            nextloc = (self.y-1, self.x)
+            nextloc = (self.y - 1, self.x)
         elif self.direction == 1:
-            nextloc = (self.y, self.x+1)
+            nextloc = (self.y, self.x + 1)
         elif self.direction == 2:
-            nextloc = (self.y+1, self.x)
+            nextloc = (self.y + 1, self.x)
         else:
-            nextloc = (self.y, self.x-1)
+            nextloc = (self.y, self.x - 1)
 
         # Only move into empty spaces
         if Map[nextloc] == 0:
-            Map[nextloc] = self.ID + self.direction/10
+            Map[nextloc] = self.ID + self.direction / 10
             Map[(self.y, self.x)] = 0
             (self.y, self.x) = nextloc
 
@@ -123,7 +123,7 @@ class Bot:
 
         if Map[nextloc] == 3:
             self.ballcount += 1
-            Map[nextloc] = self.ID + self.direction/10
+            Map[nextloc] = self.ID + self.direction / 10
             Map[(self.y, self.x)] = 0
             (self.y, self.x) = nextloc
             # Remove ball
@@ -134,22 +134,22 @@ class Bot:
         self.computeVision(Map)
 
     def rotCW(self, Map):
-        ''' Rotates bot clockwise'''
+        """ Rotates bot clockwise"""
         self.oldloc = (self.y, self.x)
-        self.direction = (self.direction+1) % 4
-        Map[(self.y, self.x)] = self.ID + self.direction/10
+        self.direction = (self.direction + 1) % 4
+        Map[(self.y, self.x)] = self.ID + self.direction / 10
         self.computeVision(Map)
 
     def rotCCW(self, Map):
-        ''' Rotates bot CCW '''
+        """ Rotates bot CCW """
         self.oldloc = (self.y, self.x)
-        self.direction = (self.direction-1) % 4
-        Map[(self.y, self.x)] = self.ID + self.direction/10
+        self.direction = (self.direction - 1) % 4
+        Map[(self.y, self.x)] = self.ID + self.direction / 10
         self.computeVision(Map)
 
     def computeVision(self, Map):
-        ''' Gets list of values straight ahead of
-        bot until it encounters a wall. '''
+        """ Gets list of values straight ahead of
+        bot until it encounters a wall. """
         self.vision = []
         targety = self.y
         targetx = self.x
@@ -171,29 +171,30 @@ class Bot:
         def circ_pts(center, radius):
             (x, y) = center
             pts = []
-            for i in range(x-radius, x+radius):
-                for j in range(y-radius, y+radius):
-                    if (i-x)**2+(j-y)**2 < radius**2:
+            for i in range(x - radius, x + radius):
+                for j in range(y - radius, y + radius):
+                    if (i - x) ** 2 + (j - y) ** 2 < radius ** 2:
                         pts.append((i, j))
             return pts
 
         pts = circ_pts((self.y, self.x), pingrng)
         fpts = list(
-                filter(
-                    lambda x: x[0] > 0 and x[0] < maxval
-                    and x[1] > 0 and x[1] < maxval, pts))
+            filter(
+                lambda x: x[0] > 0 and x[0] < maxval and x[1] > 0 and x[1] < maxval, pts
+            )
+        )
 
-        pinginfo = {'Terrain': [], 'ABall': [], 'DBall': [], 'Enemy': []}
+        pinginfo = {"Terrain": [], "ABall": [], "DBall": [], "Enemy": []}
         for p in fpts:
             p2 = tuple(map(sum, zip(p, (-self.y, -self.x))))
             if Map[p] == 1:
-                pinginfo['Terrain'].append(p2)
+                pinginfo["Terrain"].append(p2)
             elif round(Map[p]) == 2:
-                pinginfo['ABall'].append(p2)
+                pinginfo["ABall"].append(p2)
             elif Map[p] == 3:
-                pinginfo['DBall'].append(p2)
+                pinginfo["DBall"].append(p2)
             elif Map[p] != 0 and Map[p] != Map[(self.y, self.x)]:
-                pinginfo['Enemy'].append(p2)
+                pinginfo["Enemy"].append(p2)
 
         return pinginfo
 
@@ -205,8 +206,8 @@ class Bot:
         self.ping = info
 
     def checkStab(self, Map):
-        ''' Check if adjacent cell has another bot.
-        If so, end it's life. '''
+        """ Check if adjacent cell has another bot.
+        If so, end it's life. """
         if len(self.vision) > 1:
             adj = self.vision[1]
             if adj > 10:
@@ -214,8 +215,8 @@ class Bot:
                 PLAYERS[ucode].alive = False
 
     def checkIfMoved(self):
-        ''' Check to see if bot has moved this round.
-        If not, increment time bomb'''
+        """ Check to see if bot has moved this round.
+        If not, increment time bomb"""
         if (self.y, self.x) == self.oldloc:
             self.timebomb += 1
             if self.timebomb > 120:
@@ -223,9 +224,9 @@ class Bot:
         else:
             self.timebomb = 0
 
-    def dropballs(self,Map):
-        ''' Drop all dodgeballs in inventory if bot
-        dies in an area around it '''
+    def dropballs(self, Map):
+        """ Drop all dodgeballs in inventory if bot
+        dies in an area around it """
         while self.ballcount > 0:
             Ball(self, Map, thrown=False)
 
@@ -243,45 +244,47 @@ class Ball:
             self.placeBall(Map, bot)
         else:
             self.placeDeadBall(Map, bot)
-    
 
     def getFacingLoc(self):
         d = self.direction
         if d == 0:
-            return (self.y-1, self.x)
+            return (self.y - 1, self.x)
         if d == 1:
-            return (self.y, self.x+1)
+            return (self.y, self.x + 1)
         if d == 2:
-            return (self.y+1, self.x)
-        return (self.y, self.x-1)
+            return (self.y + 1, self.x)
+        return (self.y, self.x - 1)
 
     def placeBall(self, Map, bot):
         loc = self.getFacingLoc()
         if Map[loc] == 0:
             bot.ballcount -= 1
             (self.y, self.x) = loc
-            Map[loc] = 2 + self.direction/10
+            Map[loc] = 2 + self.direction / 10
             BALLS.append(self)
         else:
             self.moving = False
 
     def placeDeadBall(self, Map, bot):
-
         def gen_locs(self):
-            locs = [(y+self.y,x+self.x) for y in np.arange(-4,5) for x in np.arange(-4,5) if 0<y+self.y<Map.shape[0] and 0<x+self.x<Map.shape[1]]
-            locs.sort(key=lambda p: (p[0]-self.y)**2+(p[1]-self.x)**2)
+            locs = [
+                (y + self.y, x + self.x)
+                for y in np.arange(-4, 5)
+                for x in np.arange(-4, 5)
+                if 0 < y + self.y < Map.shape[0] and 0 < x + self.x < Map.shape[1]
+            ]
+            locs.sort(key=lambda p: (p[0] - self.y) ** 2 + (p[1] - self.x) ** 2)
             return locs
 
         pot_locs = gen_locs(self)
         for loc in pot_locs:
             if Map[loc] == 0:
                 Map[loc] = 3
-                (self.y,self.x) = loc
+                (self.y, self.x) = loc
                 BALLS.append(self)
                 bot.ballcount -= 1
                 return
         bot.ballcount -= 1
-        
 
     def checkKill(self, Map):
         ballloc = Map(self.y, self.x)
@@ -296,13 +299,12 @@ class Ball:
 
         # Only move into empty spaces
         if Map[nextloc] == 0:
-            Map[nextloc] = 2+self.direction/10
+            Map[nextloc] = 2 + self.direction / 10
             Map[(self.y, self.x)] = 0
             (self.y, self.x) = nextloc
 
         # Hitting a wall, or any other ball
-        elif Map[nextloc] == 1 or Map[nextloc] == 3 \
-                or math.floor(Map[nextloc]) == 2:
+        elif Map[nextloc] == 1 or Map[nextloc] == 3 or math.floor(Map[nextloc]) == 2:
             self.moving = False
             Map[self.y, self.x] = 3
 
@@ -317,11 +319,11 @@ class Ball:
 
 
 def bindAndListen(sock, host, port):
-    '''Function to initialize listening on a
-    server and particular port'''
+    """Function to initialize listening on a
+    server and particular port"""
 
     if PRINTOUT:
-        print('Starting server up on {} on port {}'.format(host, port))
+        print("Starting server up on {} on port {}".format(host, port))
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.bind((host, port))
     sock.listen(1)
@@ -335,7 +337,7 @@ def playerChecksIn(sock, name, Map):
     ucode = str(PLAYERID).zfill(2)
     PLAYERS[ucode] = Bot(ucode, sock, name)
     PLAYERS[ucode].place(Map)
-    lib.sendReply(sock, lib.CMDS['checkin'], ucode.zfill(2))
+    lib.sendReply(sock, lib.CMDS["checkin"], ucode.zfill(2))
 
 
 def playerLeaves(sock, ucode, Map, ROUND):
@@ -355,120 +357,129 @@ def playerLeaves(sock, ucode, Map, ROUND):
 
 def createMap(size, obstacles):
     Map = np.ones((size, size))
-    Map[1:size-1, 1:size-1] = np.zeros((size-2, size-2))
+    Map[1 : size - 1, 1 : size - 1] = np.zeros((size - 2, size - 2))
     obs = random.randint(0, int(obstacles))
     for o in range(obs):
-        x = random.randint(1, size-1)
-        y = random.randint(1, size-1)
+        x = random.randint(1, size - 1)
+        y = random.randint(1, size - 1)
         Map[y, x] = 1
     return Map
 
 
 def shrinkMap(Map, turn_counter):
 
-    limit = turn_counter**2
-    if random.randint(0,250000)<limit:
-        #Then shrink in the map
+    limit = turn_counter ** 2
+    if random.randint(0, 250000) < limit:
+        # Then shrink in the map
         mlen = Map.shape[0]
-        starting_point = random.randint(0,mlen-1)
-        side = np.random.choice(['N', 'S', 'E', 'W'])
+        starting_point = random.randint(0, mlen - 1)
+        side = np.random.choice(["N", "S", "E", "W"])
         placed = False
 
         # What follows is ugly as hell, but I couldn't
         # figure out how to compact it nicely given
         # the need for the different rows and columns
-        if side=='N':
+        if side == "N":
             start = 0
             direct = 1
             while not placed:
-                check = Map[start,starting_point]
+                check = Map[start, starting_point]
                 if not check:
-                    Map[start,starting_point] = 1
-                    placed=True
+                    Map[start, starting_point] = 1
+                    placed = True
                 elif check > 1:
                     break
-                if start<mlen-1:
+                if start < mlen - 1:
                     start += direct
                 else:
                     break
-        elif side=='S':
-            start = mlen-1
+        elif side == "S":
+            start = mlen - 1
             direct = -1
             while not placed:
-                check = Map[start,starting_point]
+                check = Map[start, starting_point]
                 if not check:
-                    Map[start,starting_point] = 1
-                    placed=True
+                    Map[start, starting_point] = 1
+                    placed = True
                 elif check > 1:
                     break
-                if start>0:
+                if start > 0:
                     start += direct
                 else:
                     break
-        elif side=='W':
+        elif side == "W":
             start = 0
             direct = 1
             while not placed:
-                check = Map[starting_point,start]
+                check = Map[starting_point, start]
                 if not check:
-                    Map[starting_point,start] = 1
-                    placed=True
+                    Map[starting_point, start] = 1
+                    placed = True
                 elif check > 1:
                     break
-                if start<mlen-1:
+                if start < mlen - 1:
                     start += direct
                 else:
                     break
         else:
-            start = mlen-1
+            start = mlen - 1
             direct = -1
             while not placed:
-                check = Map[starting_point,start]
+                check = Map[starting_point, start]
                 if not check:
-                    Map[starting_point,start] = 1
-                    placed=True
+                    Map[starting_point, start] = 1
+                    placed = True
                 elif check > 1:
                     break
-                if start>0:
+                if start > 0:
                     start += direct
                 else:
                     break
 
     return Map
 
+
 def genMapState(PLAYERS, BALLS, Map):
     players = {}
     for p in PLAYERS:
         players[PLAYERS[p].ID] = {
-                'x': PLAYERS[p].x,
-                'y': PLAYERS[p].y,
-                'face': PLAYERS[p].direction,
-                'balls': PLAYERS[p].ballcount,
-                'name': PLAYERS[p].name,
-                'pinging': PLAYERS[p].pinging,
-                }
+            "x": PLAYERS[p].x,
+            "y": PLAYERS[p].y,
+            "face": PLAYERS[p].direction,
+            "balls": PLAYERS[p].ballcount,
+            "name": PLAYERS[p].name,
+            "pinging": PLAYERS[p].pinging,
+        }
     balls = []
     for s in BALLS:
         balls.append([s.x, s.y, s.direction, s.moving])
     M2 = Map.copy()
-    M2[M2>1]=0
-    return {'players': players, 'balls': balls, 'map':M2}
+    M2[M2 > 1] = 0
+    return {"players": players, "balls": balls, "map": M2}
 
 
-def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False, replaysample=False):
+def main(
+    inputs,
+    size,
+    obstacles,
+    viewer,
+    delay,
+    replaysave=True,
+    noprint=False,
+    replaysample=False,
+):
     global CONNECTION_LIST, PLAYERS, PLAYERID, PORT, MAPSIZE, PRINTOUT
     global NUMPLAYERS, WINNER, BALLS, MAPSTATE, ROUNDCAP, PLAYERORDER
-    
+
     if noprint:
         PRINTOUT = False
 
     MAPSTATE = {}
-    BALLS=[]
+    BALLS = []
     CONNECTION_LIST = []
     PLAYERORDER = {}
     PLAYERID = 50
-    WINNER = ''
-
+    WINNER = ""
 
     MAPSIZE = int(size)
     NUMPLAYERS = len(inputs)
@@ -477,9 +488,9 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
     server_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     # Start listening
-    bindAndListen(server_sock, 'localhost', 10000)
+    bindAndListen(server_sock, "localhost", 10000)
     Map = createMap(MAPSIZE, obstacles)
-    MAPSTATE['Map'] = Map.copy()
+    MAPSTATE["Map"] = Map.copy()
     # Pause a moment to make sure server up and running before starting bots
     time.sleep(0.5)
 
@@ -487,11 +498,10 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
     # Receive initial bot check-ins
     # ------------------------------------------
     for i in inputs:
-        subprocess.Popen([sys.executable, 'Bots/'+i])
+        subprocess.Popen([sys.executable, "Bots/" + i])
 
     while len(PLAYERS) < NUMPLAYERS:
-        read_socks, write_socks, error_socks = select.select(
-                CONNECTION_LIST, [], [])
+        read_socks, write_socks, error_socks = select.select(CONNECTION_LIST, [], [])
 
         for sock in read_socks:
             # A New connection
@@ -504,17 +514,20 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
                 try:
                     inc_msg = lib.receiveMessage(sock)
                     [msgtype, msg, needsreply] = lib.parseMessage(inc_msg)
-                    if msgtype == lib.CMDS['checkin']:
+                    if msgtype == lib.CMDS["checkin"]:
                         playerChecksIn(sock, msg, Map)
                 except:
-                    print('A client most likely did\
-                            not disconnect successfully.')
-                    print('Closing and removing it.')
+                    print(
+                        "A client most likely did\
+                            not disconnect successfully."
+                    )
+                    print("Closing and removing it.")
                     sock.close()
                     CONNECTION_LIST.remove(sock)
                     NUMPLAYERS -= 1
-                    print('Currently have {}/{} players'.format(
-                        len(PLAYERS), NUMPLAYERS))
+                    print(
+                        "Currently have {}/{} players".format(len(PLAYERS), NUMPLAYERS)
+                    )
 
     # ---------------------------------------
     # Now start the main loop
@@ -557,16 +570,16 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
 
         # Send map data to all bots
         for p in PLAYERS:
-            send_dict = {'vision': PLAYERS[p].vision,
-                         'balls': PLAYERS[p].ballcount,
-                         'alive': PLAYERS[p].alive,
-                         'pcount': len(PLAYERS),
-                         'lastping': PLAYERS[p].ping
-                         }
+            send_dict = {
+                "vision": PLAYERS[p].vision,
+                "balls": PLAYERS[p].ballcount,
+                "alive": PLAYERS[p].alive,
+                "pcount": len(PLAYERS),
+                "lastping": PLAYERS[p].ping,
+            }
             lib.sendReply(
-                    PLAYERS[p].sock,
-                    lib.CMDS['mapstate'],
-                    pickle.dumps(send_dict))
+                PLAYERS[p].sock, lib.CMDS["mapstate"], pickle.dumps(send_dict)
+            )
             PLAYERS[p].pinging = False
 
         # -------------------------------------
@@ -579,31 +592,31 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
             for sock in read_socks:
                 # A New connection
                 if sock == server_sock:
-                    print('Unregistered contender tried to connect')
+                    print("Unregistered contender tried to connect")
 
                 # Incoming client message
                 else:
                     try:
                         inc_msg = lib.receiveMessage(sock)
                         [msgtype, msg, needsreply] = lib.parseMessage(inc_msg)
-                        if msgtype == lib.CMDS['leave']:
+                        if msgtype == lib.CMDS["leave"]:
                             PLAYERS[msg].msgrecv = True
                             playerLeaves(sock, msg, Map, ROUND)
-                        if msgtype == lib.CMDS['forward']:
+                        if msgtype == lib.CMDS["forward"]:
                             PLAYERS[msg].forward(Map)
                             PLAYERS[msg].computeVision(Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == lib.CMDS['rotCW']:
+                        if msgtype == lib.CMDS["rotCW"]:
                             PLAYERS[msg].rotCW(Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == lib.CMDS['rotCCW']:
+                        if msgtype == lib.CMDS["rotCCW"]:
                             PLAYERS[msg].rotCCW(Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == lib.CMDS['ball']:
+                        if msgtype == lib.CMDS["ball"]:
                             if PLAYERS[msg].ballcount > 0:
                                 Ball(PLAYERS[msg], Map)
                             PLAYERS[msg].msgrecv = True
-                        if msgtype == lib.CMDS['ping']:
+                        if msgtype == lib.CMDS["ping"]:
                             PLAYERS[msg].handlePing(Map)
                             PLAYERS[msg].msgrecv = True
                     # if no good message, a client must have
@@ -615,25 +628,27 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
                         for p in PLAYERS:
                             if PLAYERS[p].sock == sock:
                                 ucode = str(PLAYERS[p].ID)
-                        print('{} crashed and loses.'.format(
-                            PLAYERS[ucode].name))
+                        print("{} crashed and loses.".format(PLAYERS[ucode].name))
                         playerLeaves(sock, ucode, Map, ROUND)
 
     server_sock.close()
 
     # Winner text!
-    if WINNER != '':
+    if WINNER != "":
         if PRINTOUT:
-            print('{} (#{}) was victorious in {} rounds!'.format(
-            WINNERNAME, WINNER, ROUND-1))
+            print(
+                "{} (#{}) was victorious in {} rounds!".format(
+                    WINNERNAME, WINNER, ROUND - 1
+                )
+            )
     else:
         if PRINTOUT:
-            print('There were no winners. Life is tough.')
+            print("There were no winners. Life is tough.")
         WINNERNAME = None
 
     # Save MAPSTATE
     if replaysave:
-        with open('lastgame.pickle', 'wb') as f:
+        with open("lastgame.pickle", "wb") as f:
             pickle.dump(MAPSTATE, f)
 
     # Save sample replays
@@ -641,42 +656,47 @@ def main(inputs, size, obstacles, viewer, delay, replaysave=True, noprint=False,
         if WINNERNAME:
             victor = WINNERNAME[:-3]
         else:
-            victor = 'Tie'
-        rep_name = 'Replays/{}_{}.pickle'.format(victor, random.randint(1,10))
-        with open(rep_name, 'wb') as f:
+            victor = "Tie"
+        rep_name = "Replays/{}_{}.pickle".format(victor, random.randint(1, 10))
+        with open(rep_name, "wb") as f:
             pickle.dump(MAPSTATE, f)
 
     if viewer:
-        subprocess.Popen(
-                [sys.executable, 'viewer.py', '-d', str(delay)])
+        subprocess.Popen([sys.executable, "viewer.py", "-d", str(delay)])
 
     return PLAYERORDER
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument(
-            '-i', '--input', nargs='*', help='List of python bots to compete')
+        "-i", "--input", nargs="*", help="List of python bots to compete"
+    )
+    parser.add_argument("-s", "--size", default=MAPSIZE, help="Square size of arena")
     parser.add_argument(
-            '-s', '--size', default=MAPSIZE, help='Square size of arena')
+        "-d", "--delay", default=1, help="Speed multiplier for viewer playback"
+    )
+    parser.add_argument("-o", "--obs", default=10, help="Maximum number of obstacles")
     parser.add_argument(
-            '-d', '--delay', default=1,
-            help='Speed multiplier for viewer playback')
+        "-v",
+        "--view",
+        default=True,
+        action="store_false",
+        help="Suppress viewer after completion?",
+    )
     parser.add_argument(
-            '-o', '--obs', default=10, help='Maximum number of obstacles')
-    parser.add_argument(
-            '-v', '--view', default=True, action='store_false',
-            help='Suppress viewer after completion?')
-    parser.add_argument(
-            '--noprint', default=False, action='store_true',
-            help='Suppress all printed output to screen')
+        "--noprint",
+        default=False,
+        action="store_true",
+        help="Suppress all printed output to screen",
+    )
     botnames = parser.parse_args()
 
-
     main(
-            botnames.input,
-            botnames.size,
-            botnames.obs,
-            botnames.view,
-            botnames.delay,
-            noprint=botnames.noprint)
+        botnames.input,
+        botnames.size,
+        botnames.obs,
+        botnames.view,
+        botnames.delay,
+        noprint=botnames.noprint,
+    )
