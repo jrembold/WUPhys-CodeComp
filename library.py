@@ -46,7 +46,7 @@ def createMessage( msgtype, msg, needs_reply=False ):
         bytemsg = msg
     msglen = len(bytemsg)
     # Add 3 byte message length
-    ba.extend(bytes(str(msglen).zfill(3), 'UTF-8'))
+    ba.extend(bytes(str(msglen).zfill(4), 'UTF-8'))
     # Add actual message
     ba.extend(bytemsg)
     # End Message
@@ -72,7 +72,7 @@ def receiveMessage( socket_conn ):
         buf.extend(inc_bytes)
 
         # Get msg length
-        inc_bytes = socket_conn.recv(3)
+        inc_bytes = socket_conn.recv(4)
         msglen = int(str(inc_bytes, 'UTF-8'))
         buf.extend(inc_bytes)
 
@@ -102,8 +102,8 @@ def parseMessage( buf ):
         else:
             reply = True
         msgtype = str(buf[4:6], 'UTF-8')
-        msglen = int(str(buf[6:9], 'UTF-8'))
-        msg = str(buf[9:9+msglen], 'UTF-8')
+        msglen = int(str(buf[6:10], 'UTF-8'))
+        msg = str(buf[10:10+msglen], 'UTF-8')
         return [msgtype, msg, reply]
     return [None, None, None]
 
@@ -120,8 +120,8 @@ def parseMapState( buf ):
         else:
             reply = True
         msgtype = str(buf[4:6], 'UTF-8')
-        msglen = int(str(buf[6:9], 'UTF-8'))
-        msg = pickle.loads(buf[9:9+msglen])
+        msglen = int(str(buf[6:10], 'UTF-8'))
+        msg = pickle.loads(buf[10:10+msglen])
         return msg
 
 def sendReply( socket_conn, msgtype, msg ):
