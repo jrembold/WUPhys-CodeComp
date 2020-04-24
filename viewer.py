@@ -79,6 +79,7 @@ numrounds = max([x for x in mapstate.keys() if isinstance(x, int)])
 for rnd in range(numrounds + 1):
     ax.cla()
     ax.imshow(mapstate[rnd]["map"], cmap="gray_r")
+    xlim, ylim = ax.get_xlim(), ax.get_ylim()
     fig.suptitle("Round {}".format(rnd))
     for s in mapstate[rnd]["balls"]:
         ax.scatter(s[0], s[1], marker=getBallDirSym(s), color=getBallColor(s))
@@ -108,6 +109,8 @@ for rnd in range(numrounds + 1):
                     color=getPlayerColor(p),
                 )
             )
+    ax.set_xlim(xlim)
+    ax.set_ylim(ylim)
     ax.legend(playersym, playerstatus, loc="center left", bbox_to_anchor=(1, 0.5))
     # fig.savefig('Temp/ForGif_{:03d}.png'.format(rnd))
     plt.pause(0.05 / float(args.delay))
